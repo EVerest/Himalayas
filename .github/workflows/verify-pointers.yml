@@ -43,14 +43,15 @@ jobs:
 
       - name: Raise or update an issue when a pointer is broken
         if: steps.verify.outputs.rc != '0'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
-            const fs = require('fs');
+            // github-script v9 runs the body as ESM: require() is gone.
+            const { readFileSync } = await import('node:fs');
             const body = '<!-- pointer-check -->\n\n' +
               'The scheduled pointer check failed. Until this is resolved, submissions ' +
               'referencing the affected pointer cannot be shown to have tested an agreed ' +
-              'base.\n\n```\n' + fs.readFileSync('report.txt', 'utf8') + '\n```';
+              'base.\n\n```\n' + readFileSync('report.txt', 'utf8') + '\n```';
             const { data: open } = await github.rest.issues.listForRepo({
               owner: context.repo.owner, repo: context.repo.repo,
               state: 'open', labels: 'pointer-check', per_page: 20,

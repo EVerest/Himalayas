@@ -154,15 +154,16 @@ jobs:
 
       - name: Post the verdict on the PR
         if: always() && steps.files.outputs.kind != 'not-a-submission'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
-            const fs = require('fs');
+            // github-script v9 runs the body as ESM: require() is gone.
+            const { readFileSync } = await import('node:fs');
             // The step that writes this can be skipped, so never assume it exists:
             // `cat` on a missing file used to kill the step under `bash -e` and this
             // job had no `if:`, so the pull request got a red check and no comment.
             let body = '';
-            try { body = fs.readFileSync('verdict.md', 'utf8'); } catch (e) {}
+            try { body = readFileSync('verdict.md', 'utf8'); } catch (e) {}
             if (!body.trim()) {
               body = '### Submission rejected\n\nThe intake gate produced no verdict, '
                    + 'which is a fault in this repository rather than in your '
