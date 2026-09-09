@@ -78,7 +78,7 @@ jobs:
               print("::error::" + "; ".join(missing)); sys.exit(1)
           print("every schema $id resolves to an uploaded file")
           PY
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: status
 
