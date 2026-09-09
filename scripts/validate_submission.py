@@ -267,7 +267,7 @@ def main():
         v.err("bad-path",
               "Path must be `results/&lt;integrator&gt;/&lt;pointer&gt;/YYYYMMDD.json`, with an "
               "optional `-2`, `-3`&hellip; suffix for a second run the same day. "
-              "e.g. `results/acme-charge/testing/main/20260909-2.json`. "
+              "e.g. `results/deadbeef-charge/testing/main/20260909-2.json`. "
               f"Got `{rel}`.")
     who = m.group("who") if m else None
     path_ptr = m.group("pointer") if m else None

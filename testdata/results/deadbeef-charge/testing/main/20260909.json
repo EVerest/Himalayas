@@ -22,15 +22,15 @@
     "environment": {
       "appName": "EVerest",
       "appVersion": "testing/main",
-      "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
+      "commit": "fdf2ac5415425e0a6af7d30caacf46f2bf9316ee",
       "branchName": "main",
       "repositoryUrl": "https://github.com/EVerest/EVerest",
       "testEnvironment": "HIL",
       "healthy": true,
       "osPlatform": "linux",
       "osVersion": "6.6.0-yocto-standard",
-      "buildUrl": "https://ci.acme-charge.example/pipelines/48213",
-      "reportName": "acme-charge HIL DC"
+      "buildUrl": "https://ci.deadbeef-charge.example/pipelines/48213",
+      "reportName": "deadbeef-charge HIL DC"
     },
     "extra": {
       "build": {
@@ -63,8 +63,8 @@
         ]
       },
       "integrator": {
-        "id": "acme-charge",
-        "displayName": "ACME Charge GmbH"
+        "id": "deadbeef-charge",
+        "displayName": "DEADBEEF Charge GmbH"
       },
       "hardware": {
         "bsp": "yeti-fw-1.4.2",

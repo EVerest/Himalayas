@@ -1,77 +1,17 @@
 {
-  "generated": "2026-09-09 18:42 UTC",
+  "generated": "2026-09-09 21:22 UTC",
   "selfReported": true,
   "graceDays": 14,
   "internalFormat": "openhtf",
   "pointers": {
     "testing/main": {
       "tracks": "main",
-      "tip": null,
-      "integrators": {
-        "acme-charge": {
-          "displayName": "ACME Charge GmbH",
-          "sourceFormat": "openhtf",
-          "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
-          "environment": "HIL",
-          "dutId": "ACME-CC200-SN-00473",
-          "build": "passed",
-          "buildTargets": 1,
-          "buildTargetsFailed": 0,
-          "modules": [
-            "EvseManager",
-            "EvseV2G",
-            "OCPP201",
-            "YetiSimulator"
-          ],
-          "phases": 3,
-          "passed": 1,
-          "failed": 1,
-          "skipped": 1,
-          "measurements": 3,
-          "measurementsFailed": 1,
-          "coverage": {
-            "DC": "passed",
-            "ISO15118-2": "passed",
-            "x-derating": "failed",
-            "ISO15118-20": "notrun",
-            "TLS": "notrun"
-          },
-          "ran": "2026-09-09",
-          "ageDays": 0.2,
-          "stale": null,
-          "staleUnknownBecause": "the pointer branch was not found, so its tip is unknown",
-          "submissions": 3
-        },
-        "anon-7f3a": {
-          "displayName": null,
-          "sourceFormat": "ctrf",
-          "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
-          "environment": "SIL",
-          "dutId": "sil",
-          "build": "passed",
-          "buildTargets": 0,
-          "buildTargetsFailed": 0,
-          "modules": [
-            "EvseManager"
-          ],
-          "phases": 0,
-          "passed": 0,
-          "failed": 0,
-          "skipped": 0,
-          "measurements": 0,
-          "measurementsFailed": 0,
-          "coverage": {},
-          "ran": "2026-09-09",
-          "ageDays": 0.4,
-          "stale": null,
-          "staleUnknownBecause": "the pointer branch was not found, so its tip is unknown",
-          "submissions": 1
-        }
-      }
+      "tip": "fdf2ac5415425e0a6af7d30caacf46f2bf9316ee",
+      "integrators": {}
     },
     "testing/stable-2026.02": {
       "tracks": "stable/2026.02",
-      "tip": null,
+      "tip": "7d22131340e6e27cb1490aca135da5b469fe5250",
       "integrators": {}
     }
   }

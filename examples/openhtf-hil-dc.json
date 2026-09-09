@@ -7,11 +7,11 @@
   "marginal": false,
   "metadata": {
     "everest": {
-      "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
+      "commit": "fdf2ac5415425e0a6af7d30caacf46f2bf9316ee",
       "pointer": "testing/main",
       "tracks": "main",
       "testEnvironment": "HIL",
-      "buildUrl": "https://ci.acme-charge.example/pipelines/48219"
+      "buildUrl": "https://ci.deadbeef-charge.example/pipelines/48219"
     },
     "build": {
       "status": "passed",
@@ -30,8 +30,8 @@
       ]
     },
     "integrator": {
-      "id": "acme-charge",
-      "displayName": "ACME Charge GmbH"
+      "id": "deadbeef-charge",
+      "displayName": "DEADBEEF Charge GmbH"
     },
     "hardware": {
       "bsp": "yeti-fw-1.4.2",

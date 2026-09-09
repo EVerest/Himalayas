@@ -12,7 +12,7 @@
 - [ ] This PR changes files under `results/` only
 - [ ] My integrator id is in `integrators/allowlist.yaml` (add it in a separate PR first)
 - [ ] The file is named `results/<my-id>/<pointer>/YYYYMMDD.json`, e.g.
-      `results/acme-charge/testing/main/20260909.json` (add `-2`, `-3`... for a
+      `results/deadbeef-charge/testing/main/20260909.json` (add `-2`, `-3`... for a
       second run the same day; `-1` is not a legal name)
 - [ ] `results.extra.build.status` is `passed`
 - [ ] `summary.start` / `summary.stop` are real timestamps, not `0`

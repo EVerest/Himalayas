@@ -49,7 +49,7 @@ module list is among them.
 ## Submitting
 
 Open a pull request adding one file at `results/<your-id>/<pointer>/YYYYMMDD.json` — for
-example `results/acme-charge/testing/main/20260909.json`. For a second run on the same
+example `results/deadbeef-charge/testing/main/20260909.json`. For a second run on the same
 pointer the same day, add a numeric suffix: `20260909-2.json`, then `-3` and so on.
 **`-1` is not a legal name**, deliberately: the first submission of a day has no suffix, so
 allowing `-1` would give two legal names for the same thing.
@@ -126,7 +126,7 @@ repository tracks.
 python3 -m pip install -r scripts/requirements.txt
 
 # the same gate CI runs; --skip-commit-check works offline
-python3 scripts/validate_submission.py results/acme-charge/testing/main/20260909.json
+python3 scripts/validate_submission.py results/deadbeef-charge/testing/main/20260909.json
 
 # rebuild the page
 python3 scripts/build_status.py --grace-days 14

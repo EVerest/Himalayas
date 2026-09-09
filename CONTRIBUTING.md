@@ -61,7 +61,7 @@ and omit `display_name`. Nothing else is required. The status page then shows
 2. Build and test at that commit.
 3. Produce the record ([§4](#4-producing-the-file)) — **CTRF or OpenHTF**, either is accepted.
 4. Open a PR **adding one file**: `results/<your-id>/<pointer>/<YYYYMMDD>.json`, e.g.
-   `results/acme-charge/testing/main/20260909.json`. For a second run on the same pointer
+   `results/deadbeef-charge/testing/main/20260909.json`. For a second run on the same pointer
    the same day, add a numeric suffix — `20260909-2.json`, then `-3` and so on. **`-1` is
    rejected**: the first submission of a day carries no suffix, so `-1` would be a second
    legal name for the same thing.

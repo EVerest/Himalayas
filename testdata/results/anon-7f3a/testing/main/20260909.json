@@ -18,7 +18,7 @@
     "environment": {
       "appName": "EVerest",
       "appVersion": "testing/main",
-      "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
+      "commit": "fdf2ac5415425e0a6af7d30caacf46f2bf9316ee",
       "branchName": "main",
       "testEnvironment": "SIL",
       "healthy": true

@@ -12,12 +12,6 @@
   },
   "log": [
     {
-      "pointer": "testing/main",
-      "tracks": "main",
-      "sha": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
-      "moved_at": "2026-09-09T00:00:00Z"
-    },
-    {
       "pointer": "testing/stable-2026.02",
       "tracks": "stable/2026.02",
       "sha": "7d22131340e6e27cb1490aca135da5b469fe5250",

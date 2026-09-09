@@ -163,64 +163,14 @@ footer p{max-width:82ch}
   exists and was a recorded tip of the pointer branch, and the reported build passed.
   <b>Nothing else.</b></p>
 </div>
-<div class="banner"><p><b>Freshness cannot be evaluated right now.</b> The pointer branches <code>testing/main</code>, <code>testing/stable-2026.02</code> were not found in <a href="https://github.com/EVerest/EVerest">EVerest</a>, so no entry below can be compared against a current tip. <b>The absence of a &ldquo;stale&rdquo; marker below therefore does not mean a result is current.</b> Every entry reads <i>freshness unknown</i> instead.</p></div>
+
 <div class="meta">
-  <span>generated 2026-09-09 18:42 UTC</span>
+  <span>generated 2026-09-09 21:22 UTC</span>
   <span>one pointer branch at a time</span>
   <span>staleness grace 14 days</span>
 </div>
-<nav class="ptrnav" aria-label="Pointer branch"><button type="button" id="pn-btn" class="pn-btn" aria-expanded="false" aria-haspopup="true" aria-controls="pn-menu"><span class="pn-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="pn-lbl">showing <code id="pn-cur">testing/main</code></span><span class="pn-caret" aria-hidden="true">&#9662;</span></button><ul id="pn-menu" class="pn-menu" role="menu" hidden><li role="none"><button type="button" role="menuitemradio" aria-checked="true" data-target="p-testing-main" data-pointer="testing/main"><code>testing/main</code><span class="pn-has">2 integrator(s) &middot; 4 submission(s)</span></button></li><li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-target="p-testing-stable-2026-02" data-pointer="testing/stable-2026.02"><code>testing/stable-2026.02</code><span class="pn-none">no results reported</span></button></li></ul><noscript><span class="pn-ns">JavaScript is off, so every pointer branch is listed below.</span></noscript></nav>
-
-  <section class="pointer" id="p-testing-main" data-pointer="testing/main">
-    <div class="phead">
-      <h2><code>testing/main</code></h2>
-      <span class="ptracks">tracks <code>main</code></span>
-      <span class="ptip"><span class="warntxt">tip unknown &mdash; the pointer branch was not found, so nothing below can be aged</span></span>
-      <span class="pcount">2 integrator(s) &middot; 4 submission(s)</span>
-      <span class="psr" title="Every entry in this section was produced and reported by the integrator named on it. EVerest does not run, reproduce or verify it.">self-reported</span>
-    </div>
-    <div class="grid">
-      <article class="card v-bad f-unknown">
-        <header><h3>ACME Charge GmbH</h3><div class="chips"><span class="pill bad">1 of 3 phases failed</span><span class="pill unknown" title="Freshness could not be evaluated: the pointer branch was not found, so its tip is unknown. This entry is not known to be current.">freshness unknown</span></div></header>
-        <p class="notes">1 phase(s) did not run &middot; 1 measurement(s) outside limits</p>
-        <dl>
-          <dt>commit</dt><dd><code>30150a81ce19</code> <span class='dim'>&mdash; pointer tip unknown</span></dd>
-          <dt>environment</dt><dd>HIL &middot; Yeti v1.5 &middot; yeti-fw-1.4.2 &middot; ACME CC-200</dd>
-          <dt>device</dt><dd><code>ACME-CC200-SN-00473</code> <span class="dim">on</span> <code>acme-hil-bench-2</code></dd>
-          <dt>build</dt><dd>passed <span class="dim">&mdash; 1 target(s)</span><div class="tgts"><span class="tgt ok">aarch64-linux-gnu</span></div></dd>
-          <dt>modules</dt><dd class='mods'><span class="mod">EvseManager</span><span class="mod">EvseV2G</span><span class="mod">OCPP201</span><span class="mod">YetiSimulator</span></dd>
-          <dt>ran</dt><dd>2026-09-09 &middot; <a href="https://ci.acme-charge.example/pipelines/48219">run log</a> &middot; <span class="fmt htf" title="Submitted as OpenHTF, which carries measurements and their limits natively">OpenHTF</span></dd>
-          <dt>covers</dt><dd><span class="ptag passed" title="A phase carrying this tag passed.">DC</span><span class="ptag passed" title="A phase carrying this tag passed.">ISO15118-2</span><span class="ptag notrun" title="Every phase carrying this tag was skipped or did not run - this protocol was NOT exercised.">ISO15118-20</span><span class="ptag notrun" title="Every phase carrying this tag was skipped or did not run - this protocol was NOT exercised.">TLS</span><span class="ptag failed" title="Every phase carrying this tag failed - this is not coverage.">x-derating</span></dd>
-        </dl>
-        <details open><summary>3 measurement(s) &middot; <b class="badtxt">1 outside limits</b></summary><div class="tscroll"><table class="meas"><thead><tr><th>phase</th><th>measurement</th><th>value</th><th>limit</th><th>verdict</th></tr></thead><tbody><tr><td>dc_precharge_voltage_window</td><td>precharge_voltage_v</td><td class="num">398.7 V</td><td class="lim">395 &lt;= x &lt;= 405</td><td><span class="mo ok">PASS</span></td></tr><tr><td>dc_precharge_voltage_window</td><td>precharge_settle_ms</td><td class="num">812 ms</td><td class="lim">x &lt;= 2000</td><td><span class="mo ok">PASS</span></td></tr><tr><td>dc_derating_ramp_rate</td><td>ramp_rate_a_per_s</td><td class="num">3.4 A/s</td><td class="lim">x &lt;= 2.0</td><td><span class="mo no">FAIL</span></td></tr></tbody></table></div></details>
-        <details><summary>3 submission(s) &middot; each with its own date</summary>
-          <div class="tscroll"><table><thead><tr><th>ran (UTC)</th><th>env</th><th>commit</th>
-          <th>build</th><th title="passed / failed / did not run">pass/fail/skip</th>
-          <th></th></tr></thead>
-          <tbody><tr><td class="nw">2026-09-09 13:22 <span class="dim">UTC</span></td><td>HIL</td><td><code>30150a81ce19</code></td><td>passed <span class="dim">(1 tgt)</span></td><td class="pfs"><span class="ok-inline">1</span>/<span class="badtxt">1</span>/<span class="dim">1</span></td><td><a href="results/acme-charge/testing/main/20260909-3.json">json</a></td></tr><tr><td class="nw">2026-09-09 11:34 <span class="dim">UTC</span></td><td>HIL</td><td><code>30150a81ce19</code></td><td>passed <span class="dim">(1 tgt)</span></td><td class="pfs"><span class="ok-inline">1</span>/<span class="badtxt">1</span>/<span class="dim">1</span></td><td><a href="results/acme-charge/testing/main/20260909-2.json">json</a></td></tr><tr><td class="nw">2026-09-09 09:19 <span class="dim">UTC</span></td><td>HIL</td><td><code>30150a81ce19</code></td><td>passed <span class="badtxt">(1 of 3 targets failed)</span></td><td class="pfs"><span class="ok-inline">2</span>/<span class="badtxt">1</span>/<span class="dim">0</span></td><td><a href="results/acme-charge/testing/main/20260909.json">json</a></td></tr></tbody></table></div>
-        </details>
-      </article>
-      <article class="card v-none f-unknown">
-        <header><h3>anon-7f3a (anonymous)</h3><div class="chips"><span class="pill none">build only &middot; no tests reported</span><span class="pill unknown" title="Freshness could not be evaluated: the pointer branch was not found, so its tip is unknown. This entry is not known to be current.">freshness unknown</span></div></header>
-        
-        <dl>
-          <dt>commit</dt><dd><code>30150a81ce19</code> <span class='dim'>&mdash; pointer tip unknown</span></dd>
-          <dt>environment</dt><dd>SIL</dd>
-          <dt>device</dt><dd><code>sil</code> <span class="dim">on</span> <code>anon-7f3a</code></dd>
-          <dt>build</dt><dd>passed <span class="dim">&mdash; no target detail reported</span><div class="tgts"></div></dd>
-          <dt>modules</dt><dd class='mods'><span class="mod">EvseManager</span></dd>
-          <dt>ran</dt><dd>2026-09-09 &middot; <span class="dim" title="buildUrl is optional, so this entry carries no cheap way for a reader to check it">no run link</span> &middot; <span class="fmt ctrf" title="Submitted as CTRF and converted. CTRF has no measurement concept, so this entry has no measurements by construction - they are not missing.">CTRF &rarr; OpenHTF</span></dd>
-          
-        </dl>
-        <p class="nomeas">No measurements &mdash; CTRF carries no measurement concept, so this entry has none by construction.</p>
-        <details><summary>1 submission(s) &middot; each with its own date</summary>
-          <div class="tscroll"><table><thead><tr><th>ran (UTC)</th><th>env</th><th>commit</th>
-          <th>build</th><th title="passed / failed / did not run">pass/fail/skip</th>
-          <th></th></tr></thead>
-          <tbody><tr><td class="nw">2026-09-09 09:19 <span class="dim">UTC</span></td><td>SIL</td><td><code>30150a81ce19</code></td><td>passed</td><td class="pfs"><span class="ok-inline">0</span>/<span class="dim">0</span>/<span class="dim">0</span></td><td><a href="results/anon-7f3a/testing/main/20260909.json">json</a></td></tr></tbody></table></div>
-        </details>
-      </article></div>
-  </section><section class="pointer" id="p-testing-stable-2026-02" data-pointer="testing/stable-2026.02"><div class="phead"><h2><code>testing/stable-2026.02</code></h2><span class="ptracks">tracks <code>stable/2026.02</code></span><span class="ptip"><span class="warntxt">tip unknown &mdash; the pointer branch was not found</span></span><span class="pcount">0 integrator(s) &middot; 0 submission(s)</span></div><div class="grid"><article class="card empty"><header><h3>No results</h3><div class="chips"><span class="pill none">nobody has reported against this pointer</span></div></header><p>This pointer is declared in <code>pointers.json</code> and is listed here deliberately. <b>No integrator has submitted a result for it.</b> That is neither a pass nor a failure: it means this line is currently untested by anyone reporting to Himalayas.</p></article></div></section>
+<nav class="ptrnav" aria-label="Pointer branch"><button type="button" id="pn-btn" class="pn-btn" aria-expanded="false" aria-haspopup="true" aria-controls="pn-menu"><span class="pn-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="pn-lbl">showing <code id="pn-cur">testing/main</code></span><span class="pn-caret" aria-hidden="true">&#9662;</span></button><ul id="pn-menu" class="pn-menu" role="menu" hidden><li role="none"><button type="button" role="menuitemradio" aria-checked="true" data-target="p-testing-main" data-pointer="testing/main"><code>testing/main</code><span class="pn-none">no results reported</span></button></li><li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-target="p-testing-stable-2026-02" data-pointer="testing/stable-2026.02"><code>testing/stable-2026.02</code><span class="pn-none">no results reported</span></button></li></ul><noscript><span class="pn-ns">JavaScript is off, so every pointer branch is listed below.</span></noscript></nav>
+<section class="pointer" id="p-testing-main" data-pointer="testing/main"><div class="phead"><h2><code>testing/main</code></h2><span class="ptracks">tracks <code>main</code></span><span class="ptip">current tip <code>fdf2ac541542</code></span><span class="pcount">0 integrator(s) &middot; 0 submission(s)</span></div><div class="grid"><article class="card empty"><header><h3>No results</h3><div class="chips"><span class="pill none">nobody has reported against this pointer</span></div></header><p>This pointer is declared in <code>pointers.json</code> and is listed here deliberately. <b>No integrator has submitted a result for it.</b> That is neither a pass nor a failure: it means this line is currently untested by anyone reporting to Himalayas.</p></article></div></section><section class="pointer" id="p-testing-stable-2026-02" data-pointer="testing/stable-2026.02"><div class="phead"><h2><code>testing/stable-2026.02</code></h2><span class="ptracks">tracks <code>stable/2026.02</code></span><span class="ptip">current tip <code>7d22131340e6</code></span><span class="pcount">0 integrator(s) &middot; 0 submission(s)</span></div><div class="grid"><article class="card empty"><header><h3>No results</h3><div class="chips"><span class="pill none">nobody has reported against this pointer</span></div></header><p>This pointer is declared in <code>pointers.json</code> and is listed here deliberately. <b>No integrator has submitted a result for it.</b> That is neither a pass nor a failure: it means this line is currently untested by anyone reporting to Himalayas.</p></article></div></section>
 <div class="legend">
   <span><span class="pill good">passed</span> an outcome the integrator reported</span>
   <span><span class="pill none">no results</span> nothing reported &mdash; not a pass</span>
