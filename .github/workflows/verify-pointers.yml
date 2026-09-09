@@ -43,7 +43,7 @@ jobs:
 
       - name: Raise or update an issue when a pointer is broken
         if: steps.verify.outputs.rc != '0'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
