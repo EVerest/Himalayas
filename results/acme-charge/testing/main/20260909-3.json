@@ -1,0 +1,131 @@
+{
+  "dut_id": "ACME-CC200-SN-00473",
+  "station_id": "acme-hil-bench-2",
+  "outcome": "FAIL",
+  "start_time_millis": 1788959100000,
+  "end_time_millis": 1788960120000,
+  "marginal": false,
+  "metadata": {
+    "everest": {
+      "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
+      "pointer": "testing/main",
+      "tracks": "main",
+      "testEnvironment": "HIL",
+      "buildUrl": "https://ci.acme-charge.example/pipelines/48219"
+    },
+    "build": {
+      "status": "passed",
+      "targets": [
+        {
+          "target": "aarch64-linux-gnu",
+          "status": "passed",
+          "toolchain": "gcc 13.2.0"
+        }
+      ],
+      "modules": [
+        "EvseManager",
+        "EvseV2G",
+        "OCPP201",
+        "YetiSimulator"
+      ]
+    },
+    "integrator": {
+      "id": "acme-charge",
+      "displayName": "ACME Charge GmbH"
+    },
+    "hardware": {
+      "bsp": "yeti-fw-1.4.2",
+      "board": "Yeti v1.5",
+      "chargeController": "ACME CC-200"
+    },
+    "source": {
+      "format": "openhtf",
+      "tool": "openhtf 1.6.0"
+    }
+  },
+  "phases": [
+    {
+      "name": "dc_precharge_voltage_window",
+      "outcome": "PASS",
+      "start_time_millis": 1788959642564,
+      "end_time_millis": 1788959660564,
+      "suite": [
+        "acme_hil",
+        "dc"
+      ],
+      "tags": [
+        "DC",
+        "ISO15118-2"
+      ],
+      "measurements": {
+        "precharge_voltage_v": {
+          "name": "precharge_voltage_v",
+          "outcome": "PASS",
+          "measured_value": 398.7,
+          "units": "V",
+          "validators": [
+            "395 <= x <= 405"
+          ]
+        },
+        "precharge_settle_ms": {
+          "name": "precharge_settle_ms",
+          "outcome": "PASS",
+          "measured_value": 812,
+          "units": "ms",
+          "validators": [
+            "x <= 2000"
+          ]
+        }
+      },
+      "attachments": {}
+    },
+    {
+      "name": "dc_derating_ramp_rate",
+      "outcome": "FAIL",
+      "start_time_millis": 1788959660564,
+      "end_time_millis": 1788959678564,
+      "suite": [
+        "acme_hil",
+        "dc"
+      ],
+      "tags": [
+        "DC",
+        "x-derating"
+      ],
+      "measurements": {
+        "ramp_rate_a_per_s": {
+          "name": "ramp_rate_a_per_s",
+          "outcome": "FAIL",
+          "measured_value": 3.4,
+          "units": "A/s",
+          "validators": [
+            "x <= 2.0"
+          ]
+        }
+      },
+      "attachments": {},
+      "outcome_details": [
+        {
+          "code": "limit",
+          "description": "ramp_rate_a_per_s 3.4 exceeds limit 2.0"
+        }
+      ]
+    },
+    {
+      "name": "iso15118_20_tls_handshake",
+      "outcome": "SKIP",
+      "start_time_millis": 1788959678564,
+      "end_time_millis": 1788959696564,
+      "suite": [
+        "acme_hil",
+        "hlc"
+      ],
+      "tags": [
+        "ISO15118-20",
+        "TLS"
+      ],
+      "measurements": {},
+      "attachments": {}
+    }
+  ]
+}

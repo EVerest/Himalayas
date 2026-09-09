@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://everest.github.io/Himalayas/schema/everest-profile.schema.json",
+  "title": "EVerest federated testing CTRF profile",
+  "description": "A STRICTER OVERLAY on top of CTRF, applied in addition to ctrf.schema.json. CTRF leaves the fields this project depends on as freeform strings - commit, appVersion, testEnvironment, osPlatform, tags - so two integrators can fill them differently and the aggregate becomes meaningless. CTRF's own schema is closed and cannot be tightened, so this profile constrains those fields separately. It only names fields it constrains; everything else is governed by CTRF.",
+  "type": "object",
+  "required": [
+    "results"
+  ],
+  "properties": {
+    "results": {
+      "type": "object",
+      "required": [
+        "environment",
+        "summary"
+      ],
+      "properties": {
+        "environment": {
+          "type": "object",
+          "required": [
+            "commit",
+            "appVersion",
+            "testEnvironment"
+          ],
+          "properties": {
+            "appName": {
+              "description": "Always EVerest. This repository tracks nothing else.",
+              "const": "EVerest"
+            },
+            "appVersion": {
+              "description": "The floating pointer branch that was tracked. Tags were replaced by force-pushed pointer branches, so there is no version string here any more.",
+              "enum": [
+                "testing/main",
+                "testing/stable-2026.02"
+              ]
+            },
+            "commit": {
+              "description": "FULL 40-character EVerest commit SHA. Short SHAs are rejected on purpose: they are ambiguous, and a result whose base cannot be pinned exactly is not reproducible even in principle.",
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "branchName": {
+              "description": "The real branch the pointer follows.",
+              "type": "string",
+              "pattern": "^(main|stable/[0-9]{4}\\.[0-9]{2})$"
+            },
+            "testEnvironment": {
+              "description": "Simulation or real hardware. Reported and displayed separately, so it must be one of these two exactly.",
+              "enum": [
+                "SIL",
+                "HIL"
+              ]
+            },
+            "osPlatform": {
+              "enum": [
+                "linux",
+                "darwin",
+                "windows"
+              ]
+            },
+            "buildUrl": {
+              "description": "Link back to the run. Optional but strongly encouraged - with traces truncated it is the only route to full failure detail.",
+              "type": "string",
+              "pattern": "^https://"
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "required": [
+            "start",
+            "stop"
+          ],
+          "properties": {
+            "start": {
+              "description": "Run start, epoch milliseconds. MUST be a real timestamp. junit-to-ctrf emits 0 here, and a result with no timestamp can never be aged, so the staleness rule could never govern it.",
+              "type": "integer",
+              "minimum": 1
+            },
+            "stop": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tags": {
+                "description": "Protocol and lifecycle tags. Standard values come from schema/vocabulary.json; anything else must use the x- prefix so private tags cannot collide with future standard ones. Free text here is what breaks per-protocol rollups.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^([A-Z][A-Za-z0-9.]*(-[A-Za-z0-9.]+)*|[a-z][a-z0-9]*|x-[a-z0-9][a-z0-9-]{0,38})$"
+                }
+              },
+              "suite": {
+                "description": "Where the test came from. Recover this from the JUnit classname - junit-to-ctrf drops it, and without it nobody can tell an AC result from a DC one.",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "A HIL run submitted as CTRF must name the board. CTRF has no dut_id, so without this the normaliser falls back to 'unspecified-dut' and two chargers from one integrator become indistinguishable.",
+          "if": {
+            "properties": {
+              "environment": {
+                "properties": {
+                  "testEnvironment": {
+                    "const": "HIL"
+                  }
+                },
+                "required": [
+                  "testEnvironment"
+                ]
+              }
+            },
+            "required": [
+              "environment"
+            ]
+          },
+          "then": {
+            "properties": {
+              "extra": {
+                "properties": {
+                  "hardware": {
+                    "required": [
+                      "board"
+                    ]
+                  }
+                },
+                "required": [
+                  "hardware"
+                ]
+              }
+            },
+            "required": [
+              "extra"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

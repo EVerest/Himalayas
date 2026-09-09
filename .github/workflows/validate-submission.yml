@@ -1,0 +1,237 @@
+name: Validate submission
+
+# WHY pull_request_target AND NOT pull_request
+#
+# GitHub documents: "The GITHUB_TOKEN has read-only permissions in pull requests from
+# forked repositories." Integrators submit from forks, so a `pull_request` workflow
+# cannot post the accept/reject reason back onto the PR. pull_request_target runs the
+# workflow from the BASE branch with a writable token, which is what lets us comment.
+#
+# pull_request_target carries a documented security warning - "Running untrusted code on
+# the pull_request_target trigger may lead to security vulnerabilities" - and that warning
+# is about running code from the PR. This workflow never does:
+#
+#   * it checks out the BASE ref only, so every script and schema is trusted code;
+#   * it fetches the PR's changed files as DATA into a scratch dir it never executes;
+#   * it runs no build, no install from the PR, no PR-supplied action, no PR-supplied
+#     script, and never interpolates PR text into a shell command.
+#
+# A submission is a JSON document that gets parsed by a validator from the base branch.
+# That is precisely the case pull_request_target is safe for. Do not add a build step
+# here, and do not `git checkout` the head ref.
+#
+# WHY THERE IS NO `paths:` FILTER
+#
+# There was one, `results/**`, and this job is a REQUIRED status check. A
+# required check that never reports blocks a pull request forever, so the allowlist pull
+# request CONTRIBUTING.md tells a first-time integrator to open - which touches only
+# integrators/allowlist.yaml - could never be merged, and neither could any maintainer
+# pull request. Filtering in the workflow is what caused that; deciding INSIDE the
+# workflow is what fixes it. The classifier reports `not-a-submission` for a pull
+# request that changes nothing under results/, the job passes, and it says nothing.
+#
+# RESULTS IS APPEND-ONLY
+#
+# results/ is permanent, and removing a record needs human write access to main. The
+# classifier refuses any pull request that removes, modifies or renames a file under
+# results/, before a single byte is fetched. That is what makes the old vacuous-accept
+# defect unreachable: there is no deletion case left for the gate to reason about.
+
+# WHAT EACH OUTCOME DOES, in full. Worked out as a truth table over the two
+# step outputs, because a `run:` condition cannot be tested locally and the last
+# version of this file failed the required check on every pull request that was
+# not a submission:
+#
+#   kind              gate rc | fetch gate comment close automerge check
+#   not-a-submission        - | skip  skip  skip   skip  skip      GREEN
+#   refuse                  - | skip  skip  POST   skip  skip      red
+#   submission              0 | run   run   POST   skip  ARM       GREEN
+#   submission              1 | run   run   POST   skip  skip      red
+#   submission              2 | run   run   POST   CLOSE skip      red
+#
+# The two things to preserve: `not-a-submission` must be GREEN and silent, or a
+# required check deadlocks every code and allowlist pull request; and a skipped
+# gate step leaves `steps.gate.outputs.rc` as the empty string, so any condition
+# reading it must also name the kind.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: validate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate submission
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the BASE branch (trusted code only)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install validator deps
+        run: python -m pip install --quiet -r scripts/requirements.txt
+
+      - name: Decide what this pull request is
+        id: files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$REPO/pulls/$PR/files" --paginate --slurp > files.json
+          python scripts/classify_pr_files.py \
+            --input files.json --added added.txt --verdict verdict.md
+
+      - name: Fetch the added submissions as DATA (never executed)
+        if: steps.files.outputs.kind == 'submission'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          # pipefail matters here: without it a `gh` failure left a 0-byte file and
+          # the submitter was told `not-json`, which is not what happened. It also
+          # made the documented `too-big` cap unreachable, because the contents API
+          # returns empty content for a blob over 1 MB.
+          set -euo pipefail
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            mkdir -p "$(dirname "$f")"
+            gh api "repos/$HEAD_REPO/contents/$f?ref=$HEAD_SHA" --jq '.content' \
+              | base64 -d > "$f"
+            echo "fetched $f ($(wc -c < "$f") bytes)"
+            [ -s "$f" ] || { echo "::error::$f fetched empty"; exit 1; }
+          done < added.txt
+
+      - name: Run the intake gate
+        if: steps.files.outputs.kind == 'submission'
+        id: gate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # An integrator id carries the GitHub accounts allowed to
+          # publish as it. The login reaches the gate through the environment, never
+          # interpolated into the shell.
+          SUBMISSION_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          : > verdict.md
+          rc=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            # A fresh part.md per file. Without this, a file that produced no report
+            # left the PREVIOUS file's verdict in place and it was appended twice -
+            # so a rejected pull request could show two "accepted" blocks and no
+            # reason at all.
+            : > part.md
+            frc=0
+            # `|| frc=$?` rather than `; frc=$?`, because the default shell is
+            # `bash -e` and a rejection would otherwise kill the step before the
+            # exit code could be read - which is how a rejection and a tool error
+            # became the same observation.
+            python scripts/validate_submission.py "$f" --report part.md || frc=$?
+            # Exit 2 is "the gate could not tell", and it wins: a pull request is
+            # all-or-nothing, so one unprocessable file makes the whole thing
+            # unprocessable rather than partly accepted.
+            if [ "$frc" -eq 2 ]; then rc=2; elif [ "$frc" -ne 0 ] && [ "$rc" -ne 2 ]; then rc=1; fi
+            cat part.md >> verdict.md
+            echo >> verdict.md
+          done < added.txt
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Post the verdict on the PR
+        if: always() && steps.files.outputs.kind != 'not-a-submission'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            // The step that writes this can be skipped, so never assume it exists:
+            // `cat` on a missing file used to kill the step under `bash -e` and this
+            // job had no `if:`, so the pull request got a red check and no comment.
+            let body = '';
+            try { body = fs.readFileSync('verdict.md', 'utf8'); } catch (e) {}
+            if (!body.trim()) {
+              body = '### Submission rejected\n\nThe intake gate produced no verdict, '
+                   + 'which is a fault in this repository rather than in your '
+                   + 'submission. Please raise an issue.\n';
+            }
+            const marker = '<!-- everest-himalayas-gate -->';
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number, per_page: 100,
+            });
+            const mine = comments.find(c => c.body && c.body.includes(marker));
+            const payload = marker + '\n' + body;
+            if (mine) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: mine.id, body: payload });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number, body: payload });
+            }
+
+      # A submission the gate cannot process is the integrator's to fix, not ours. A
+      # submission the gate cannot process is the submitter's to fix and resubmit, so
+      # the pull request is closed rather than left waiting for a push. A plain
+      # rejection (exit 1) is NOT closed: the verdict says what to fix and the gate
+      # re-runs on the next push.
+      - name: Close the PR when the gate could not process it
+        if: steps.gate.outputs.rc == '2'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr close "$PR_URL"
+
+      # Auto-merge is on, so a green submission lands without a human in the loop:
+      # the pointers move daily, and per-record review would not keep up with them.
+      # It is sound now because results/ is append-only and the submitting account is
+      # bound to the integrator id, so the gate IS the approval.
+      #
+      # CAVEAT, and it matters. GitHub documents: "When you use the repository's
+      # GITHUB_TOKEN to perform tasks, events triggered by the GITHUB_TOKEN will not
+      # create a new workflow run." Auto-merge enabled with GITHUB_TOKEN merges as
+      # github-actions[bot], so the push to main will NOT trigger deploy-status.yml.
+      # The page would go stale silently.
+      #
+      # deploy-status.yml therefore carries a short cron as its guaranteed trigger. If
+      # you want the page to redeploy the instant a submission merges, enable auto-merge
+      # with a PAT or GitHub App token here instead of GITHUB_TOKEN, and the push
+      # trigger will fire normally.
+      - name: Enable auto-merge on an accepted submission
+        if: steps.files.outputs.kind == 'submission' && steps.gate.outputs.rc == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          # NOT continue-on-error, and no `|| echo`. Both were here, so a failure to
+          # arm auto-merge was swallowed twice and the submission sat green and
+          # unmerged with nothing saying why.
+          gh pr merge --auto --squash "$PR_URL"
+          echo "auto-merge armed; it lands once required checks pass"
+
+      # The gate step is SKIPPED on a pull request that is not a submission, so
+      # steps.gate.outputs.rc is the empty string there - and `rc != '0'` would
+      # then be true, failing the required check on every code and allowlist
+      # pull request. Both conditions have to name the kind explicitly.
+      - name: Fail the check if the submission was rejected
+        if: |
+          steps.files.outputs.kind == 'refuse' ||
+          (steps.files.outputs.kind == 'submission' && steps.gate.outputs.rc != '0')
+        run: |
+          echo "Submission rejected - see the PR comment for the reason." >&2
+          exit 1

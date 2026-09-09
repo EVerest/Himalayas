@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://everest.github.io/Himalayas/schema/everest-htf-metadata.schema.json",
+  "title": "EVerest federated testing metadata contract (OpenHTF)",
+  "description": "Contract for TestRecord.metadata in an EVerest federated testing submission. OpenHTF is the normalised internal format here, and it models a device under test - it has no concept of a source commit, a build, or a test suite. Everything that identifies WHAT was tested therefore lives here, in an untyped metadata object, which is the same closed-schema problem CTRF had with results.extra, moved to a different field. This file is what gives it meaning.",
+  "type": "object",
+  "required": [
+    "everest",
+    "build",
+    "integrator"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "everest": {
+      "description": "What was tested. OpenHTF has no native field for any of this.",
+      "type": "object",
+      "required": [
+        "commit",
+        "pointer",
+        "testEnvironment"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "description": "FULL 40-character EVerest commit SHA. With tags replaced by force-pushed pointer branches this is the ONLY durable identifier a submission carries, so a short SHA is rejected.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "pointer": {
+          "description": "The floating pointer branch that was tracked.",
+          "enum": [
+            "testing/main",
+            "testing/stable-2026.02"
+          ]
+        },
+        "tracks": {
+          "description": "The real branch the pointer follows, e.g. main or stable/2026.02.",
+          "type": "string",
+          "pattern": "^(main|stable/[0-9]{4}\\.[0-9]{2})$"
+        },
+        "testEnvironment": {
+          "description": "Simulation or real hardware. Displayed separately, so exactly these two.",
+          "enum": [
+            "SIL",
+            "HIL"
+          ]
+        },
+        "buildUrl": {
+          "description": "Link back to the run. Optional but strongly encouraged - with attachments capped it is the only route to full detail.",
+          "type": "string",
+          "pattern": "^https://"
+        }
+      }
+    },
+    "build": {
+      "description": "Build status. OpenHTF has no build concept either, so it lives here. The intake gate rejects a submission whose build is missing or failed.",
+      "type": "object",
+      "required": [
+        "status",
+        "modules"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "target",
+              "status"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "target": {
+                "type": "string",
+                "pattern": "^[a-z0-9_]+-[a-z0-9]+-[a-z0-9]+$",
+                "maxLength": 100
+              },
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "skipped"
+                ]
+              },
+              "toolchain": {
+                "type": "string",
+                "pattern": "^(gcc|clang|msvc|icc) [0-9]+(\\.[0-9]+){0,2}$",
+                "maxLength": 60
+              }
+            }
+          }
+        },
+        "modules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Za-z0-9_]{1,49}$"
+          },
+          "minItems": 1,
+          "description": "EVerest modules built. Required: without it a submission cannot say which parts of EVerest it actually exercised, so two passing runs covering different module sets look identical. Checked against schema/everest-modules.txt and warned on if unknown."
+        }
+      }
+    },
+    "integrator": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Unique integrator id. Also the results/<id>/ directory name. Use a pseudonym to stay anonymous; there is no separate publication flag because the repository is public.",
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])?$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[^\\s].*[^\\s]$"
+        }
+      }
+    },
+    "hardware": {
+      "description": "Board-level detail. Per-DUT identity belongs in OpenHTF's native dut_id and station_id, not here.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bsp": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Board support package or firmware identifier for the board itself, e.g. yeti-fw-1.4.2. NOT an EVerest module name - the modules a run exercised go in build.modules."
+        },
+        "board": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Board MODEL, e.g. yeti-1.1. This is the closest thing CTRF has to a device identity, and it is a model rather than a rig: two rigs with the same board are indistinguishable in a CTRF submission. Required when testEnvironment is HIL."
+        },
+        "chargeController": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Charge controller model or firmware, if it is a separate unit from the board."
+        }
+      }
+    },
+    "source": {
+      "description": "Set by the normaliser when a submission arrived as CTRF and was converted, so the provenance of a converted record is never lost.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "enum": [
+            "ctrf",
+            "openhtf"
+          ]
+        },
+        "tool": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "specVersion": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "convertedBy": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "archived": {
+          "description": "Set by scripts/archive.py when the record was archived and its traces, attachments and codeinfo stripped. Present so an archived record still validates, and so a reader can tell a record with no attachments from one whose attachments were dropped.",
+          "type": "boolean"
+        },
+        "synthesised": {
+          "description": "Fields on this record that normalise.py manufactured because the submitted format has no equivalent - dut_id and station_id on the CTRF path. A reader must be able to tell a synthesised value from a reported one.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "dut_id",
+              "station_id"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+# The TSC or a named owner approves each addition to the allowlist.
+#
+# Everything below needs review from the owner listed. Combine with a branch protection
+# rule that requires review from Code Owners, or CODEOWNERS is advisory only.
+#
+# TODO confirm the real team slug before enabling - @EVerest/tsc is a placeholder and an
+# unresolvable owner silently blocks every PR it matches.
+
+/integrators/   @EVerest/tsc
+/schema/        @EVerest/tsc
+/scripts/       @EVerest/tsc
+/.github/       @EVerest/tsc
+
+# results/ is deliberately NOT owned: submissions are gated by the workflow, not by review.

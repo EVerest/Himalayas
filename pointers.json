@@ -1,0 +1,27 @@
+{
+  "$comment": "Append-only log of where each floating pointer branch has pointed. THIS FILE IS THE WHOLE POINT: a force-pushed branch has no history, so without an append-only record there is no way to prove a submission tested an agreed base. A tag pins a commit forever; a floating branch does not. Written by the EVerest CI job that moves the pointers; never edited by hand, never reordered, entries never removed.",
+  "pointers": {
+    "testing/main": {
+      "tracks": "main",
+      "description": "Latest commit on main that EVerest CI considers the agreed base to test against. Force-pushed forward; never rewound."
+    },
+    "testing/stable-2026.02": {
+      "tracks": "stable/2026.02",
+      "description": "Same, for the 2026.02 maintenance line. NOTE the name: it deliberately does NOT live under stable/, because stable/2026.02 already exists as a real protected branch that receives backports."
+    }
+  },
+  "log": [
+    {
+      "pointer": "testing/main",
+      "tracks": "main",
+      "sha": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
+      "moved_at": "2026-09-09T00:00:00Z"
+    },
+    {
+      "pointer": "testing/stable-2026.02",
+      "tracks": "stable/2026.02",
+      "sha": "7d22131340e6e27cb1490aca135da5b469fe5250",
+      "moved_at": "2026-09-09T00:00:00Z"
+    }
+  ]
+}

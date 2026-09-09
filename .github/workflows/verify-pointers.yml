@@ -1,0 +1,71 @@
+name: Verify pointer branches
+
+# This runs here on a schedule so that a dead pointer job is caught. The
+# pointers are moved by a CI job in EVerest, in a repository this
+# one does not control, so a schedule here is the only way a broken or stalled
+# pointer surfaces without someone noticing by hand.
+#
+# What it catches that nothing else would: a pointer advertising a commit that is
+# not on the branch it claims to track, and a branch moved without appending to
+# pointers.json - which would silently break the audit trail the gate depends on.
+
+on:
+  schedule:
+    - cron: '23 6 * * *'      # daily, a few hours after the daily pointer move
+  push:
+    branches: [main]
+    paths:
+      - 'pointers.json'
+      - 'scripts/verify_pointers.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write               # to raise one when a pointer is broken
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify the pointers against EVerest
+        id: verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          python scripts/verify_pointers.py --repo EVerest/EVerest | tee report.txt
+          echo "rc=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Raise or update an issue when a pointer is broken
+        if: steps.verify.outputs.rc != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = '<!-- pointer-check -->\n\n' +
+              'The scheduled pointer check failed. Until this is resolved, submissions ' +
+              'referencing the affected pointer cannot be shown to have tested an agreed ' +
+              'base.\n\n```\n' + fs.readFileSync('report.txt', 'utf8') + '\n```';
+            const { data: open } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'pointer-check', per_page: 20,
+            });
+            if (open.length) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: open[0].number, body });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title: 'Pointer branch check is failing',
+                labels: ['pointer-check'], body });
+            }
+
+      - name: Fail the run
+        if: steps.verify.outputs.rc != '0'
+        run: exit 1

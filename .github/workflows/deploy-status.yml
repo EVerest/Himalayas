@@ -1,0 +1,93 @@
+name: Build and deploy status page
+
+# Runs after a submission merges, and on a schedule so staleness is re-evaluated
+# even when nothing new arrives: a pointer branch moving in EVerest ages every
+# result with no activity in this repository at all.
+#
+# It also publishes schema/ alongside the page, because every schema's $id is a
+# URL under this site and nothing was uploading them.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'results/**'
+      - 'scripts/build_status.py'
+      - 'integrators/**'
+      - 'pointers.json'
+  # Two reasons for a schedule, not one:
+  #  1. staleness must be re-evaluated even with no activity here at all - a
+  #     pointer branch moving in EVerest ages every result with no PR here;
+  #  2. auto-merge performed with GITHUB_TOKEN does NOT trigger the push event above
+  #     (documented), so this is the guaranteed trigger after an automatic merge.
+  #     Swap auto-merge to a PAT/App token if you want instant redeploys instead.
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build the status page
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/build_status.py --grace-days 14
+      - name: Copy raw submissions next to the page
+        run: |
+          set -euo pipefail
+          # the page links each row to its own CTRF file, so ship results/ with it
+          mkdir -p status/results
+          cp -r results/. status/results/
+
+      - name: Publish the schemas at the URLs they claim
+        run: |
+          set -euo pipefail
+          # Every schema declares an $id under
+          # https://everest.github.io/Himalayas/schema/..., and nothing
+          # uploaded schema/ - so all of them 404'd. A published $id that does
+          # not resolve is worse than none: it tells a reader the contract is
+          # fetchable when it is not.
+          mkdir -p status/schema
+          cp -r schema/. status/schema/
+          python - <<'PY'
+          import glob, json, pathlib, sys
+          base = "https://everest.github.io/Himalayas/"
+          missing = []
+          for f in sorted(glob.glob("schema/*.schema.json")):
+              i = json.load(open(f)).get("$id")
+              if not i:
+                  continue
+              rel = i[len(base):] if i.startswith(base) else None
+              if rel is None or not pathlib.Path("status", rel).exists():
+                  missing.append(f"{f}: $id {i} does not resolve to an uploaded file")
+          if missing:
+              print("::error::" + "; ".join(missing)); sys.exit(1)
+          print("every schema $id resolves to an uploaded file")
+          PY
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: status
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

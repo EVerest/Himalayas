@@ -1,0 +1,193 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://everest.github.io/Himalayas/schema/everest-htf-profile.schema.json",
+  "title": "EVerest federated testing OpenHTF profile",
+  "description": "The shape a normalised submission must have. OpenHTF has no published JSON Schema - its record is defined by openhtf/core/test_record.py - so this file doubles as the structural definition and as the EVerest tightening of it. Field names and enum values are taken verbatim from google/openhtf@master.",
+  "type": "object",
+  "required": [
+    "dut_id",
+    "station_id",
+    "outcome",
+    "start_time_millis",
+    "end_time_millis",
+    "metadata",
+    "phases"
+  ],
+  "properties": {
+    "dut_id": {
+      "description": "Device under test. Native OpenHTF - this is the hardware identity CTRF has no field for. For SIL runs use a stable synthetic id such as sil.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "station_id": {
+      "description": "Which station ran it. Native OpenHTF.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "outcome": {
+      "description": "Run outcome. Verbatim OpenHTF Outcome enum - note it carries ERROR, TIMEOUT and ABORTED, which CTRF cannot express at all.",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "ERROR",
+        "TIMEOUT",
+        "ABORTED"
+      ]
+    },
+    "start_time_millis": {
+      "description": "Epoch milliseconds. Must be real: a record with no timestamp can never be aged, so the staleness rule could never govern it.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "end_time_millis": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "marginal": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "outcome_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "$comment": "Typed as an object here and validated in full against everest-htf-metadata.schema.json. The type matters on its own: this schema runs on the document AS SUBMITTED, and it is what stops a metadata of the wrong shape reaching the code that reads it.",
+      "type": "object"
+    },
+    "phases": {
+      "description": "OpenHTF's equivalent of CTRF tests[]. A converted CTRF submission maps each test to one phase.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "outcome"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "outcome": {
+            "description": "Verbatim OpenHTF PhaseOutcome enum. Note it differs from the run-level Outcome: SKIP exists here, TIMEOUT and ABORTED do not.",
+            "enum": [
+              "PASS",
+              "FAIL",
+              "SKIP",
+              "ERROR"
+            ]
+          },
+          "start_time_millis": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_time_millis": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "marginal": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "measurements": {
+            "description": "The reason OpenHTF was chosen as the normal form. CTRF has no concept of a measurement, so a converted CTRF submission has none - that asymmetry is expected and is not an error.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "outcome": {
+                  "enum": [
+                    "PASS",
+                    "FAIL",
+                    "SKIP",
+                    "UNSET",
+                    "PARTIALLY_SET"
+                  ]
+                },
+                "measured_value": {},
+                "units": {
+                  "type": [
+                    "string",
+                    "object",
+                    "null"
+                  ]
+                },
+                "validators": {
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "attachments": {
+            "description": "OpenHTF inlines these as base64 by default. Capped by the gate, because the repository keeps submissions indefinitely.",
+            "type": "object"
+          },
+          "codeinfo": {
+            "description": "Carries sourcecode, which OpenHTF includes by default. The gate WARNS if it is populated, because integrator tests may be closed source and this repository is public.",
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "docstring": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sourcecode": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "tags": {
+            "description": "Not native OpenHTF. Added by EVerest so per-protocol rollups survive the move from CTRF, where tags were native.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^([A-Z][A-Za-z0-9.]*(-[A-Za-z0-9.]+)*|[a-z][a-z0-9]*|x-[a-z0-9][a-z0-9-]{0,38})$"
+            }
+          },
+          "suite": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

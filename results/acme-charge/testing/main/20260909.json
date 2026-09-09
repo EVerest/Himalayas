@@ -1,0 +1,123 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "generatedBy": "EVerest emit-ctrf 0.1.0",
+  "timestamp": "2026-09-09T09:09:02.564Z",
+  "results": {
+    "tool": {
+      "name": "EVerest run-tests.sh",
+      "version": "2026.02.1"
+    },
+    "summary": {
+      "tests": 3,
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "start": 1788944942564,
+      "stop": 1788945589177,
+      "duration": 646613
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
+      "branchName": "main",
+      "repositoryUrl": "https://github.com/EVerest/EVerest",
+      "testEnvironment": "HIL",
+      "healthy": true,
+      "osPlatform": "linux",
+      "osVersion": "6.6.0-yocto-standard",
+      "buildUrl": "https://ci.acme-charge.example/pipelines/48213",
+      "reportName": "acme-charge HIL DC"
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "targets": [
+          {
+            "target": "x86_64-linux-gnu",
+            "status": "passed",
+            "toolchain": "gcc 13.2.0"
+          },
+          {
+            "target": "aarch64-linux-gnu",
+            "status": "passed",
+            "toolchain": "gcc 13.2.0"
+          },
+          {
+            "target": "armv7-linux-gnueabihf",
+            "status": "failed",
+            "toolchain": "gcc 13.2.0"
+          }
+        ],
+        "modules": [
+          "EvseManager",
+          "EvseV2G",
+          "OCPP201",
+          "EvseSecurity",
+          "YetiSimulator",
+          "EnergyManager",
+          "Auth"
+        ]
+      },
+      "integrator": {
+        "id": "acme-charge",
+        "displayName": "ACME Charge GmbH"
+      },
+      "hardware": {
+        "bsp": "yeti-fw-1.4.2",
+        "board": "Yeti v1.5",
+        "chargeController": "ACME CC-200"
+      }
+    },
+    "tests": [
+      {
+        "name": "test_iso15118_dc_session",
+        "status": "passed",
+        "duration": 24310,
+        "suite": [
+          "core_tests",
+          "smoke_tests"
+        ],
+        "device": "Yeti v1.5",
+        "tags": [
+          "DC",
+          "ISO15118-2"
+        ]
+      },
+      {
+        "name": "test_iso15118_20_dc_session_over_tls",
+        "status": "passed",
+        "duration": 18022,
+        "suite": [
+          "core_tests",
+          "smoke_tests"
+        ],
+        "device": "Yeti v1.5",
+        "tags": [
+          "DC",
+          "ISO15118-20",
+          "TLS"
+        ]
+      },
+      {
+        "name": "acme_internal_dc_derating_ramp",
+        "status": "failed",
+        "duration": 9500,
+        "suite": [
+          "acme",
+          "closed-source"
+        ],
+        "device": "Yeti v1.5",
+        "tags": [
+          "DC",
+          "x-integrator-private"
+        ],
+        "message": "derating ramp exceeded 2 A/s tolerance",
+        "trace": "acme_tests/derating.py:212: AssertionError: observed 3.4 A/s over 1.8 s window\n  assert ramp <= TOLERANCE"
+      }
+    ]
+  }
+}
