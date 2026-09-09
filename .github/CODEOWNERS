@@ -6,9 +6,9 @@
 # TODO confirm the real team slug before enabling - @EVerest/tsc is a placeholder and an
 # unresolvable owner silently blocks every PR it matches.
 
-/integrators/   @EVerest/tsc
-/schema/        @EVerest/tsc
-/scripts/       @EVerest/tsc
-/.github/       @EVerest/tsc
+/integrators/   @mlitre
+/schema/        @mlitre
+/scripts/       @mlitre
+/.github/       @mlitre
 
 # results/ is deliberately NOT owned: submissions are gated by the workflow, not by review.
