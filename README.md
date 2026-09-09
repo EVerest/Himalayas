@@ -7,7 +7,8 @@ against the floating `testing/` pointer branches of
 All EVerest documentation and issue tracking lives in the
 [main EVerest repository](https://github.com/EVerest/everest).
 
-**→ Status page:** `https://everest.github.io/Himalayas/` *(once GitHub Pages is enabled)*
+**→ [Status page](https://everest.github.io/Himalayas/)** - who has reported what,
+against which pointer, and how recently.
 
 Submissions are accepted as **CTRF** or **OpenHTF** and normalised to OpenHTF internally.
 **Both formats accept both SIL and HIL runs** — see [SCHEMA.md](SCHEMA.md).
