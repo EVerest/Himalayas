@@ -809,6 +809,27 @@ def suite_docs(work, verbose):
     check("docs: the CI guard expects the real check count",
           guard == {str(TOTAL)}, f"guard says {sorted(guard)}, suite is {TOTAL}")
 
+    # github-script v9 runs the script body as ESM, where require() does not
+    # exist. Nothing else here executes those bodies, so a require() left behind
+    # fails only in production - silently, because the steps that use them post
+    # the gate's verdict and open the pointer issue rather than deciding a check.
+    wfdir = os.path.join(work, ".github", "workflows")
+    offenders = []
+    for fn in sorted(os.listdir(wfdir)):
+        with open(os.path.join(wfdir, fn)) as f:
+            text = f.read()
+        if "actions/github-script@" not in text:
+            continue
+        # A full-line comment may name it while explaining why it is gone; a call
+        # may not. Only whole-line comments are stripped, so a trailing one still
+        # counts - a commented-out call is a trap for whoever edits next.
+        code = [ln for ln in text.splitlines()
+                if not ln.lstrip().startswith(("//", "#"))]
+        if any("require(" in ln for ln in code):
+            offenders.append(fn)
+    check("docs: no workflow calls require() in a github-script body",
+          not offenders, f"require() in {offenders}")
+
     # Every file named in README.md's layout table has to exist, and every
     # script has to be named there. The table listed ctrf-hil-dc.json twice and
     # omitted openhtf-hil-dc.json entirely.
@@ -959,7 +980,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 6, "pointers": 9,
-          "archive": 9, "staleness": 6, "build": 18, "docs": 6}
+          "archive": 9, "staleness": 6, "build": 18, "docs": 7}
 TOTAL = sum(EXPECT.values())
 
 
