@@ -1,0 +1,17 @@
+# The actions here are all first-party (actions/*) on floating major tags, which
+# is GitHub's own supply chain rather than a third party's - but a floating tag
+# is still a moving target, and two of them run inside the pull_request_target
+# job in validate-submission.yml.
+#
+# Pinning to commit SHAs is the stronger answer and is NOT done here, because a
+# pinned SHA with nothing updating it becomes a stale, unpatched pin - which is
+# worse than a tag. This makes the upgrades visible first. Pin to SHAs once
+# these pull requests are actually being reviewed; Dependabot then keeps the
+# pins current and rewrites them in place.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

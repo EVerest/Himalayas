@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Himalayas &middot; EVerest federated testing status</title>
+<style>
+:root{--green:#00CE7C;--blue:#2F96D0;--bg:#f6f8fc;--surface:#fff;--ink:#0C2351;
+--ink2:#44577a;--ink3:#74849f;--line:#dae2ee;--warn:#9a5b06;--warnbg:#fdf2dc;
+--warnline:#e8c584;--bad:#a71d1d;--badbg:#fdeaea;--badline:#eeb4b4;--ok:#04724d;
+--okbg:#dcf5ea;--okline:#93ddc0;--info:#1c5d85;--infobg:#e4f1fa;--infoline:#9fcde9}
+@media(prefers-color-scheme:dark){:root{--bg:#080f1d;--surface:#0e1830;--ink:#e8eef8;
+--ink2:#a9b8d0;--ink3:#7e8fab;--line:#22314f;--warn:#f0c076;--warnbg:#2e2410;
+--warnline:#5b4718;--bad:#f0a1a1;--badbg:#2e1414;--badline:#5e2626;--ok:#7ce0b4;
+--okbg:#0d2a20;--okline:#1d523c;--info:#8ec8ea;--infobg:#0b2233;--infoline:#1d4460}}
+*{box-sizing:border-box}
+body{margin:0;padding:0 20px 60px;background:var(--bg);color:var(--ink);
+font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif}
+.wrap{max-width:1080px;margin:0 auto}
+header.top{padding:40px 0 16px}
+h1{margin:0;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em}
+.sub{color:var(--ink2);margin-top:10px;max-width:70ch}
+.caveat{background:var(--warnbg);border:1px solid var(--warnline);
+border-left:5px solid var(--warn);border-radius:10px;padding:18px 20px;margin:22px 0}
+.caveat .lead{font-size:clamp(17px,2.5vw,22px);line-height:1.35;font-weight:750;
+color:var(--warn);margin:0 0 10px;letter-spacing:-.01em;max-width:52ch}
+.caveat p{margin:0 0 8px;max-width:78ch} .caveat p:last-child{margin:0}
+.caveat b{color:var(--warn)}
+.banner{background:var(--warnbg);border:1px solid var(--warnline);border-radius:10px;
+padding:12px 16px;margin:0 0 4px;font-size:13.5px}
+.banner p{margin:0;max-width:82ch}
+.meta{display:flex;gap:20px;flex-wrap:wrap;color:var(--ink3);font-size:13px;margin:14px 0 0}
+.ptrnav{position:relative;margin:20px 0 0}
+.pn-btn{display:inline-flex;align-items:center;gap:10px;font:inherit;font-size:13.5px;
+background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:9px;
+padding:8px 13px;cursor:pointer}
+.pn-btn:hover{border-color:var(--ink3)}
+.pn-bars{display:grid;gap:3px;width:15px}
+.pn-bars i{display:block;height:2px;background:var(--ink2);border-radius:2px}
+.pn-lbl{color:var(--ink2)} .pn-lbl code{color:var(--ink);font-weight:700}
+.pn-caret{color:var(--ink3);font-size:11px}
+.pn-btn[aria-expanded="true"] .pn-caret{transform:rotate(180deg)}
+.pn-menu{list-style:none;margin:6px 0 0;padding:6px;position:absolute;z-index:20;
+min-width:min(340px,92vw);background:var(--surface);border:1px solid var(--line);
+border-radius:10px;box-shadow:0 10px 28px rgba(12,35,81,.14)}
+.pn-menu[hidden]{display:none}
+.pn-menu button{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;
+font:inherit;font-size:13.5px;background:none;border:0;border-radius:7px;padding:8px 10px;
+cursor:pointer;color:var(--ink)}
+.pn-menu button:hover{background:var(--bg)}
+.pn-menu button[aria-checked="true"]{background:var(--infobg);color:var(--info)}
+.pn-menu button code{font-weight:700;background:none;border:0;padding:0}
+.pn-has{font-size:11.5px;color:var(--ink3)}
+.pn-none{font-size:11.5px;color:var(--warn);font-weight:650}
+.pn-ns{font-size:12.5px;color:var(--ink3);margin-left:12px}
+section.pointer{margin-top:34px}
+section.pointer[hidden]{display:none}
+.phead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-bottom:10px;
+border-bottom:2px solid var(--line);margin-bottom:16px}
+.phead h2{margin:0;font-size:19px}
+.phead h2 code{font-size:.9em}
+.ptracks,.ptip,.pcount{font-size:12.5px;color:var(--ink3)}
+.psr{margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:.05em;
+text-transform:uppercase;color:var(--warn);background:var(--warnbg);
+border:1px solid var(--warnline);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.warntxt{color:var(--warn);font-weight:650}
+.badtxt{color:var(--bad);font-weight:650}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr))}
+.grid>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+padding:18px 20px;min-width:0;align-self:start}
+.card.v-bad{border-left:5px solid var(--bad)}
+.card.v-good{border-left:5px solid var(--okline)}
+.card.v-none{border-left:5px solid var(--line)}
+/* Stale gets the hatch and the drained greens; UNKNOWN deliberately does not.
+   Banner and chip are for unknown only. Unknown is not the same as bad, and
+   a page that looks drained for weeks teaches readers to ignore the signal. */
+.card.f-stale{border-top:1px solid var(--warnline);
+border-right:1px solid var(--warnline);border-bottom:1px solid var(--warnline);
+background:repeating-linear-gradient(135deg,var(--surface),
+var(--surface) 10px,var(--warnbg) 10px,var(--warnbg) 20px)}
+.card.f-stale .mo.ok,.card.f-stale .tgt.ok,.card.f-stale .ptag.passed,
+.card.f-stale .ok-inline{filter:saturate(.2)}
+.card.empty{border-left:5px solid var(--line);color:var(--ink2)}
+.card.empty p{margin:0;font-size:13.5px;max-width:62ch}
+.card header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+flex-wrap:wrap;margin-bottom:10px}
+.card h3{margin:0;font-size:16.5px;min-width:0;overflow-wrap:anywhere}
+.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+.pill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;
+max-width:100%;overflow-wrap:anywhere}
+.pill.good{background:var(--okbg);color:var(--ok);border:1px solid var(--okline)}
+.pill.bad{background:var(--badbg);color:var(--bad);border:1px solid var(--badline)}
+.pill.none{background:transparent;color:var(--ink3);border:1px dashed var(--ink3)}
+.pill.fresh{background:var(--infobg);color:var(--info);border:1px solid var(--infoline)}
+.pill.stale{background:var(--warnbg);color:var(--warn);border:1px solid var(--warn)}
+.pill.unknown{background:var(--warnbg);color:var(--warn);border:1px dashed var(--warn)}
+.notes{margin:0 0 10px;font-size:12.5px;color:var(--bad);font-weight:600;
+max-width:100%;overflow-wrap:anywhere}
+dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 14px;margin:0;
+font-size:13.5px}
+dt{color:var(--ink3);font-weight:650} dd{margin:0;min-width:0;overflow-wrap:anywhere}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88em;
+overflow-wrap:anywhere}
+.dim{color:var(--ink3)} .ok-inline{color:var(--ok);font-weight:650}
+.qual{color:var(--bad);font-weight:650}
+.tgts{margin-top:2px}
+.tgt{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;
+margin:2px 3px 0 0;font-family:ui-monospace,Menlo,monospace}
+.tgt.ok{background:var(--okbg);color:var(--ok)}
+.tgt.no{background:var(--badbg);color:var(--bad);border:1px solid var(--badline);
+font-weight:700}
+.ptag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;
+margin:2px 3px 0 0}
+.ptag.passed{background:var(--okbg);border:1px solid var(--okline);color:var(--ok)}
+.ptag.failed{background:var(--badbg);border:1px solid var(--badline);color:var(--bad)}
+.ptag.notrun{background:transparent;border:1px dashed var(--ink3);color:var(--ink3);
+text-decoration:line-through}
+.mods .mod{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;
+margin:2px 3px 0 0;background:var(--bg);border:1px solid var(--line);color:var(--ink2);
+font-family:ui-monospace,Menlo,monospace}
+.fmt{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:4px;
+border:1px solid var(--infoline);background:var(--infobg);color:var(--info)}
+.fmt.ctrf{border-style:dashed}
+.nomeas{margin:12px 0 0;font-size:12.5px;color:var(--ink3);background:var(--bg);
+border:1px dashed var(--line);border-radius:6px;padding:8px 10px;max-width:100%}
+details{margin-top:12px;font-size:13px} summary{cursor:pointer;color:var(--ink2)}
+.tscroll{overflow-x:auto;max-width:100%}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.5px}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--ink3);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}
+td.num{text-align:right;font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
+td.lim{color:var(--ink3);font-family:ui-monospace,Menlo,monospace;font-size:.95em;
+white-space:nowrap}
+td.pfs{font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
+td.nw{white-space:nowrap}
+table.meas td:first-child{color:var(--ink3);font-size:.95em;overflow-wrap:anywhere}
+table.meas{background:var(--bg);border-radius:6px;min-width:430px}
+.mo{font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.mo.ok{background:var(--okbg);color:var(--ok)}
+.mo.no{background:var(--badbg);color:var(--bad);border:1px solid var(--badline)}
+.legend{display:flex;gap:14px 20px;flex-wrap:wrap;font-size:12px;color:var(--ink3);
+margin:20px 0 0;padding:12px 16px;background:var(--surface);border:1px solid var(--line);
+border-radius:8px}
+.legend>span{display:flex;align-items:center;gap:7px;min-width:0}
+footer{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);color:var(--ink3);
+font-size:12.5px}
+footer p{max-width:82ch}
+</style></head><body><div class="wrap">
+<header class="top">
+  <h1>Himalayas</h1>
+  <p class="sub"><b>EVerest federated testing.</b> Build and test results reported by EVerest
+  integrators, against the floating <code>testing/</code> pointer branches of
+  <a href="https://github.com/EVerest/EVerest">EVerest</a>.</p>
+</header>
+
+<div class="caveat">
+  <p class="lead">Nothing on this page was run or verified by EVerest. Every result below is
+  self-reported by the integrator named on it.</p>
+  <p>Each entry was produced on the integrator's own hardware and in their own CI.
+  Integrators may also report results from tests that are not public, so <b>a passing entry
+  does not mean a fixed, comparable suite was run</b> &mdash; and two passing entries are not
+  necessarily comparable with each other.</p>
+  <p>What EVerest checks on submission: the record validates against the schemas, the commit
+  exists and was a recorded tip of the pointer branch, and the reported build passed.
+  <b>Nothing else.</b></p>
+</div>
+<div class="banner"><p><b>Freshness cannot be evaluated right now.</b> The pointer branches <code>testing/main</code>, <code>testing/stable-2026.02</code> were not found in <a href="https://github.com/EVerest/EVerest">EVerest</a>, so no entry below can be compared against a current tip. <b>The absence of a &ldquo;stale&rdquo; marker below therefore does not mean a result is current.</b> Every entry reads <i>freshness unknown</i> instead.</p></div>
+<div class="meta">
+  <span>generated 2026-09-09 18:42 UTC</span>
+  <span>one pointer branch at a time</span>
+  <span>staleness grace 14 days</span>
+</div>
+<nav class="ptrnav" aria-label="Pointer branch"><button type="button" id="pn-btn" class="pn-btn" aria-expanded="false" aria-haspopup="true" aria-controls="pn-menu"><span class="pn-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="pn-lbl">showing <code id="pn-cur">testing/main</code></span><span class="pn-caret" aria-hidden="true">&#9662;</span></button><ul id="pn-menu" class="pn-menu" role="menu" hidden><li role="none"><button type="button" role="menuitemradio" aria-checked="true" data-target="p-testing-main" data-pointer="testing/main"><code>testing/main</code><span class="pn-has">2 integrator(s) &middot; 4 submission(s)</span></button></li><li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-target="p-testing-stable-2026-02" data-pointer="testing/stable-2026.02"><code>testing/stable-2026.02</code><span class="pn-none">no results reported</span></button></li></ul><noscript><span class="pn-ns">JavaScript is off, so every pointer branch is listed below.</span></noscript></nav>
+
+  <section class="pointer" id="p-testing-main" data-pointer="testing/main">
+    <div class="phead">
+      <h2><code>testing/main</code></h2>
+      <span class="ptracks">tracks <code>main</code></span>
+      <span class="ptip"><span class="warntxt">tip unknown &mdash; the pointer branch was not found, so nothing below can be aged</span></span>
+      <span class="pcount">2 integrator(s) &middot; 4 submission(s)</span>
+      <span class="psr" title="Every entry in this section was produced and reported by the integrator named on it. EVerest does not run, reproduce or verify it.">self-reported</span>
+    </div>
+    <div class="grid">
+      <article class="card v-bad f-unknown">
+        <header><h3>ACME Charge GmbH</h3><div class="chips"><span class="pill bad">1 of 3 phases failed</span><span class="pill unknown" title="Freshness could not be evaluated: the pointer branch was not found, so its tip is unknown. This entry is not known to be current.">freshness unknown</span></div></header>
+        <p class="notes">1 phase(s) did not run &middot; 1 measurement(s) outside limits</p>
+        <dl>
+          <dt>commit</dt><dd><code>30150a81ce19</code> <span class='dim'>&mdash; pointer tip unknown</span></dd>
+          <dt>environment</dt><dd>HIL &middot; Yeti v1.5 &middot; yeti-fw-1.4.2 &middot; ACME CC-200</dd>
+          <dt>device</dt><dd><code>ACME-CC200-SN-00473</code> <span class="dim">on</span> <code>acme-hil-bench-2</code></dd>
+          <dt>build</dt><dd>passed <span class="dim">&mdash; 1 target(s)</span><div class="tgts"><span class="tgt ok">aarch64-linux-gnu</span></div></dd>
+          <dt>modules</dt><dd class='mods'><span class="mod">EvseManager</span><span class="mod">EvseV2G</span><span class="mod">OCPP201</span><span class="mod">YetiSimulator</span></dd>
+          <dt>ran</dt><dd>2026-09-09 &middot; <a href="https://ci.acme-charge.example/pipelines/48219">run log</a> &middot; <span class="fmt htf" title="Submitted as OpenHTF, which carries measurements and their limits natively">OpenHTF</span></dd>
+          <dt>covers</dt><dd><span class="ptag passed" title="A phase carrying this tag passed.">DC</span><span class="ptag passed" title="A phase carrying this tag passed.">ISO15118-2</span><span class="ptag notrun" title="Every phase carrying this tag was skipped or did not run - this protocol was NOT exercised.">ISO15118-20</span><span class="ptag notrun" title="Every phase carrying this tag was skipped or did not run - this protocol was NOT exercised.">TLS</span><span class="ptag failed" title="Every phase carrying this tag failed - this is not coverage.">x-derating</span></dd>
+        </dl>
+        <details open><summary>3 measurement(s) &middot; <b class="badtxt">1 outside limits</b></summary><div class="tscroll"><table class="meas"><thead><tr><th>phase</th><th>measurement</th><th>value</th><th>limit</th><th>verdict</th></tr></thead><tbody><tr><td>dc_precharge_voltage_window</td><td>precharge_voltage_v</td><td class="num">398.7 V</td><td class="lim">395 &lt;= x &lt;= 405</td><td><span class="mo ok">PASS</span></td></tr><tr><td>dc_precharge_voltage_window</td><td>precharge_settle_ms</td><td class="num">812 ms</td><td class="lim">x &lt;= 2000</td><td><span class="mo ok">PASS</span></td></tr><tr><td>dc_derating_ramp_rate</td><td>ramp_rate_a_per_s</td><td class="num">3.4 A/s</td><td class="lim">x &lt;= 2.0</td><td><span class="mo no">FAIL</span></td></tr></tbody></table></div></details>
+        <details><summary>3 submission(s) &middot; each with its own date</summary>
+          <div class="tscroll"><table><thead><tr><th>ran (UTC)</th><th>env</th><th>commit</th>
+          <th>build</th><th title="passed / failed / did not run">pass/fail/skip</th>
+          <th></th></tr></thead>
+          <tbody><tr><td class="nw">2026-09-09 13:22 <span class="dim">UTC</span></td><td>HIL</td><td><code>30150a81ce19</code></td><td>passed <span class="dim">(1 tgt)</span></td><td class="pfs"><span class="ok-inline">1</span>/<span class="badtxt">1</span>/<span class="dim">1</span></td><td><a href="results/acme-charge/testing/main/20260909-3.json">json</a></td></tr><tr><td class="nw">2026-09-09 11:34 <span class="dim">UTC</span></td><td>HIL</td><td><code>30150a81ce19</code></td><td>passed <span class="dim">(1 tgt)</span></td><td class="pfs"><span class="ok-inline">1</span>/<span class="badtxt">1</span>/<span class="dim">1</span></td><td><a href="results/acme-charge/testing/main/20260909-2.json">json</a></td></tr><tr><td class="nw">2026-09-09 09:19 <span class="dim">UTC</span></td><td>HIL</td><td><code>30150a81ce19</code></td><td>passed <span class="badtxt">(1 of 3 targets failed)</span></td><td class="pfs"><span class="ok-inline">2</span>/<span class="badtxt">1</span>/<span class="dim">0</span></td><td><a href="results/acme-charge/testing/main/20260909.json">json</a></td></tr></tbody></table></div>
+        </details>
+      </article>
+      <article class="card v-none f-unknown">
+        <header><h3>anon-7f3a (anonymous)</h3><div class="chips"><span class="pill none">build only &middot; no tests reported</span><span class="pill unknown" title="Freshness could not be evaluated: the pointer branch was not found, so its tip is unknown. This entry is not known to be current.">freshness unknown</span></div></header>
+        
+        <dl>
+          <dt>commit</dt><dd><code>30150a81ce19</code> <span class='dim'>&mdash; pointer tip unknown</span></dd>
+          <dt>environment</dt><dd>SIL</dd>
+          <dt>device</dt><dd><code>sil</code> <span class="dim">on</span> <code>anon-7f3a</code></dd>
+          <dt>build</dt><dd>passed <span class="dim">&mdash; no target detail reported</span><div class="tgts"></div></dd>
+          <dt>modules</dt><dd class='mods'><span class="mod">EvseManager</span></dd>
+          <dt>ran</dt><dd>2026-09-09 &middot; <span class="dim" title="buildUrl is optional, so this entry carries no cheap way for a reader to check it">no run link</span> &middot; <span class="fmt ctrf" title="Submitted as CTRF and converted. CTRF has no measurement concept, so this entry has no measurements by construction - they are not missing.">CTRF &rarr; OpenHTF</span></dd>
+          
+        </dl>
+        <p class="nomeas">No measurements &mdash; CTRF carries no measurement concept, so this entry has none by construction.</p>
+        <details><summary>1 submission(s) &middot; each with its own date</summary>
+          <div class="tscroll"><table><thead><tr><th>ran (UTC)</th><th>env</th><th>commit</th>
+          <th>build</th><th title="passed / failed / did not run">pass/fail/skip</th>
+          <th></th></tr></thead>
+          <tbody><tr><td class="nw">2026-09-09 09:19 <span class="dim">UTC</span></td><td>SIL</td><td><code>30150a81ce19</code></td><td>passed</td><td class="pfs"><span class="ok-inline">0</span>/<span class="dim">0</span>/<span class="dim">0</span></td><td><a href="results/anon-7f3a/testing/main/20260909.json">json</a></td></tr></tbody></table></div>
+        </details>
+      </article></div>
+  </section><section class="pointer" id="p-testing-stable-2026-02" data-pointer="testing/stable-2026.02"><div class="phead"><h2><code>testing/stable-2026.02</code></h2><span class="ptracks">tracks <code>stable/2026.02</code></span><span class="ptip"><span class="warntxt">tip unknown &mdash; the pointer branch was not found</span></span><span class="pcount">0 integrator(s) &middot; 0 submission(s)</span></div><div class="grid"><article class="card empty"><header><h3>No results</h3><div class="chips"><span class="pill none">nobody has reported against this pointer</span></div></header><p>This pointer is declared in <code>pointers.json</code> and is listed here deliberately. <b>No integrator has submitted a result for it.</b> That is neither a pass nor a failure: it means this line is currently untested by anyone reporting to Himalayas.</p></article></div></section>
+<div class="legend">
+  <span><span class="pill good">passed</span> an outcome the integrator reported</span>
+  <span><span class="pill none">no results</span> nothing reported &mdash; not a pass</span>
+  <span><span class="pill stale">stale</span> too old to read as current</span>
+  <span><span class="pill unknown">unknown</span> freshness could not be computed</span>
+  <span><span class="ptag notrun">TAG</span> a protocol whose phases did not run</span>
+  <span><span class="fmt ctrf">CTRF</span> source format, not a quality rating</span>
+</div>
+<footer>
+  <p>A result is marked <strong>stale</strong> once the pointer branch has moved off the commit
+  it tested <em>and</em> the result is more than 14 days old. Both conditions must
+  hold: the pointers move daily, so a newer base alone means very little. When either
+  condition cannot be evaluated the entry reads <strong>freshness unknown</strong> rather
+  than current.</p>
+  <p><strong>Coverage tags reflect outcomes.</strong> A protocol is shown as covered only when
+  a phase carrying that tag passed; a tag whose phases failed or did not run is marked as
+  such, so a skipped handshake is never counted as coverage.</p>
+  <p>Submissions are accepted as CTRF or OpenHTF and normalised to OpenHTF, which is why
+  measurements appear for some entries and not others &mdash; CTRF has no concept of a
+  measurement, so those entries have none by construction rather than by omission.
+  Machine-readable summary: <a href="summary.json">summary.json</a>.</p>
+  <p><strong>Himalayas</strong> is the name of this programme. A submission is a pull request to
+  <a href="https://github.com/EVerest/Himalayas">EVerest/Himalayas</a>.</p>
+</footer>
+</div>
+<script>
+/* One pointer branch at a time. Progressive enhancement on purpose:
+   every section is in the HTML, so with this script absent the page is the full
+   list. The choice lives in location.hash so a link can name a branch - people
+   share "the state of main", and localStorage cannot be shared. */
+(function () {
+  var nav = document.querySelector(".ptrnav");
+  if (!nav) return;
+  var btn = document.getElementById("pn-btn");
+  var menu = document.getElementById("pn-menu");
+  var cur = document.getElementById("pn-cur");
+  var items = [].slice.call(menu.querySelectorAll("button"));
+  var sections = [].slice.call(document.querySelectorAll("section.pointer"));
+
+  function open(state) {
+    menu.hidden = !state;
+    btn.setAttribute("aria-expanded", state ? "true" : "false");
+  }
+  function show(id, push) {
+    var hit = items.filter(function (b) { return b.dataset.target === id; })[0];
+    if (!hit) hit = items[0];
+    sections.forEach(function (s) { s.hidden = s.id !== hit.dataset.target; });
+    items.forEach(function (b) {
+      b.setAttribute("aria-checked", b === hit ? "true" : "false");
+    });
+    cur.textContent = hit.dataset.pointer;
+    if (push && location.hash.slice(1) !== hit.dataset.target) {
+      history.replaceState(null, "", "#" + hit.dataset.target);
+    }
+  }
+  btn.addEventListener("click", function () {
+    open(btn.getAttribute("aria-expanded") !== "true");
+  });
+  items.forEach(function (b) {
+    b.addEventListener("click", function () {
+      show(b.dataset.target, true);
+      open(false);
+      btn.focus();
+    });
+  });
+  document.addEventListener("click", function (e) {
+    if (!nav.contains(e.target)) open(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { open(false); }
+  });
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1), false); });
+  show(location.hash.slice(1), false);
+})();
+</script>
+</body></html>

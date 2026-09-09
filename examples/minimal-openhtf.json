@@ -1,0 +1,20 @@
+{
+  "dut_id": "sil",
+  "station_id": "anon-7f3a",
+  "outcome": "PASS",
+  "start_time_millis": 1788944942564,
+  "end_time_millis": 1788945589177,
+  "metadata": {
+    "everest": {
+      "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
+      "pointer": "testing/main",
+      "testEnvironment": "SIL"
+    },
+    "build": {
+      "status": "passed",
+      "modules": ["EvseManager"]
+    },
+    "integrator": { "id": "anon-7f3a" }
+  },
+  "phases": []
+}

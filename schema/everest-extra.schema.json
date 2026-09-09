@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://everest.github.io/Himalayas/schema/everest-extra.schema.json",
+  "title": "EVerest federated testing extra contract",
+  "description": "Contract for results.extra in an EVerest federated testing CTRF submission. CTRF types extra as a bare object, so this file is what gives a submission meaning beyond pass/fail counts. Deliberately minimal: only build and integrator are required, so the cost of submitting at all stays low and everything beyond the build stays optional.",
+  "type": "object",
+  "required": [
+    "build",
+    "integrator"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "build": {
+      "description": "Build status. Carried here, NOT as a synthetic CTRF test. The intake gate rejects a submission whose build is missing or failed.",
+      "type": "object",
+      "required": [
+        "status",
+        "modules"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "description": "Overall build outcome. 'failed' submissions are rejected by the intake gate.",
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "targets": {
+          "description": "Per-target results. EVerest itself cross-builds four embedded targets, so build status is plural by nature.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "target",
+              "status"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "target": {
+                "description": "Target triple. The five in schema/vocabulary.json are the ones EVerest itself builds, so reporting one of those is directly comparable with upstream; anything else must still be a well-formed triple.",
+                "type": "string",
+                "pattern": "^[a-z0-9_]+-[a-z0-9]+-[a-z0-9]+$",
+                "maxLength": 100
+              },
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "skipped"
+                ]
+              },
+              "toolchain": {
+                "description": "Compiler and version, as '<compiler> <version>' - e.g. 'gcc 13.2.0', 'clang 18.1.0'. Standardised so toolchain can be compared across integrators rather than parsed by hand.",
+                "type": "string",
+                "pattern": "^(gcc|clang|msvc|icc) [0-9]+(\\.[0-9]+){0,2}$",
+                "maxLength": 60
+              }
+            }
+          }
+        },
+        "modules": {
+          "description": "EVerest modules built. Required: without it a submission cannot say which parts of EVerest it actually exercised, so two passing runs covering different module sets look identical. Checked against schema/everest-modules.txt and warned on if unknown.",
+          "type": "array",
+          "items": {
+            "description": "EVerest module name, PascalCase, as under modules/**/. Checked against schema/everest-modules.txt and WARNED on if unknown - warn not reject, because the list drifts with EVerest.",
+            "type": "string",
+            "pattern": "^[A-Z][A-Za-z0-9_]{1,49}$"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    },
+    "integrator": {
+      "description": "Who submitted this. There is no native CTRF field for submitter identity.",
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Unique integrator id. Also the results/<id>/ directory name, which is what makes it unique under PR intake; under repository_dispatch it MUST be derived from the submitting token rather than self-declared, or uniqueness is unenforceable. Use a pseudonym to stay anonymous - there is no separate publication flag, because the repository is public.",
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])?$"
+        },
+        "displayName": {
+          "description": "Human-readable name. Omit to remain anonymous.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[^\\s].*[^\\s]$"
+        }
+      }
+    },
+    "hardware": {
+      "description": "Hardware under test. Only meaningful when environment.testEnvironment is HIL. Per-test hardware belongs in the native test.device field instead.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bsp": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Board support package or firmware identifier for the board itself, e.g. yeti-fw-1.4.2. NOT an EVerest module name - the modules a run exercised go in build.modules."
+        },
+        "board": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Board MODEL, e.g. yeti-1.1. This is the closest thing CTRF has to a device identity, and it is a model rather than a rig: two rigs with the same board are indistinguishable in a CTRF submission. Required when testEnvironment is HIL."
+        },
+        "chargeController": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Charge controller model or firmware, if it is a separate unit from the board."
+        }
+      }
+    }
+  }
+}

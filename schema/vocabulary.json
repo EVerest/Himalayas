@@ -1,0 +1,25 @@
+{
+  "$comment": "Controlled vocabulary for the CTRF freeform string fields EVerest depends on. Data, not schema, because it drifts: the gate WARNS on values outside it rather than rejecting, so a submission against a newer EVerest still lands. Grounded in EVerest's documented protocol surface (README.md 'Main Features') and its test suites.",
+  "testTags": {
+    "power": ["AC", "DC"],
+    "highLevelComms": ["ISO15118-2", "ISO15118-3", "ISO15118-20", "DIN70121"],
+    "basicComms": ["IEC61851"],
+    "ocpp": ["OCPP1.6", "OCPP2.0.1", "OCPP2.1"],
+    "features": ["TLS", "PnC", "SmartCharging", "Eichrecht", "Reservation", "EEBUS", "V2X"],
+    "lifecycle": ["mandatory", "smoke", "compliance", "regression"],
+    "escapeHatch": {
+      "pattern": "^x-[a-z0-9][a-z0-9-]{0,38}$",
+      "note": "Anything an integrator needs that is not listed. The x- prefix keeps private tags from colliding with future standard ones, and keeps them out of the public per-protocol rollups."
+    }
+  },
+  "buildTargets": [
+    "x86_64-linux-gnu",
+    "aarch64-linux-gnu",
+    "aarch64-linux-musl",
+    "armv7-linux-gnueabihf",
+    "armv7-linux-musleabihf"
+  ],
+  "$targetsNote": "The four non-x86 entries are exactly what EVerest cross-builds in CI (on_pr.yaml bazel-cross-build matrix), so an integrator reporting one of these is directly comparable with upstream.",
+  "testEnvironment": ["SIL", "HIL"],
+  "branchName": ["main", "stable/<yyyy.mm>"]
+}

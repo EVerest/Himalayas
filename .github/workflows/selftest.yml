@@ -1,0 +1,99 @@
+name: Self-test the gate
+
+# The negative test cases run in CI so that no future edit can silently
+# disable a check.
+#
+# The reason, concretely: a rewrite of validate_submission.py once dropped the
+# CTRF-path schemas and disabled five checks. Nothing went red,
+# because every legitimate example and submission still passed - clean data
+# validates the same either way. Only a deliberately malformed input showed it.
+#
+# So this runs on every push and PR that touches the tooling, the schemas, or the
+# examples. It asserts the specific error code for each rejection, not merely that
+# something failed: a case that starts failing for a different reason is a check
+# that has quietly stopped working, and that is the failure mode this exists for.
+
+on:
+  push:
+    branches: [main]
+    paths: ['scripts/**', 'schema/**', 'examples/**', 'integrators/**', 'pointers.json',
+            '.github/workflows/selftest.yml']
+  pull_request:
+    paths: ['scripts/**', 'schema/**', 'examples/**', 'integrators/**', 'pointers.json',
+            '.github/workflows/selftest.yml']
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  # Asserted here as well as in selftest.py's own EXPECT table, because the
+  # guard below has to survive selftest.py being gutted, and asserting only a
+  # non-zero exit code does not: a suite cut from 70 checks to 3 exits non-zero
+  # just as happily. The count is what a gutted suite cannot fake, so it is
+  # asserted here as well. Keep this in step with EXPECT.
+  EXPECTED_CHECKS: '134'
+
+jobs:
+  selftest:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet -r scripts/requirements.txt
+
+      - name: Run the self-test
+        run: |
+          set -o pipefail
+          python scripts/selftest.py --verbose | tee /tmp/clean.txt
+
+      - name: Assert the suite is the size it claims to be
+        run: |
+          set -euo pipefail
+          if ! grep -qx "${EXPECTED_CHECKS} checks, 0 failed" /tmp/clean.txt; then
+            echo "::error::Expected '${EXPECTED_CHECKS} checks, 0 failed'. Got:"
+            grep -E '^[0-9]+ checks, ' /tmp/clean.txt || echo "  (no count line at all)"
+            echo "If cases were added or removed deliberately, update EXPECT in" \
+                 "scripts/selftest.py AND EXPECTED_CHECKS in this workflow."
+            exit 1
+          fi
+
+      # A suite that cannot fail is not a suite. This reintroduces the exact
+      # regression that motivated the file and asserts the suite goes red.
+      #
+      # The count is asserted on the SABOTAGED run too. Without that, gutting
+      # selftest.py passes this step: a suite cut to three checks still goes red
+      # against a broken gate, so "rc != 0" proves only that at least one check
+      # still reacts, not that the suite is intact.
+      - name: Prove the self-test can fail
+        run: |
+          set -uo pipefail
+          cp scripts/validate_submission.py /tmp/vs.bak
+          python - <<'PY'
+          import pathlib
+          p = pathlib.Path('scripts/validate_submission.py')
+          s = p.read_text()
+          s = s.replace('    if fmt == "ctrf":', '    if False:')
+          p.write_text(s)
+          PY
+          rc=0
+          python scripts/selftest.py > /tmp/sabotaged.txt 2>&1 || rc=$?
+          cp /tmp/vs.bak scripts/validate_submission.py
+          if [ "$rc" -eq 0 ]; then
+            echo "::error::The self-test PASSED against a deliberately broken gate." \
+                 "selftest.py is no longer checking what it claims to."
+            tail -20 /tmp/sabotaged.txt
+            exit 1
+          fi
+          if ! grep -qE "^${EXPECTED_CHECKS} checks, [1-9][0-9]* failed" /tmp/sabotaged.txt; then
+            echo "::error::The sabotaged run did not run all ${EXPECTED_CHECKS} checks." \
+                 "It went red, but the suite is not intact - cases have been deleted," \
+                 "or it stopped early."
+            grep -E '^[0-9]+ checks, ' /tmp/sabotaged.txt || echo "  (no count line at all)"
+            exit 1
+          fi
+          echo "self-test correctly went red against the sabotaged gate, with all" \
+               "${EXPECTED_CHECKS} checks still running:"
+          tail -12 /tmp/sabotaged.txt

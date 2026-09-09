@@ -1,0 +1,27 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": { "name": "EVerest run-tests.sh" },
+    "summary": {
+      "tests": 0, "passed": 0, "failed": 0, "skipped": 0, "pending": 0, "other": 0,
+      "start": 1788944942564, "stop": 1788945589177
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "30150a81ce1947ba9b1d0c64b7e4f2c0cabd8a99",
+      "branchName": "main",
+      "testEnvironment": "SIL",
+      "healthy": true
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": ["EvseManager"]
+      },
+      "integrator": { "id": "anon-7f3a" }
+    },
+    "tests": []
+  }
+}
