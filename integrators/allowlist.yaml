@@ -21,3 +21,7 @@ integrators:
     # deliberately anonymous: no display_name, no contact
     github_users:
       - anon-7f3a-bot
+  - id: pionix
+    display_name: Pionix GmbH
+    github_users:
+      - mlitre
