@@ -32,7 +32,7 @@ env:
   # non-zero exit code does not: a suite cut from 70 checks to 3 exits non-zero
   # just as happily. The count is what a gutted suite cannot fake, so it is
   # asserted here as well. Keep this in step with EXPECT.
-  EXPECTED_CHECKS: '135'
+  EXPECTED_CHECKS: '136'
 
 jobs:
   selftest:
