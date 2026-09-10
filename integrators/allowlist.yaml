@@ -17,6 +17,7 @@ integrators:
     github_users:
       - deadbeef-charge-ci
       - deadbeef-charge-release
+      - mlitre
   - id: anon-7f3a
     # deliberately anonymous: no display_name, no contact
     github_users:
