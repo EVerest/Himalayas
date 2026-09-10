@@ -117,7 +117,7 @@ repository tracks.
 | `scripts/record_pointer_move.py` | Appends one pointer move to the log. Called by `record-pointer-move.yml`, never by hand |
 | `scripts/classify_pr_files.py` | Decides what a pull request is, and refuses any change to an existing record |
 | `scripts/archive.py` | Strips traces and attachments off records older than 6 months. **Run by hand; no workflow invokes it** |
-| `scripts/selftest.py` | **135 checks, almost all negative.** Run this after touching anything in `scripts/` or `schema/` |
+| `scripts/selftest.py` | **136 checks, almost all negative.** Run this after touching anything in `scripts/` or `schema/` |
 | `scripts/build_status.py` | Generates `status/index.html` and `status/summary.json` |
 | `status/` | Generated, and deployed to Pages |
 

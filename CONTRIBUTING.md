@@ -256,5 +256,5 @@ The gate has a suite of its own, and it is almost entirely negative cases, each 
 the specific rejection code rather than merely that something failed:
 
 ```bash
-python3 scripts/selftest.py        # 135 checks, all of which must pass
+python3 scripts/selftest.py        # 136 checks, all of which must pass
 ```

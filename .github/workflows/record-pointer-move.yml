@@ -6,19 +6,29 @@ name: Record a pointer move
 # malformed or undeclared move is refused here rather than silently recorded.
 #
 # EVERY PAYLOAD FIELD GOES THROUGH env:, AND NOTHING IS INTERPOLATED INTO A
-# SHELL COMMAND. The four fields were `${{ github.event.client_payload.* }}`
-# inside `run:` blocks, which is command substitution in a job that needs a
-# push credential and therefore cannot use `persist-credentials: false` - so an
-# injected command could have read the token straight out of .git/config.
-# `env:` puts the value in the process environment, where the shell never parses
-# it. Do not put a payload field back into a run: line.
+# COMMAND OR A SCRIPT BODY. The four fields were `${{ github.event.client_payload.* }}`
+# inside `run:` blocks, which is command substitution. `env:` puts the value in
+# the process environment, where neither the shell nor Node ever parses it. The
+# rule covers the github-script body below just as it covers a run: line: Actions
+# interpolates `${{ }}` into the script text before Node sees it, so a payload
+# field written there is a JavaScript injection instead of a shell one. Read the
+# fields from process.env. Do not put one back into a run: line or a script body.
+#
+# The log is written through GitHub's commit API, not `git push`. A commit
+# created that way is signed by GitHub's own key, which satisfies main's
+# required-signatures setting with no private key anywhere for anyone to manage,
+# leak or rotate. The mutation carries expectedHeadOid, so the append is a
+# compare-and-swap against main's head: a head that moved for any reason loses
+# the race rather than being overwritten, and the attempt is re-derived against
+# the new head. The concurrency group below serialises this workflow against
+# itself; expectedHeadOid is what defends against everything else.
 
 on:
   repository_dispatch:
     types: [pointer-moved]
 
 permissions:
-  contents: write
+  contents: write     # the commit API call needs it, just as the push did
 
 concurrency:
   group: pointer-log
@@ -27,8 +37,6 @@ concurrency:
 jobs:
   record:
     runs-on: ubuntu-24.04
-    # This job pushes, so the checkout keeps its credential. That is the reason
-    # the injection above mattered, and the reason it must stay fixed.
     env:
       POINTER: ${{ github.event.client_payload.pointer }}
       TRACKS: ${{ github.event.client_payload.tracks }}
@@ -36,10 +44,17 @@ jobs:
       MOVED_AT: ${{ github.event.client_payload.moved_at }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Nothing here writes through git any more, so the checkout does not
+          # need a credential in .git/config for anything to read.
+          persist-credentials: false
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
+      # Fails the run on a payload the log must not carry - an undeclared
+      # pointer, a tracked branch that disagrees with the declaration, a short
+      # sha, a rewind - before any API call is made.
       - name: Append the move
         run: |
           set -euo pipefail
@@ -49,23 +64,86 @@ jobs:
             --sha      "$SHA" \
             --moved-at "$MOVED_AT"
 
-      - name: Commit, if it changed
-        run: |
-          set -euo pipefail
-          if git diff --quiet -- pointers.json; then
-            echo "no change - already logged"
-            exit 0
-          fi
-          git config user.name  "everest-himalayas[bot]"
-          git config user.email "noreply@everest.github.io"
-          git add pointers.json
-          # -F -, so the message is read from stdin rather than being part of the
-          # command line. record_pointer_move.py has already rejected anything
-          # that is not a declared pointer and a 40-character SHA, so these two
-          # are constrained by the time they get here - but the shape of the
-          # command should not depend on that.
-          printf 'pointers: %s -> %s\n' "$POINTER" "$SHA" | git commit -F -
-          git push
+      - name: Commit through the API, if it changed
+        uses: actions/github-script@v9
+        with:
+          script: |
+            // github-script v9 runs the body as ESM: require() is gone.
+            const { readFile, writeFile } = await import('node:fs/promises');
+            const { spawnSync } = await import('node:child_process');
+            const { POINTER, TRACKS, SHA, MOVED_AT } = process.env;
+            const { owner, repo } = context.repo;
+            const branch = context.payload.repository.default_branch;
+            const PATH = 'pointers.json';
+
+            // One query, so the head oid and the file text are read at the same
+            // point in history. Reading them separately would leave a window in
+            // which the append is derived from one commit and swapped against
+            // another.
+            const HEAD = `query($owner:String!,$repo:String!,$branch:String!,$path:String!){
+              repository(owner:$owner,name:$repo){
+                object(expression:$branch){ ... on Commit {
+                  oid file(path:$path){ object{ ... on Blob { text } } } } } } }`;
+
+            const COMMIT = `mutation($input:CreateCommitOnBranchInput!){
+              createCommitOnBranch(input:$input){ commit { oid } } }`;
+
+            // What a rejected expectedHeadOid comes back saying. Anything else is
+            // a real failure and is rethrown: a retry would only repeat it.
+            const stale = e => /but it did not|expectedheadoid|stale|another commit/i
+              .test([e.message, ...(e.errors ?? []).map(x => x.message)].join(' '));
+
+            const ATTEMPTS = 3;
+            let settled = false;
+            for (let attempt = 1; attempt <= ATTEMPTS && !settled; attempt++) {
+              const head = (await github.graphql(HEAD, {
+                owner, repo, branch, path: PATH })).repository.object;
+              const base = head?.file?.object?.text;
+              if (typeof base !== 'string') {
+                throw new Error(`could not read ${PATH} at ${branch}`);
+              }
+
+              // Re-derive the append on top of whatever the branch holds now, so
+              // the content committed is always a function of the oid it is
+              // swapped against. The appender is idempotent and refuses a rewind,
+              // which is what makes a retry a rebase rather than an overwrite.
+              // Args go as an array and no shell is spawned, so the payload
+              // fields are never parsed as a command - the same rule as the
+              // run: step above.
+              await writeFile(PATH, base);
+              const appended = spawnSync('python', ['scripts/record_pointer_move.py',
+                '--pointer', POINTER, '--tracks', TRACKS,
+                '--sha', SHA, '--moved-at', MOVED_AT], { stdio: 'inherit' });
+              if (appended.error) throw appended.error;
+              if (appended.status !== 0) {
+                throw new Error(`record_pointer_move.py refused the move `
+                  + `(exit ${appended.status})`);
+              }
+              const next = await readFile(PATH, 'utf8');
+              if (next === base) {
+                core.info('no change - already logged');
+                settled = true;
+                break;
+              }
+
+              try {
+                const { createCommitOnBranch: done } = await github.graphql(COMMIT, {
+                  input: {
+                    branch: { repositoryNameWithOwner: `${owner}/${repo}`,
+                              branchName: branch },
+                    expectedHeadOid: head.oid,
+                    message: { headline: `pointers: ${POINTER} -> ${SHA}` },
+                    fileChanges: { additions: [
+                      { path: PATH, contents: Buffer.from(next).toString('base64') }] },
+                  },
+                });
+                core.info(`committed ${done.commit.oid} on ${branch}`);
+                settled = true;
+              } catch (e) {
+                if (attempt === ATTEMPTS || !stale(e)) throw e;
+                core.info(`${branch} moved off ${head.oid}, re-reading and retrying`);
+              }
+            }
 
       - name: Verify the pointers still agree
         env:

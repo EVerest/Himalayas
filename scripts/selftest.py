@@ -830,6 +830,21 @@ def suite_docs(work, verbose):
     check("docs: no workflow calls require() in a github-script body",
           not offenders, f"require() in {offenders}")
 
+    # The pointer log is committed through GitHub's commit API, which is what
+    # makes the commit signed and the append a compare-and-swap. A `git push`
+    # anywhere in a workflow is either that write reintroduced unsigned - main
+    # requires signatures, so it is rejected and the pointer silently never gets
+    # logged - or a second, unreviewed write path into this repository.
+    pushers = []
+    for fn in sorted(os.listdir(wfdir)):
+        with open(os.path.join(wfdir, fn)) as f:
+            code = [ln for ln in f.read().splitlines()
+                    if not ln.lstrip().startswith(("//", "#"))]
+        if any(re.search(r"\bgit\s+push\b", ln) for ln in code):
+            pushers.append(fn)
+    check("docs: no workflow runs git push - the commit API is the only write",
+          not pushers, f"git push in {pushers}")
+
     # Every file named in README.md's layout table has to exist, and every
     # script has to be named there. The table listed ctrf-hil-dc.json twice and
     # omitted openhtf-hil-dc.json entirely.
@@ -980,7 +995,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 6, "pointers": 9,
-          "archive": 9, "staleness": 6, "build": 18, "docs": 7}
+          "archive": 9, "staleness": 6, "build": 18, "docs": 8}
 TOTAL = sum(EXPECT.values())
 
 
