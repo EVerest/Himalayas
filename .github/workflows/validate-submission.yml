@@ -58,8 +58,14 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
+# An explicit permissions block is exhaustive: what is not named here is not
+# granted. `contents: write` is what lets the last step act on the gate's own
+# verdict - arming auto-merge is a write to the repository's contents, and
+# without it the mutation is refused and an accepted submission sits green and
+# unmerged. `pull-requests: write` posts the verdict comment and closes an
+# unprocessable pull request. Nothing else is needed; do not add anything else.
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 concurrency:
@@ -222,8 +228,22 @@ jobs:
           # NOT continue-on-error, and no `|| echo`. Both were here, so a failure to
           # arm auto-merge was swallowed twice and the submission sat green and
           # unmerged with nothing saying why.
+          #
+          # WHY THE REQUIRED CHECK HAS TO EXIST FOR THIS TO ARM
+          #
+          # `--auto` only ARMS auto-merge when something is still pending. With
+          # nothing pending, gh falls back to merging on the spot - a different
+          # mutation, mergePullRequest rather than enablePullRequestAutoMerge. main
+          # carried no required status checks when this step was written, so every
+          # accepted submission took that fallback, and the immediate merge was
+          # refused because the token was contents: read. "Validate submission" is a
+          # required check now, so this job is itself the pending check: arming is
+          # what happens, and the pull request lands when this job reports green.
+          # Remove that required check and this step silently goes back to trying to
+          # merge immediately.
           gh pr merge --auto --squash "$PR_URL"
-          echo "auto-merge armed; it lands once required checks pass"
+          echo "auto-merge armed; this job is the required check, so the pull"
+          echo "request lands when this run reports green"
 
       # The gate step is SKIPPED on a pull request that is not a submission, so
       # steps.gate.outputs.rc is the empty string there - and `rc != '0'` would
