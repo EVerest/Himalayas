@@ -1,0 +1,84 @@
+name: Revalidate stored results
+
+# Every submission already committed under results/ must still validate. A
+# schema tightened, a validator fixed, or a pointer retired can invalidate a
+# record that was accepted months ago, and nothing else would notice: the intake
+# gate only ever looks at the files a pull request adds.
+#
+# This used to be a loop inside scripts/selftest.py. It does not belong there.
+# That suite asserts what the tooling REJECTS and guards itself with an exact
+# check count, and a sweep that runs one check per stored submission makes that
+# count grow every time an integrator publishes - so the self-test went red on
+# its own guard with every check passing. This job has no count guard, because
+# growing with the data is the whole point of it.
+#
+# It is its own workflow rather than a job in an existing one because no
+# existing workflow has both triggers. deploy-status.yml runs on results/**
+# but not on the validator or the schemas, and its every-20-minutes cron is far
+# more often than a full sweep needs; verify-pointers.yml has the daily cron but
+# is not triggered by results/** at all.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'results/**'
+      - 'scripts/validate_submission.py'
+      - 'schema/**'
+      - 'integrators/**'
+      - 'pointers.json'
+      - '.github/workflows/revalidate-results.yml'
+  # Deliberately not results/** here: a submission pull request is already
+  # judged by validate-submission.yml, and a second verdict on the same file
+  # would only confuse the integrator reading it. What a pull request CAN do
+  # that nothing else catches is tighten a schema or the validator in a way
+  # that invalidates records accepted months ago, so those paths are swept
+  # before they merge rather than after.
+  pull_request:
+    paths:
+      - 'scripts/validate_submission.py'
+      - 'schema/**'
+      - 'integrators/**'
+      - 'pointers.json'
+      - '.github/workflows/revalidate-results.yml'
+  # A record can rot with no change in this repository: the gate reads
+  # pointers.json and the allowlist, and a pointer retired upstream is not a
+  # commit here.
+  schedule:
+    - cron: '41 7 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  revalidate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet -r scripts/requirements.txt
+
+      # --skip-commit-check for the same reason the self-test used it: the
+      # commit a stored record names is checked against EVerest at intake, and
+      # re-checking it here would make this job fail on an upstream outage
+      # rather than on a submission that stopped validating.
+      - name: Revalidate every stored submission
+        run: |
+          set -uo pipefail
+          rc=0
+          n=0
+          while IFS= read -r f; do
+            n=$((n + 1))
+            if out=$(python scripts/validate_submission.py "$f" --skip-commit-check 2>&1); then
+              echo "ok    $f"
+            else
+              rc=1
+              echo "::error::$f no longer validates"
+              echo "$out"
+            fi
+          done < <(find results -name '*.json' | sort)
+          echo "$n stored submission(s) revalidated"
+          exit $rc

@@ -118,7 +118,7 @@ repository tracks.
 | `scripts/classify_pr_files.py` | Decides what a pull request is, and refuses any change to an existing record |
 | `scripts/refresh_module_names.py` | Regenerates `schema/everest-modules.txt` by walking `modules/**/manifest.yaml` in EVerest. **Run by hand when the list goes stale; never hand-edit the list** |
 | `scripts/archive.py` | Strips traces and attachments off records older than 6 months. **Run by hand; no workflow invokes it** |
-| `scripts/selftest.py` | **138 checks, almost all negative.** Run this after touching anything in `scripts/` or `schema/` |
+| `scripts/selftest.py` | **131 checks, almost all negative.** Run this after touching anything in `scripts/` or `schema/` |
 | `scripts/build_status.py` | Generates `status/index.html` and `status/summary.json` |
 | `status/` | Generated, and deployed to Pages |
 
