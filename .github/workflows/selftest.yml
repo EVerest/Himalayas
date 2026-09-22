@@ -12,6 +12,15 @@ name: Self-test the gate
 # examples. It asserts the specific error code for each rejection, not merely that
 # something failed: a case that starts failing for a different reason is a check
 # that has quietly stopped working, and that is the failure mode this exists for.
+#
+# WHAT IT DOES NOT COVER
+#
+# Whether the submissions already stored under results/ still validate. That is a
+# check on production data, not on test code, and it grows by one every time an
+# integrator publishes - which made EXPECTED_CHECKS below go stale daily and this
+# workflow red with every check passing. It runs in revalidate-results.yml
+# instead, which has no count guard. Fixtures this repository owns - examples/ -
+# are still covered here, because they change only when someone edits them.
 
 on:
   push:
@@ -32,7 +41,7 @@ env:
   # non-zero exit code does not: a suite cut from 70 checks to 3 exits non-zero
   # just as happily. The count is what a gutted suite cannot fake, so it is
   # asserted here as well. Keep this in step with EXPECT.
-  EXPECTED_CHECKS: '138'
+  EXPECTED_CHECKS: '131'
 
 jobs:
   selftest:

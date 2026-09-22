@@ -21,6 +21,14 @@ Each suite's check count is asserted against EXPECT at the bottom of this file,
 and the total is asserted again in .github/workflows/selftest.yml. Without that,
 deleting cases is invisible: a suite cut from 70 checks to 3 still exits
 non-zero, which is all the CI guard used to assert.
+
+That guard only works while the count is a property of the test code, so no
+check here may be generated per stored submission under results/. Confirming
+that the submissions already published still validate is a data check, not a
+negative test: it lives in .github/workflows/revalidate-results.yml, which
+has no count guard because growing is what it does. Fixtures the repository
+owns - examples/ - are covered here, since they change only when someone
+edits them and that is exactly what the count guard exists to surface.
 """
 import argparse, base64, copy, json, os, re, shutil, subprocess, sys, tempfile
 
@@ -401,9 +409,13 @@ def suite_gate(work, verbose):
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept SIL without hardware           rc={rc}")
 
-    # every example and every real submission must be accepted. The path has to match
-    # the example's OWN integrator id, or id-mismatch fires - correctly - and the test
-    # is measuring the harness rather than the gate.
+    # Every example must be accepted. The path has to match the example's OWN
+    # integrator id, or id-mismatch fires - correctly - and the test is measuring
+    # the harness rather than the gate.
+    #
+    # Only examples/, deliberately. Sweeping the stored submissions under results/
+    # belongs to revalidate-results.yml: its count grows every time an integrator
+    # publishes, and a check count that moves on its own cannot guard anything.
     for name in sorted(os.listdir(os.path.join(work, "examples"))):
         if not name.endswith(".json"):
             continue
@@ -416,17 +428,6 @@ def suite_gate(work, verbose):
         report(f"accept example {name}", ok, f"rc={rc} codes={cs}")
         if verbose or not ok:
             print(f"  {'ok  ' if ok else 'FAIL'} accept example {name:28} rc={rc}")
-
-    for dirpath, _, files in os.walk(os.path.join(work, "results")):
-        for fn in sorted(files):
-            if not fn.endswith(".json"):
-                continue
-            rel = os.path.relpath(os.path.join(dirpath, fn), work).replace(os.sep, "/")
-            r = sh(work, "validate_submission.py", rel, "--skip-commit-check")
-            ok = r.returncode == 0
-            report(f"accept committed {rel}", ok, f"rc={r.returncode} {codes(r.stdout)}")
-            if verbose or not ok:
-                print(f"  {'ok  ' if ok else 'FAIL'} accept committed {rel:44} rc={r.returncode}")
 
 
 def suite_intake(work, verbose):
@@ -942,8 +943,11 @@ def suite_build(work, verbose):
                   for i in (p.get("integrators") or {}).values())
     check("summary.json counts every committed submission",
           bool(files) and counted == len(files), f"{counted} counted, {len(files)} on disk")
-    for rel in sorted(files):
-        check(f"page links {rel}", rel in page)
+    # One check over all of them, not one per file: a per-file count grows with
+    # the stored data, and EXPECT cannot guard a number that moves on its own.
+    unlinked = [rel for rel in sorted(files) if rel not in page]
+    check("the page links every committed submission",
+          bool(files) and not unlinked, f"{len(unlinked)} unlinked: {unlinked[:3]}")
 
     # Freshness is never absent by construction: a missing marker reads as fresh.
     cards = cards_of(page)
@@ -1016,8 +1020,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 66, "intake": 14, "normalise": 6, "pointers": 9,
-          "archive": 9, "staleness": 6, "build": 18, "docs": 10}
+EXPECT = {"gate": 62, "intake": 14, "normalise": 6, "pointers": 9,
+          "archive": 9, "staleness": 6, "build": 15, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
