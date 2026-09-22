@@ -16,12 +16,13 @@ name: Record a pointer move
 #
 # The log is written through GitHub's commit API, not `git push`. A commit
 # created that way is signed by GitHub's own key, which satisfies main's
-# required-signatures setting with no private key anywhere for anyone to manage,
-# leak or rotate. The mutation carries expectedHeadOid, so the append is a
-# compare-and-swap against main's head: a head that moved for any reason loses
-# the race rather than being overwritten, and the attempt is re-derived against
-# the new head. The concurrency group below serialises this workflow against
-# itself; expectedHeadOid is what defends against everything else.
+# required-signatures setting with no signing key to manage, leak or rotate.
+# The app key below authenticates the call and signs nothing. The mutation
+# carries expectedHeadOid, so the append is a compare-and-swap against main's
+# head: a head that moved for any reason loses the race rather than being
+# overwritten, and the attempt is re-derived against the new head. The
+# concurrency group below serialises this workflow against itself;
+# expectedHeadOid is what defends against everything else.
 
 on:
   repository_dispatch:
@@ -64,9 +65,24 @@ jobs:
             --sha      "$SHA" \
             --moved-at "$MOVED_AT"
 
+      # The commit below must come from the app that main's ruleset names as a
+      # bypass actor. actions/github-script defaults to github-actions[bot],
+      # which is not that app and can never be a bypass actor anywhere, so the
+      # ruleset refused the mutation outright.
+      #
+      # No owner or repositories: with both unset the token is scoped to this
+      # repository, which is where the commit goes. everest-core's dispatch step
+      # sets them because its target is a different repository. Not so here.
+      - uses: actions/create-github-app-token@v3
+        id: app
+        with:
+          app-id: ${{ secrets.POINTER_LOG_APP_ID }}
+          private-key: ${{ secrets.POINTER_LOG_APP_PRIVATE_KEY }}
+
       - name: Commit through the API, if it changed
         uses: actions/github-script@v9
         with:
+          github-token: ${{ steps.app.outputs.token }}
           script: |
             // github-script v9 runs the body as ESM: require() is gone.
             const { readFile, writeFile } = await import('node:fs/promises');
