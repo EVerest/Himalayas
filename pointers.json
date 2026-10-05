@@ -40,6 +40,18 @@
       "tracks": "main",
       "sha": "54ae07abebc6792b49557ace94305bb9b248a1bb",
       "moved_at": "2026-09-23T03:28:08Z"
+    },
+    {
+      "pointer": "testing/main",
+      "tracks": "main",
+      "sha": "07c7803d7bd39ebad1fcadc003b4430e209952bf",
+      "moved_at": "2026-10-05T18:07:06Z"
+    },
+    {
+      "pointer": "testing/stable-2026.02",
+      "tracks": "stable/2026.02",
+      "sha": "050488ea1415ff23e61dc0941ecea6e132acc420",
+      "moved_at": "2026-10-04T04:30:14Z"
     }
   ]
 }
