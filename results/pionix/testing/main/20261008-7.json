@@ -1,0 +1,74 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "Pionix ISO 15118 Conformance Tester"
+    },
+    "summary": {
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "start": 1791497295248,
+      "stop": 1791497301219
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "047d5ca1d22b1a2c0217ce255fbf8d7ced17e9d9",
+      "branchName": "main",
+      "testEnvironment": "SIL",
+      "osPlatform": "linux",
+      "healthy": true,
+      "buildUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261008T220826Z/"
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "DummyTokenProvider",
+          "DummyTokenValidator",
+          "EnergyManager",
+          "EnergyNode",
+          "Evse15118D20",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac"
+        ]
+      },
+      "integrator": {
+        "id": "pionix",
+        "displayName": "Pionix GmbH"
+      },
+      "configuration": "ac-dc100",
+      "reportUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261008T220826Z/ac-dc100/conformance-report.pdf"
+    },
+    "tests": [
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_011",
+        "status": "failed",
+        "duration": 5929,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC",
+          "x-inconclusive"
+        ],
+        "rawStatus": "INCONCLUSIVE",
+        "message": "harness.verdict.PreconditionInconclusive: INCONCLUSIVE (dc100 GoodCase held at X1 (no EIM)): SUT not at X1 (100%) at connection-loss time (duty 26.666667938232422) -- the dc100 X1->E/F premise is not established\nassert (26.666667938232422 is not None and 26.666667938232422 >= 99.5)\n +  where 26.666667938232422 = <harness.test_ev.ConformanceTestEv object at 0x7fb54c3a9c50>.duty\n +  and   26.666667938232422 = <harness.test_ev.ConformanceTestEv object at 0x7fb54c3a9c50>.duty",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      }
+    ]
+  }
+}
