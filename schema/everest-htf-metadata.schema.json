@@ -50,6 +50,11 @@
           "type": "string",
           "pattern": "^https://"
         },
+        "configuration": {
+          "description": "Name of the SUT configuration this run tested, for an integrator that submits several configurations per pointer (e.g. one AC and one DC charger setup). Each configuration gets its own card on the status page; without it the newest submission hides the others. Optional.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
         "reportUrl": {
           "description": "Link to a human-readable report of this run (a PDF or HTML test report), shown on the status page next to the run link. Optional.",
           "type": "string",
