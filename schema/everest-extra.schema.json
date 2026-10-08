@@ -10,6 +10,12 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "reportUrl": {
+      "description": "Link to a human-readable report of this run (a PDF or HTML test report), shown on the status page next to the run link. Optional. Use it when the run log is not public or not where a reader finds the results: buildUrl stays the link back to the CI run.",
+      "type": "string",
+      "pattern": "^https://",
+      "maxLength": 2048
+    },
     "build": {
       "description": "Build status. Carried here, NOT as a synthetic CTRF test. The intake gate rejects a submission whose build is missing or failed.",
       "type": "object",

@@ -102,6 +102,7 @@ def load_results():
             "commit": ev.get("commit"),
             "environmentKind": ev.get("testEnvironment") or "unknown",
             "buildUrl": ev.get("buildUrl"),
+            "reportUrl": ev.get("reportUrl"),
             "integrator": integ.get("id", "unknown"),
             "displayName": integ.get("displayName"),
             "dutId": rec.get("dut_id"),
@@ -306,6 +307,8 @@ def render(groups, tips, grace_days, generated, declared):
                     if latest["buildUrl"]
                     else '<span class="dim" title="buildUrl is optional, so this entry '
                          'carries no cheap way for a reader to check it">no run link</span>')
+            if latest.get("reportUrl"):
+                link += f' &middot; <a class="report" href="{esc(latest["reportUrl"])}">report</a>'
             fmtbadge = ('<span class="fmt htf" title="Submitted as OpenHTF, which carries '
                         'measurements and their limits natively">OpenHTF</span>'
                         if latest["sourceFormat"] == "openhtf"
