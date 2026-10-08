@@ -12,7 +12,8 @@
       "tracks": "main",
       "testEnvironment": "HIL",
       "buildUrl": "https://ci.deadbeef-charge.example/pipelines/48219",
-      "reportUrl": "https://ci.deadbeef-charge.example/pipelines/48219/report.pdf"
+      "reportUrl": "https://ci.deadbeef-charge.example/pipelines/48219/report.pdf",
+      "configuration": "dc-150kw"
     },
     "build": {
       "status": "passed",

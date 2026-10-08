@@ -108,6 +108,7 @@ keys, so this is enforced, not advisory.
 | build health as a boolean | `results.environment.healthy` | mirror of `extra.build.status`, so generic CTRF readers see it |
 | link back to your CI run | `results.environment.buildUrl` | optional, **strongly encouraged** — with traces truncated it is the only route to full detail |
 | link to a human-readable report of the run | `results.extra.reportUrl` | optional; shown on the status page as **report** next to the run log. For a PDF/HTML test report, especially when the CI run itself is not public. OpenHTF: `metadata.everest.reportUrl` |
+| SUT configuration, when you submit several per pointer | `results.extra.configuration` | optional; e.g. `dc-full-ocpp`. Each configuration gets its own card on the status page &mdash; without it your newest submission hides the others. OpenHTF: `metadata.everest.configuration` |
 | OS / arch | `results.environment.osPlatform`, `osVersion`, `osRelease` | |
 | run start and end | `results.summary.start`, `stop` | **Required by CTRF, and must not be `0`.** Staleness is computed from these |
 | protocol variants, per test | `test.tags` | e.g. `["DC","ISO15118-2"]`. This is what makes per-protocol views possible |
@@ -171,6 +172,7 @@ It constrains only the fields it names; everything else stays governed by CTRF.
 | `environment.osPlatform` | `linux` \| `darwin` \| `windows` | |
 | `environment.buildUrl` | must start `https://` | |
 | `extra.reportUrl` | must start `https://` | |
+| `extra.configuration` | `[A-Za-z0-9][A-Za-z0-9._-]{0,63}` | it is a card title and a summary key, not prose |
 | `summary.start`, `summary.stop` | integer **≥ 1** | `junit-to-ctrf` emits `0`. A result with no timestamp **can never be aged**, so the staleness rule could never govern it. This is why it is an error and not a warning |
 | `test.tags[]` | `PascalCase`, `lowercase`, or `x-`-prefixed | free text here is exactly what breaks per-protocol rollups |
 | `build.targets[].target` | a well-formed triple | |

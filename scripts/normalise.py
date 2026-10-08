@@ -173,6 +173,7 @@ def ctrf_to_openhtf(doc):
             "buildUrl": env.get("buildUrl"),
             # CTRF has no report-link field; the EVerest extra contract does.
             "reportUrl": extra.get("reportUrl"),
+            "configuration": extra.get("configuration"),
         }.items() if v is not None},
         "source": {k: v for k, v in {
             "format": "ctrf",

@@ -34,6 +34,7 @@
     },
     "extra": {
       "reportUrl": "https://ci.deadbeef-charge.example/pipelines/48213/report.pdf",
+      "configuration": "dc-150kw",
       "build": {
         "status": "passed",
         "targets": [

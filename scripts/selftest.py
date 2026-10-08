@@ -140,6 +140,13 @@ def suite_gate(work, verbose):
         ("htf: reportUrl not https", htf,
          lambda d: d["metadata"]["everest"].update(reportUrl="http://ci.example/report.pdf"),
          "htf-metadata", P),
+        # configuration is a card title and a summary key, not prose.
+        ("extra: configuration is prose", ctrf,
+         lambda d: d["results"]["extra"].update(configuration="AC and DC <b>"),
+         "extra-contract", P),
+        ("htf: configuration is prose", htf,
+         lambda d: d["metadata"]["everest"].update(configuration="AC and DC <b>"),
+         "htf-metadata", P),
         # A document malformed enough to break the reader must still be a
         # REJECTION with a reason, never a crash. These three were exit 1 by
         # AttributeError, which is indistinguishable from a real rejection.
@@ -598,6 +605,14 @@ def suite_normalise(work, verbose):
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} reportUrl carried: {got}")
 
+    # extra.configuration too: the status page groups cards by it.
+    got = (json.loads(r.stdout).get("metadata") or {}).get("everest", {}).get("configuration")
+    want = json.load(open(os.path.join(work, "examples", "ctrf-hil-dc.json")))["results"]["extra"]["configuration"]
+    ok = got == want
+    report("ctrf extra.configuration reaches metadata.everest", ok, f"got {got}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} configuration carried: {got}")
+
 
 def newest_moved_at(work):
     """The newest moved_at in the log, as a datetime."""
@@ -1036,6 +1051,21 @@ def suite_build(work, verbose):
         check("a card links the submitted report",
               'href="https://reports.example/run-1/report.pdf">report</a>' in card, card[:160])
 
+    # Two SUT configurations of one integrator are two cards, not one card
+    # showing whichever was submitted last.
+    if not rows:
+        check("each configuration gets its own card", False, "no committed submission")
+    else:
+        a, b = copy.deepcopy(rows[0]), copy.deepcopy(rows[0])
+        a["configuration"], b["configuration"] = "ac-basic", "dc-full"
+        b["ranAt"] = (a["ranAt"] or 0) + 1
+        page4 = bs.render({a["pointer"]: [a, b]}, {}, 14, "now",
+                          {a["pointer"]: {"tracks": "main"}})
+        cards = cards_of(page4)
+        check("each configuration gets its own card",
+              len(cards) == 2 and any("ac-basic" in c for c in cards)
+              and any("dc-full" in c for c in cards), f"{len(cards)} card(s)")
+
 
 SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normalise,
           "pointers": suite_pointers, "archive": suite_archive,
@@ -1050,8 +1080,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 64, "intake": 14, "normalise": 7, "pointers": 9,
-          "archive": 9, "staleness": 6, "build": 16, "docs": 10}
+EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 9,
+          "archive": 9, "staleness": 6, "build": 17, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

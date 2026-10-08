@@ -103,6 +103,7 @@ def load_results():
             "environmentKind": ev.get("testEnvironment") or "unknown",
             "buildUrl": ev.get("buildUrl"),
             "reportUrl": ev.get("reportUrl"),
+            "configuration": ev.get("configuration"),
             "integrator": integ.get("id", "unknown"),
             "displayName": integ.get("displayName"),
             "dutId": rec.get("dut_id"),
@@ -187,6 +188,14 @@ def fmt_ms(ms):
         ms / 1000, datetime.timezone.utc).strftime("%Y-%m-%d")
 
 
+def card_key(row):
+    """One status card per integrator and, for an integrator that submits
+    several SUT configurations per pointer, per configuration: otherwise the
+    newest submission would hide the others."""
+    cfg = row.get("configuration")
+    return f'{row["integrator"]}/{cfg}' if cfg else row["integrator"]
+
+
 def slug(name):
     """Stable DOM id for a pointer branch name, which contains a slash."""
     return "".join(c if c.isalnum() else "-" for c in name)
@@ -235,7 +244,7 @@ def render(groups, tips, grace_days, generated, declared):
         rows = groups[ptr]
         per = {}
         for r in rows:
-            per.setdefault(r["integrator"], []).append(r)
+            per.setdefault(card_key(r), []).append(r)
         for v in per.values():
             v.sort(key=lambda r: (r["ranAt"], r["file"]), reverse=True)
 
@@ -247,7 +256,9 @@ def render(groups, tips, grace_days, generated, declared):
         for who in sorted(per):
             rs = per[who]
             latest = rs[0]
-            name = latest["displayName"] or f"{who} (anonymous)"
+            name = latest["displayName"] or f'{latest["integrator"]} (anonymous)'
+            if latest.get("configuration"):
+                name += f' \u2014 {latest["configuration"]}'
             fcls, flabel, fwhy = freshness(latest)
             bstat = (latest["build"] or {}).get("status", "unknown")
 
@@ -394,14 +405,14 @@ def render(groups, tips, grace_days, generated, declared):
                    else '<span class="warntxt">tip unknown &mdash; the pointer branch was '
                         'not found, so nothing below can be aged</span>')
         blocks.append((ptr,
-                       f'{len(per)} integrator(s) &middot; {len(rows)} submission(s)',
+                       f'{len({r['integrator'] for r in rows})} integrator(s) &middot; {len(rows)} submission(s)',
                        True, f"""
   <section class="pointer" id="p-{slug(ptr)}" data-pointer="{esc(ptr)}">
     <div class="phead">
       <h2><code>{esc(ptr)}</code></h2>
       <span class="ptracks">{"tracks <code>" + esc(tracks) + "</code>" if tracks else ""}</span>
       <span class="ptip">{tipline}</span>
-      <span class="pcount">{len(per)} integrator(s) &middot; {len(rows)} submission(s)</span>
+      <span class="pcount">{len({r['integrator'] for r in rows})} integrator(s) &middot; {len(rows)} submission(s)</span>
       <span class="psr" title="Every entry in this section was produced and reported by the integrator named on it. EVerest does not run, reproduce or verify it.">self-reported</span>
     </div>
     <div class="grid">{"".join(cards)}</div>
@@ -763,7 +774,7 @@ def main():
     for ptr in sorted(set(list(groups) + list(declared))):
         per = {}
         for r in groups.get(ptr, []):
-            per.setdefault(r["integrator"], []).append(r)
+            per.setdefault(card_key(r), []).append(r)
         for v in per.values():
             v.sort(key=lambda r: (r["ranAt"], r["file"]), reverse=True)
         summary["pointers"][ptr] = {
@@ -771,6 +782,8 @@ def main():
             "tip": tips.get(ptr),
             "integrators": {
                 who: {
+                    "integrator": rs[0]["integrator"],
+                    "configuration": rs[0]["configuration"],
                     "displayName": rs[0]["displayName"],
                     "sourceFormat": rs[0]["sourceFormat"],
                     "commit": rs[0]["commit"],
