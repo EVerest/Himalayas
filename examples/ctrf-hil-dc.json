@@ -33,6 +33,7 @@
       "reportName": "deadbeef-charge HIL DC"
     },
     "extra": {
+      "reportUrl": "https://ci.deadbeef-charge.example/pipelines/48213/report.pdf",
       "build": {
         "status": "passed",
         "targets": [

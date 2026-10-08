@@ -49,6 +49,12 @@
           "description": "Link back to the run. Optional but strongly encouraged - with attachments capped it is the only route to full detail.",
           "type": "string",
           "pattern": "^https://"
+        },
+        "reportUrl": {
+          "description": "Link to a human-readable report of this run (a PDF or HTML test report), shown on the status page next to the run link. Optional.",
+          "type": "string",
+          "pattern": "^https://",
+          "maxLength": 2048
         }
       }
     },

@@ -132,6 +132,14 @@ def suite_gate(work, verbose):
         ("extra: build status not in the enum", ctrf,
          lambda d: d["results"]["extra"]["build"].update(status="green"),
          ("extra-contract", "build-failed"), P),
+        # reportUrl is a link a reader follows from the status page: https only,
+        # like buildUrl, on both submission paths.
+        ("extra: reportUrl not https", ctrf,
+         lambda d: d["results"]["extra"].update(reportUrl="http://ci.example/report.pdf"),
+         "extra-contract", P),
+        ("htf: reportUrl not https", htf,
+         lambda d: d["metadata"]["everest"].update(reportUrl="http://ci.example/report.pdf"),
+         "htf-metadata", P),
         # A document malformed enough to break the reader must still be a
         # REJECTION with a reason, never a crash. These three were exit 1 by
         # AttributeError, which is indistinguishable from a real rejection.
@@ -580,6 +588,16 @@ def suite_normalise(work, verbose):
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} measurements survive: {n}")
 
+    # CTRF has no report-link field, so extra.reportUrl must be carried into
+    # metadata.everest, where the status page reads it for both formats.
+    r = sh(work, "normalise.py", os.path.join("examples", "ctrf-hil-dc.json"))
+    got = (json.loads(r.stdout).get("metadata") or {}).get("everest", {}).get("reportUrl")
+    want = json.load(open(os.path.join(work, "examples", "ctrf-hil-dc.json")))["results"]["extra"]["reportUrl"]
+    ok = got == want
+    report("ctrf extra.reportUrl reaches metadata.everest", ok, f"got {got}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} reportUrl carried: {got}")
+
 
 def newest_moved_at(work):
     """The newest moved_at in the log, as a datetime."""
@@ -1006,6 +1024,18 @@ def suite_build(work, verbose):
         check("a stale card still shows the stale marker",
               'class="pill stale"' in card, card[:120])
 
+    # A submitted report link is rendered on the card, next to the run log.
+    if not rows:
+        check("a card links the submitted report", False, "no committed submission")
+    else:
+        row = copy.deepcopy(rows[0])
+        row["reportUrl"] = "https://reports.example/run-1/report.pdf"
+        page3 = bs.render({row["pointer"]: [row]}, {}, 14, "now",
+                          {row["pointer"]: {"tracks": "main"}})
+        card = (cards_of(page3) or [""])[0]
+        check("a card links the submitted report",
+              'href="https://reports.example/run-1/report.pdf">report</a>' in card, card[:160])
+
 
 SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normalise,
           "pointers": suite_pointers, "archive": suite_archive,
@@ -1020,8 +1050,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 62, "intake": 14, "normalise": 6, "pointers": 9,
-          "archive": 9, "staleness": 6, "build": 15, "docs": 10}
+EXPECT = {"gate": 64, "intake": 14, "normalise": 7, "pointers": 9,
+          "archive": 9, "staleness": 6, "build": 16, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
