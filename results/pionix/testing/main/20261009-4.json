@@ -1,0 +1,153 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "Pionix ISO 15118 Conformance Tester"
+    },
+    "summary": {
+      "tests": 5,
+      "passed": 0,
+      "failed": 4,
+      "skipped": 1,
+      "pending": 0,
+      "other": 0,
+      "start": 1791532801395,
+      "stop": 1791532895692
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "ed063b5d908751f9a2b2642f8dc8118979580e82",
+      "branchName": "main",
+      "testEnvironment": "SIL",
+      "osPlatform": "linux",
+      "healthy": true,
+      "buildUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261009T080333Z/"
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "DummyTokenProvider",
+          "DummyTokenValidator",
+          "EnergyManager",
+          "EnergyNode",
+          "Evse15118D20",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac"
+        ]
+      },
+      "integrator": {
+        "id": "pionix",
+        "displayName": "Pionix GmbH"
+      },
+      "configuration": "ac-dc100",
+      "reportUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261009T080333Z/ac-dc100/conformance-report.pdf"
+    },
+    "tests": [
+      {
+        "name": "TC_SECC_AC_VTB_CmSlacParm_003",
+        "status": "failed",
+        "duration": 17170,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "TimeoutError: CP E/F (duty 0) step not observed before the window closed (last duty=26.666667938232422)",
+        "filePath": "tests/test_secc_ac_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_009",
+        "status": "skipped",
+        "duration": 3820,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC",
+          "x-rig-limitation"
+        ],
+        "rawStatus": "INCONCLUSIVE",
+        "message": "NOT TESTABLE ON THIS RIG: requires a timed operator authorization at the station; not automatable",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_011",
+        "status": "failed",
+        "duration": 4897,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC",
+          "x-inconclusive"
+        ],
+        "rawStatus": "INCONCLUSIVE",
+        "message": "harness.verdict.PreconditionInconclusive: INCONCLUSIVE (dc100 GoodCase held at X1 (no EIM)): SUT not at X1 (100%) at connection-loss time (duty 26.666667938232422) -- the dc100 X1->E/F premise is not established\nassert (26.666667938232422 is not None and 26.666667938232422 >= 99.5)\n +  where 26.666667938232422 = <harness.test_ev.ConformanceTestEv object at 0x7f4e33a4cbd0>.duty\n +  and   26.666667938232422 = <harness.test_ev.ConformanceTestEv object at 0x7f4e33a4cbd0>.duty",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_009",
+        "status": "failed",
+        "duration": 34065,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "TimeoutError: CP PWM duty ~5.0% (tol 1.5) not observed within 30.0s (last=26.666667938232422)",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_007",
+        "status": "failed",
+        "duration": 34273,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "TimeoutError: CP PWM duty ~5.0% (tol 1.5) not observed within 30.0s (last=26.666667938232422)",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      }
+    ]
+  }
+}
