@@ -1,0 +1,312 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "Pionix ISO 15118 Conformance Tester"
+    },
+    "summary": {
+      "tests": 15,
+      "passed": 12,
+      "failed": 2,
+      "skipped": 1,
+      "pending": 0,
+      "other": 0,
+      "start": 1791529875446,
+      "stop": 1791530086815
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "ed063b5d908751f9a2b2642f8dc8118979580e82",
+      "branchName": "main",
+      "testEnvironment": "SIL",
+      "osPlatform": "linux",
+      "healthy": true,
+      "buildUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261009T080333Z/"
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "DummyTokenProvider",
+          "DummyTokenValidator",
+          "EnergyManager",
+          "EnergyNode",
+          "Evse15118D20",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac"
+        ]
+      },
+      "integrator": {
+        "id": "pionix",
+        "displayName": "Pionix GmbH"
+      },
+      "configuration": "ac-basic",
+      "reportUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261009T080333Z/ac-basic/conformance-report.pdf"
+    },
+    "tests": [
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_001",
+        "status": "passed",
+        "duration": 6960,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_002",
+        "status": "passed",
+        "duration": 6023,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_003",
+        "status": "passed",
+        "duration": 22851,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_004",
+        "status": "passed",
+        "duration": 19446,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_005",
+        "status": "passed",
+        "duration": 4223,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_006",
+        "status": "passed",
+        "duration": 7024,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_007",
+        "status": "passed",
+        "duration": 7023,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_008",
+        "status": "skipped",
+        "duration": 4018,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC",
+          "x-rig-limitation"
+        ],
+        "rawStatus": "INCONCLUSIVE",
+        "message": "NOT TESTABLE ON THIS RIG: requires a timed operator authorization at the station; not automatable",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_009",
+        "status": "passed",
+        "duration": 4019,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_010",
+        "status": "passed",
+        "duration": 10829,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_011",
+        "status": "passed",
+        "duration": 4023,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_012",
+        "status": "failed",
+        "duration": 6829,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "TimeoutError: CP PWM duty ~0.0% (tol 1.5) not observed within 3.25s (last=26.666667938232422)",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_013",
+        "status": "failed",
+        "duration": 3819,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: EV inlet not energized during chain seq 1.1 — no mains ADC telemetry (rig without cb_eval_ev adc/0)",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_014",
+        "status": "passed",
+        "duration": 5029,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_015",
+        "status": "passed",
+        "duration": 99166,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      }
+    ]
+  }
+}
