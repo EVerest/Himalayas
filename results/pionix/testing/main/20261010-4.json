@@ -1,0 +1,150 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "Pionix ISO 15118 Conformance Tester"
+    },
+    "summary": {
+      "tests": 5,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 1,
+      "pending": 0,
+      "other": 0,
+      "start": 1791618952105,
+      "stop": 1791618993993
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "2e710bc8191bd5a29c16a4d0815c6bcd9318c51d",
+      "branchName": "main",
+      "testEnvironment": "SIL",
+      "osPlatform": "linux",
+      "healthy": true,
+      "buildUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261010T075903Z/"
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "DummyTokenValidator",
+          "EnergyManager",
+          "EnergyNode",
+          "Evse15118D20",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac",
+          "OCPPmulti",
+          "System"
+        ]
+      },
+      "integrator": {
+        "id": "pionix",
+        "displayName": "Pionix GmbH"
+      },
+      "configuration": "ac-dc100",
+      "reportUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261010T075903Z/ac-dc100/conformance-report.pdf"
+    },
+    "tests": [
+      {
+        "name": "TC_SECC_AC_VTB_CmSlacParm_003",
+        "status": "skipped",
+        "duration": 17188,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC",
+          "x-accepted-deviation"
+        ],
+        "rawStatus": "FAIL EXPECTED",
+        "message": "ACCEPTED DEVIATION: Operator-accepted deviation from ISO 15118-3 [V2G3-M06-08]: after a positive EIM the dc100 SUT goes from X1 straight to nominal PWM without the E/F step for T_step_EF. Kept on purpose for compatibility with EVs without HLC that follow plain IEC 61851-1 charging and are confused by the extra E/F step.",
+        "filePath": "tests/test_secc_ac_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_009",
+        "status": "passed",
+        "duration": 4285,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC",
+          "x-rig-limitation"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_011",
+        "status": "passed",
+        "duration": 8690,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_009",
+        "status": "passed",
+        "duration": 6058,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_007",
+        "status": "passed",
+        "duration": 5603,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      }
+    ]
+  }
+}
