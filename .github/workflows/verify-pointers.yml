@@ -25,6 +25,12 @@ permissions:
 
 jobs:
   verify:
+    # The recorder's own commits are verified by the recorder, scoped to the
+    # pointer it logged. A full check on that push races the next dispatch of
+    # the same EVerest run and fails on a move still in flight.
+    if: >-
+      github.event_name != 'push' ||
+      !startsWith(github.event.head_commit.message, 'pointers: ')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
