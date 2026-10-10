@@ -656,6 +656,20 @@ def suite_pointers(work, verbose):
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} verifier refuses bad --now rc={r.returncode}")
 
+    # The recorder scopes the check to the pointer it just logged, so a sibling
+    # pointer's in-flight move cannot fail it.
+    r = sh(work, "verify_pointers.py", "--offline", "--now", fresh, "--pointer", "testing/main")
+    ok = r.returncode == 0 and "pointers checked: 1 " in r.stdout
+    report("verifier scopes to --pointer", ok, f"rc={r.returncode} {r.stdout[-160:]}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} verifier scopes to --pointer rc={r.returncode}")
+
+    r = sh(work, "verify_pointers.py", "--offline", "--now", fresh, "--pointer", "testing/rogue")
+    ok = r.returncode == 2
+    report("verifier refuses an undeclared --pointer", ok, f"rc={r.returncode}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} verifier refuses undeclared --pointer rc={r.returncode}")
+
     pj = os.path.join(work, "pointers.json")
     sha_a = "0" * 39 + "a"
     cases = [
@@ -1080,7 +1094,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 9,
+EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
           "archive": 9, "staleness": 6, "build": 17, "docs": 10}
 TOTAL = sum(EXPECT.values())
 

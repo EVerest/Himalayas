@@ -36,6 +36,12 @@ real wall clock, which made the self-test go red on 2026-09-20 with no code
 change at all, under a check named "pointer log is internally consistent" - a
 failure that points at the log rather than at the calendar.
 
+--pointer scopes every check to the named pointers. The recorder passes the one
+it just logged: EVerest moves several pointers seconds apart and dispatches one
+move each, so a full check run between two of those appends sees the other
+pointer's branch ahead of its log and calls an in-flight move unauditable. The
+daily schedule checks every pointer, long after the moves have settled.
+
 Exit 0 all checks pass, 1 a check failed, 2 tool error.
 """
 import argparse, json, os, sys, urllib.request, urllib.error, datetime
@@ -82,6 +88,8 @@ def main():
                          "A rewind older than this window is no longer detectable here, "
                          "which is why the pointer branches should not be left writable "
                          "by hand.")
+    ap.add_argument("--pointer", action="append", metavar="NAME",
+                    help="check only this pointer; repeatable. Default: every declared one.")
     ap.add_argument("--offline", action="store_true",
                     help="check only the log's internal consistency")
     ap.add_argument("--now", metavar="ISO8601",
@@ -110,6 +118,13 @@ def main():
         now = datetime.datetime.now(datetime.timezone.utc)
 
     declared = doc.get("pointers") or {}
+    if args.pointer:
+        unknown = sorted(set(args.pointer) - declared.keys())
+        if unknown:
+            print(f"error: --pointer names undeclared pointer(s): {', '.join(unknown)}",
+                  file=sys.stderr)
+            return 2
+        declared = {k: v for k, v in declared.items() if k in args.pointer}
     log = doc.get("log") or []
     token = os.environ.get("GITHUB_TOKEN")
     fails, notes = [], []

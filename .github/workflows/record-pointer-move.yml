@@ -161,7 +161,11 @@ jobs:
               }
             }
 
-      - name: Verify the pointers still agree
+      # Only the pointer just recorded. Another pointer moved in the same EVerest
+      # run may still have its own dispatch queued behind this one, so a full
+      # check here fails on a move that is merely in flight. The daily schedule
+      # in verify-pointers.yml checks them all.
+      - name: Verify the recorded pointer agrees
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/verify_pointers.py --repo EVerest/EVerest
+        run: python scripts/verify_pointers.py --repo EVerest/EVerest --pointer "$POINTER"
