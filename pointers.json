@@ -82,6 +82,12 @@
       "tracks": "main",
       "sha": "ddbc6195c51e871919bc5d46750725f6b31cf1fb",
       "moved_at": "2026-10-13T03:35:06Z"
+    },
+    {
+      "pointer": "testing/stable-2026.02",
+      "tracks": "stable/2026.02",
+      "sha": "f42304ddf0eb26016ba233f737d32b08e576fbfe",
+      "moved_at": "2026-10-13T03:35:22Z"
     }
   ]
 }
