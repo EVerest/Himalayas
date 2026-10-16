@@ -26,3 +26,7 @@ integrators:
     github_users:
       - mlitre
       - pionix-conformance-bot
+  - id: kempower
+    display_name: Kempower Oyj
+    github_users:
+      - kempower-himalayas-bot
