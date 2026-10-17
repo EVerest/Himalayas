@@ -118,6 +118,12 @@
       "tracks": "main",
       "sha": "2f2dd0256824dac88814cb8c8df47ea9fe499650",
       "moved_at": "2026-10-16T03:27:14Z"
+    },
+    {
+      "pointer": "testing/main",
+      "tracks": "main",
+      "sha": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+      "moved_at": "2026-10-17T03:25:04Z"
     }
   ]
 }
