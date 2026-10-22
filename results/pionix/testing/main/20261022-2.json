@@ -1,0 +1,311 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "Pionix ISO 15118 Conformance Tester"
+    },
+    "summary": {
+      "tests": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "start": 1792653174265,
+      "stop": 1792653557448
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "b328178d220475bb7b0289519c159292997208dc",
+      "branchName": "main",
+      "testEnvironment": "SIL",
+      "osPlatform": "linux",
+      "healthy": true,
+      "buildUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261022T081742Z/"
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "DummyTokenProvider",
+          "DummyTokenValidator",
+          "EnergyManager",
+          "EnergyNode",
+          "Evse15118D20",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac",
+          "OCPPmulti",
+          "System"
+        ]
+      },
+      "integrator": {
+        "id": "pionix",
+        "displayName": "Pionix GmbH"
+      },
+      "configuration": "ac-basic",
+      "reportUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261022T081742Z/ac-basic/conformance-report.pdf"
+    },
+    "tests": [
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_001",
+        "status": "passed",
+        "duration": 6867,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_002",
+        "status": "passed",
+        "duration": 6824,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_003",
+        "status": "passed",
+        "duration": 22254,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_004",
+        "status": "passed",
+        "duration": 19046,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_005",
+        "status": "passed",
+        "duration": 4220,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_006",
+        "status": "passed",
+        "duration": 7029,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_007",
+        "status": "passed",
+        "duration": 7025,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_008",
+        "status": "passed",
+        "duration": 10430,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC",
+          "x-rig-limitation"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_009",
+        "status": "passed",
+        "duration": 4621,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_010",
+        "status": "passed",
+        "duration": 10831,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_011",
+        "status": "passed",
+        "duration": 4022,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_012",
+        "status": "passed",
+        "duration": 4627,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_013",
+        "status": "passed",
+        "duration": 171282,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_014",
+        "status": "passed",
+        "duration": 5226,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_Iec61851P1_015",
+        "status": "passed",
+        "duration": 98782,
+        "suite": [
+          "conformance",
+          "IEC61851-1",
+          "Iec61851P1"
+        ],
+        "tags": [
+          "compliance",
+          "IEC61851",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_iec61851_1.py"
+      }
+    ]
+  }
+}
