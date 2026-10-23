@@ -1,249 +1,162 @@
-<!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Himalayas &middot; EVerest federated testing status</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Himalayas · testing/main</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
-:root{--green:#00CE7C;--blue:#2F96D0;--bg:#f6f8fc;--surface:#fff;--ink:#0C2351;
---ink2:#44577a;--ink3:#74849f;--line:#dae2ee;--warn:#9a5b06;--warnbg:#fdf2dc;
---warnline:#e8c584;--bad:#a71d1d;--badbg:#fdeaea;--badline:#eeb4b4;--ok:#04724d;
---okbg:#dcf5ea;--okline:#93ddc0;--info:#1c5d85;--infobg:#e4f1fa;--infoline:#9fcde9}
-@media(prefers-color-scheme:dark){:root{--bg:#080f1d;--surface:#0e1830;--ink:#e8eef8;
---ink2:#a9b8d0;--ink3:#7e8fab;--line:#22314f;--warn:#f0c076;--warnbg:#2e2410;
---warnline:#5b4718;--bad:#f0a1a1;--badbg:#2e1414;--badline:#5e2626;--ok:#7ce0b4;
---okbg:#0d2a20;--okline:#1d523c;--info:#8ec8ea;--infobg:#0b2233;--infoline:#1d4460}}
-*{box-sizing:border-box}
-body{margin:0;padding:0 20px 60px;background:var(--bg);color:var(--ink);
-font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif}
-.wrap{max-width:1080px;margin:0 auto}
-header.top{padding:40px 0 16px}
-h1{margin:0;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em}
-.sub{color:var(--ink2);margin-top:10px;max-width:70ch}
-.caveat{background:var(--warnbg);border:1px solid var(--warnline);
-border-left:5px solid var(--warn);border-radius:10px;padding:18px 20px;margin:22px 0}
-.caveat .lead{font-size:clamp(17px,2.5vw,22px);line-height:1.35;font-weight:750;
-color:var(--warn);margin:0 0 10px;letter-spacing:-.01em;max-width:52ch}
-.caveat p{margin:0 0 8px;max-width:78ch} .caveat p:last-child{margin:0}
-.caveat b{color:var(--warn)}
-.banner{background:var(--warnbg);border:1px solid var(--warnline);border-radius:10px;
-padding:12px 16px;margin:0 0 4px;font-size:13.5px}
-.banner p{margin:0;max-width:82ch}
-.meta{display:flex;gap:20px;flex-wrap:wrap;color:var(--ink3);font-size:13px;margin:14px 0 0}
-.ptrnav{position:relative;margin:20px 0 0}
-.pn-btn{display:inline-flex;align-items:center;gap:10px;font:inherit;font-size:13.5px;
-background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:9px;
-padding:8px 13px;cursor:pointer}
-.pn-btn:hover{border-color:var(--ink3)}
-.pn-bars{display:grid;gap:3px;width:15px}
-.pn-bars i{display:block;height:2px;background:var(--ink2);border-radius:2px}
-.pn-lbl{color:var(--ink2)} .pn-lbl code{color:var(--ink);font-weight:700}
-.pn-caret{color:var(--ink3);font-size:11px}
-.pn-btn[aria-expanded="true"] .pn-caret{transform:rotate(180deg)}
-.pn-menu{list-style:none;margin:6px 0 0;padding:6px;position:absolute;z-index:20;
-min-width:min(340px,92vw);background:var(--surface);border:1px solid var(--line);
-border-radius:10px;box-shadow:0 10px 28px rgba(12,35,81,.14)}
-.pn-menu[hidden]{display:none}
-.pn-menu button{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;
-font:inherit;font-size:13.5px;background:none;border:0;border-radius:7px;padding:8px 10px;
-cursor:pointer;color:var(--ink)}
-.pn-menu button:hover{background:var(--bg)}
-.pn-menu button[aria-checked="true"]{background:var(--infobg);color:var(--info)}
-.pn-menu button code{font-weight:700;background:none;border:0;padding:0}
-.pn-has{font-size:11.5px;color:var(--ink3)}
-.pn-none{font-size:11.5px;color:var(--warn);font-weight:650}
-.pn-ns{font-size:12.5px;color:var(--ink3);margin-left:12px}
-section.pointer{margin-top:34px}
-section.pointer[hidden]{display:none}
-.phead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-bottom:10px;
-border-bottom:2px solid var(--line);margin-bottom:16px}
-.phead h2{margin:0;font-size:19px}
-.phead h2 code{font-size:.9em}
-.ptracks,.ptip,.pcount{font-size:12.5px;color:var(--ink3)}
-.psr{margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:.05em;
-text-transform:uppercase;color:var(--warn);background:var(--warnbg);
-border:1px solid var(--warnline);border-radius:999px;padding:2px 9px;white-space:nowrap}
-.warntxt{color:var(--warn);font-weight:650}
-.badtxt{color:var(--bad);font-weight:650}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr))}
-.grid>*{min-width:0}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
-padding:18px 20px;min-width:0;align-self:start}
-.card.v-bad{border-left:5px solid var(--bad)}
-.card.v-good{border-left:5px solid var(--okline)}
-.card.v-none{border-left:5px solid var(--line)}
-/* Stale gets the hatch and the drained greens; UNKNOWN deliberately does not.
-   Banner and chip are for unknown only. Unknown is not the same as bad, and
-   a page that looks drained for weeks teaches readers to ignore the signal. */
-.card.f-stale{border-top:1px solid var(--warnline);
-border-right:1px solid var(--warnline);border-bottom:1px solid var(--warnline);
-background:repeating-linear-gradient(135deg,var(--surface),
-var(--surface) 10px,var(--warnbg) 10px,var(--warnbg) 20px)}
-.card.f-stale .mo.ok,.card.f-stale .tgt.ok,.card.f-stale .ptag.passed,
-.card.f-stale .ok-inline{filter:saturate(.2)}
-.card.empty{border-left:5px solid var(--line);color:var(--ink2)}
-.card.empty p{margin:0;font-size:13.5px;max-width:62ch}
-.card header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
-flex-wrap:wrap;margin-bottom:10px}
-.card h3{margin:0;font-size:16.5px;min-width:0;overflow-wrap:anywhere}
-.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
-.pill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;
-max-width:100%;overflow-wrap:anywhere}
-.pill.good{background:var(--okbg);color:var(--ok);border:1px solid var(--okline)}
-.pill.bad{background:var(--badbg);color:var(--bad);border:1px solid var(--badline)}
-.pill.none{background:transparent;color:var(--ink3);border:1px dashed var(--ink3)}
-.pill.fresh{background:var(--infobg);color:var(--info);border:1px solid var(--infoline)}
-.pill.stale{background:var(--warnbg);color:var(--warn);border:1px solid var(--warn)}
-.pill.unknown{background:var(--warnbg);color:var(--warn);border:1px dashed var(--warn)}
-.notes{margin:0 0 10px;font-size:12.5px;color:var(--bad);font-weight:600;
-max-width:100%;overflow-wrap:anywhere}
-dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 14px;margin:0;
-font-size:13.5px}
-dt{color:var(--ink3);font-weight:650} dd{margin:0;min-width:0;overflow-wrap:anywhere}
-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88em;
-overflow-wrap:anywhere}
-.dim{color:var(--ink3)} .ok-inline{color:var(--ok);font-weight:650}
-.qual{color:var(--bad);font-weight:650}
-.tgts{margin-top:2px}
-.tgt{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;
-margin:2px 3px 0 0;font-family:ui-monospace,Menlo,monospace}
-.tgt.ok{background:var(--okbg);color:var(--ok)}
-.tgt.no{background:var(--badbg);color:var(--bad);border:1px solid var(--badline);
-font-weight:700}
-.ptag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;
-margin:2px 3px 0 0}
-.ptag.passed{background:var(--okbg);border:1px solid var(--okline);color:var(--ok)}
-.ptag.failed{background:var(--badbg);border:1px solid var(--badline);color:var(--bad)}
-.ptag.notrun{background:transparent;border:1px dashed var(--ink3);color:var(--ink3);
-text-decoration:line-through}
-.mods .mod{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;
-margin:2px 3px 0 0;background:var(--bg);border:1px solid var(--line);color:var(--ink2);
-font-family:ui-monospace,Menlo,monospace}
-.fmt{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:4px;
-border:1px solid var(--infoline);background:var(--infobg);color:var(--info)}
-.fmt.ctrf{border-style:dashed}
-.nomeas{margin:12px 0 0;font-size:12.5px;color:var(--ink3);background:var(--bg);
-border:1px dashed var(--line);border-radius:6px;padding:8px 10px;max-width:100%}
-details{margin-top:12px;font-size:13px} summary{cursor:pointer;color:var(--ink2)}
-.tscroll{overflow-x:auto;max-width:100%}
-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.5px}
-th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
-th{color:var(--ink3);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}
-td.num{text-align:right;font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
-td.lim{color:var(--ink3);font-family:ui-monospace,Menlo,monospace;font-size:.95em;
-white-space:nowrap}
-td.pfs{font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
-td.nw{white-space:nowrap}
-table.meas td:first-child{color:var(--ink3);font-size:.95em;overflow-wrap:anywhere}
-table.meas{background:var(--bg);border-radius:6px;min-width:430px}
-.mo{font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:4px;white-space:nowrap}
-.mo.ok{background:var(--okbg);color:var(--ok)}
-.mo.no{background:var(--badbg);color:var(--bad);border:1px solid var(--badline)}
-.legend{display:flex;gap:14px 20px;flex-wrap:wrap;font-size:12px;color:var(--ink3);
-margin:20px 0 0;padding:12px 16px;background:var(--surface);border:1px solid var(--line);
-border-radius:8px}
-.legend>span{display:flex;align-items:center;gap:7px;min-width:0}
-footer{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);color:var(--ink3);
-font-size:12.5px}
-footer p{max-width:82ch}
-</style></head><body><div class="wrap">
-<header class="top">
-  <h1>Himalayas</h1>
-  <p class="sub"><b>EVerest federated testing.</b> Build and test results reported by EVerest
-  integrators, against the floating <code>testing/</code> pointer branches of
-  <a href="https://github.com/EVerest/EVerest">EVerest</a>.</p>
-</header>
-
-<div class="caveat">
-  <p class="lead">Nothing on this page was run or verified by EVerest. Every result below is
-  self-reported by the integrator named on it.</p>
-  <p>Each entry was produced on the integrator's own hardware and in their own CI.
-  Integrators may also report results from tests that are not public, so <b>a passing entry
-  does not mean a fixed, comparable suite was run</b> &mdash; and two passing entries are not
-  necessarily comparable with each other.</p>
-  <p>What EVerest checks on submission: the record validates against the schemas, the commit
-  exists and was a recorded tip of the pointer branch, and the reported build passed.
-  <b>Nothing else.</b></p>
-</div>
-
-<div class="meta">
-  <span>generated 2026-09-09 21:22 UTC</span>
-  <span>one pointer branch at a time</span>
-  <span>staleness grace 14 days</span>
-</div>
-<nav class="ptrnav" aria-label="Pointer branch"><button type="button" id="pn-btn" class="pn-btn" aria-expanded="false" aria-haspopup="true" aria-controls="pn-menu"><span class="pn-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="pn-lbl">showing <code id="pn-cur">testing/main</code></span><span class="pn-caret" aria-hidden="true">&#9662;</span></button><ul id="pn-menu" class="pn-menu" role="menu" hidden><li role="none"><button type="button" role="menuitemradio" aria-checked="true" data-target="p-testing-main" data-pointer="testing/main"><code>testing/main</code><span class="pn-none">no results reported</span></button></li><li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-target="p-testing-stable-2026-02" data-pointer="testing/stable-2026.02"><code>testing/stable-2026.02</code><span class="pn-none">no results reported</span></button></li></ul><noscript><span class="pn-ns">JavaScript is off, so every pointer branch is listed below.</span></noscript></nav>
-<section class="pointer" id="p-testing-main" data-pointer="testing/main"><div class="phead"><h2><code>testing/main</code></h2><span class="ptracks">tracks <code>main</code></span><span class="ptip">current tip <code>fdf2ac541542</code></span><span class="pcount">0 integrator(s) &middot; 0 submission(s)</span></div><div class="grid"><article class="card empty"><header><h3>No results</h3><div class="chips"><span class="pill none">nobody has reported against this pointer</span></div></header><p>This pointer is declared in <code>pointers.json</code> and is listed here deliberately. <b>No integrator has submitted a result for it.</b> That is neither a pass nor a failure: it means this line is currently untested by anyone reporting to Himalayas.</p></article></div></section><section class="pointer" id="p-testing-stable-2026-02" data-pointer="testing/stable-2026.02"><div class="phead"><h2><code>testing/stable-2026.02</code></h2><span class="ptracks">tracks <code>stable/2026.02</code></span><span class="ptip">current tip <code>7d22131340e6</code></span><span class="pcount">0 integrator(s) &middot; 0 submission(s)</span></div><div class="grid"><article class="card empty"><header><h3>No results</h3><div class="chips"><span class="pill none">nobody has reported against this pointer</span></div></header><p>This pointer is declared in <code>pointers.json</code> and is listed here deliberately. <b>No integrator has submitted a result for it.</b> That is neither a pass nor a failure: it means this line is currently untested by anyone reporting to Himalayas.</p></article></div></section>
-<div class="legend">
-  <span><span class="pill good">passed</span> an outcome the integrator reported</span>
-  <span><span class="pill none">no results</span> nothing reported &mdash; not a pass</span>
-  <span><span class="pill stale">stale</span> too old to read as current</span>
-  <span><span class="pill unknown">unknown</span> freshness could not be computed</span>
-  <span><span class="ptag notrun">TAG</span> a protocol whose phases did not run</span>
-  <span><span class="fmt ctrf">CTRF</span> source format, not a quality rating</span>
-</div>
-<footer>
-  <p>A result is marked <strong>stale</strong> once the pointer branch has moved off the commit
-  it tested <em>and</em> the result is more than 14 days old. Both conditions must
-  hold: the pointers move daily, so a newer base alone means very little. When either
-  condition cannot be evaluated the entry reads <strong>freshness unknown</strong> rather
-  than current.</p>
-  <p><strong>Coverage tags reflect outcomes.</strong> A protocol is shown as covered only when
-  a phase carrying that tag passed; a tag whose phases failed or did not run is marked as
-  such, so a skipped handshake is never counted as coverage.</p>
-  <p>Submissions are accepted as CTRF or OpenHTF and normalised to OpenHTF, which is why
-  measurements appear for some entries and not others &mdash; CTRF has no concept of a
-  measurement, so those entries have none by construction rather than by omission.
-  Machine-readable summary: <a href="summary.json">summary.json</a>.</p>
-  <p><strong>Himalayas</strong> is the name of this programme. A submission is a pull request to
-  <a href="https://github.com/EVerest/Himalayas">EVerest/Himalayas</a>.</p>
-</footer>
-</div>
+:root{--ink:#0C2351;--fg:#1E2530;--muted:#556070;--soft:#3A4556;--bg:#F4F6FA;--card:#FFFFFF;--line:#DCE2EC;--line2:#EEF2F8;
+--lime:#BAF419;--link:#1F5FA0;--ok:#0B5E41;--okbg:#DDF5EA;--bad:#8A1C12;--badbg:#FDE7E4;--warn:#7A4A00;--warnbg:#FFF1D6;--dash:#8792A4;
+--mono:'DM Mono',ui-monospace,monospace;--sans:'DM Sans',system-ui,sans-serif;--disp:'DM Serif Display',Georgia,serif}
+:root{--infobg:#E4ECF9;--info:#1F3F7A;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--ink:#CFE0FF;--fg:#E4E8EF;--muted:#9AA6B8;--soft:#B8C2D3;--bg:#0E1420;--card:#161E2D;--line:#2A3547;--line2:#1E2838;
+--link:#7FB4F0;--ok:#7FE0B2;--okbg:#123A2A;--bad:#FF9C90;--badbg:#3C1814;--warn:#FFD48A;--warnbg:#3A2C10;--dash:#6B778A;--infobg:#1C2A48;--info:#A9C4F5;color-scheme:dark}}
+:root[data-theme=dark]{--ink:#CFE0FF;--fg:#E4E8EF;--muted:#9AA6B8;--soft:#B8C2D3;--bg:#0E1420;--card:#161E2D;--line:#2A3547;--line2:#1E2838;
+--link:#7FB4F0;--ok:#7FE0B2;--okbg:#123A2A;--bad:#FF9C90;--badbg:#3C1814;--warn:#FFD48A;--warnbg:#3A2C10;--dash:#6B778A;--infobg:#1C2A48;--info:#A9C4F5;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 var(--sans)}
+a{color:var(--link)}code,.mono{font-family:var(--mono);font-size:.92em}
+button,select,summary{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid #2F96D0;outline-offset:2px}
+header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+header.top .brand{font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{font-size:13px;color:#C9D4E8}
+header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 14px;border-radius:8px}
+header.top nav a[aria-current]{background:#21407A}.bar{height:4px;background:var(--lime)}
+main{max-width:1320px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 20px;min-width:0}
+h1{font-family:var(--disp);font-weight:400;color:var(--ink);margin:0;font-size:32px;text-wrap:balance}
+h2{margin:0 0 10px;font-size:18px;color:var(--ink)}h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+.muted{color:var(--muted)}.small{font-size:13px}.row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.pill{display:inline-block;padding:2px 9px;border-radius:12px;font-weight:700;font-size:13px;white-space:nowrap}
+.v-passing{background:var(--okbg);color:var(--ok)}.v-failing,.v-build-failed{background:var(--badbg);color:var(--bad)}
+.v-passing-partial{background:var(--warnbg);color:var(--warn)}.v-not-exercised,.v-build-only,.v-not-reported{border:1px dashed var(--dash);color:var(--soft);font-weight:500}
+.reg{border:1px solid var(--bad);color:var(--bad);padding:1px 7px;border-radius:10px;font-size:12px;white-space:nowrap}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:8px 12px;border-top:1px solid var(--line2)}thead th{background:var(--line2);color:var(--soft);font-size:12px;border-top:0;white-space:nowrap}
+th[scope=row] a,td>a{white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
+.summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
+.summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
+details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
+.strip{display:flex;gap:2px}.strip span{width:12px;height:18px;border-radius:2px;display:inline-block}
+.s-passing{background:#1E8F64}.s-failing,.s-build-failed{background:#C0392B}.s-passing-partial{background:#D9922B}.s-not-exercised,.s-build-only{background:#8792A4}
+.mx td{text-align:center;font-family:var(--mono);font-size:13px}.mx td.untested{color:var(--dash);border:1px dashed var(--dash)}.mx td.z{color:var(--ok)}.mx td.f{color:var(--bad);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.notice{border-left:0;background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 14px;font-size:14px}
+footer{max-width:1320px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left)) 32px;font-size:12px;color:var(--muted)}
+[hidden]{display:none!important}
+.modules{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.modules code{background:var(--line2);padding:2px 8px;border-radius:6px}
+details.grp{padding:0;overflow:hidden}details.grp>summary{padding:12px 20px}details.grp .items{padding:4px 20px 14px;display:flex;flex-direction:column}
+details.tc{border-top:1px solid var(--line2);padding:4px 0}details.tc>summary{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.dom{margin-bottom:14px}.dom h4{margin:0 0 6px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.cap{border-radius:8px;padding:8px 11px;min-width:130px;border:1px solid transparent;text-align:left;font:inherit;display:flex;flex-direction:column}
+.cap b{font-size:14px}.cap span{font-size:12px}button.cap{cursor:pointer}button.cap[aria-expanded=true],button.cap[aria-pressed=true]{outline:2px solid var(--ink);outline-offset:1px}
+.l4{background:var(--okbg);color:var(--ok)}.l3{background:var(--warnbg);color:var(--warn)}.l2{background:var(--infobg);color:var(--info)}
+.l1{background:var(--card);color:var(--soft);border:1px dashed var(--dash)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--soft)}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px}
+.via{display:flex!important;flex-wrap:wrap;gap:4px;margin-top:5px}.via em{font-style:normal;font-size:11px;border-radius:5px;padding:0 6px;border:1px dashed var(--dash);color:var(--soft);background:var(--card)}
+.via em.ok{border:0;background:var(--okbg);color:var(--ok)}.via em.bad{border:0;background:var(--warnbg);color:var(--warn)}
+tr.meas-fail td{color:var(--bad);font-weight:700}
+td.h4c{color:var(--ok)}td.h3c{color:var(--warn);font-weight:700}
+.seg{display:flex;flex-wrap:wrap;gap:6px}.seg button{min-height:40px;padding:4px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card)}.seg button[aria-pressed=true]{background:var(--ink);color:var(--card)}
+details.integ{border:1px solid var(--line);border-radius:8px;margin-bottom:6px}details.integ>summary{padding:6px 12px;background:var(--line2);border-radius:8px}
+details.integ[open]>summary{border-radius:8px 8px 0 0}
+.theme{position:relative;display:grid;grid-template-columns:repeat(2,1fr);border:1px solid #3A5590;border-radius:20px;padding:2px;margin:0;font-size:13px}
+.theme legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.theme input{position:absolute;opacity:0;pointer-events:none}
+.theme label{position:relative;z-index:1;padding:6px 12px;text-align:center;cursor:pointer;color:#C9D4E8;border-radius:18px;min-height:32px;display:flex;align-items:center;justify-content:center}
+.theme input:checked+label{color:#0C2351;font-weight:700}.theme input:focus-visible+label{outline:3px solid #2F96D0}
+.theme .thumb{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px)/2);border-radius:18px;background:var(--lime);transition:transform .2s ease}
+.theme:has(#th-dark:checked) .thumb{transform:translateX(100%)}
+@media (prefers-reduced-motion:reduce){.theme .thumb{transition:none}}
+.tagfilter{display:flex;gap:10px;align-items:center}
+.tcbody{padding:4px 0 8px 18px}.msg{white-space:pre-wrap;font-family:var(--mono);font-size:12px;background:var(--line2);padding:8px 10px;border-radius:6px;margin:4px 0;overflow-x:auto}
+</style>
+<script>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script></head><body>
+<header class="top"><div class="in"><div><a class="brand" href="index.html" style="color:#fff;text-decoration:none">Himalayas</a>
+<div class="sub">EVerest federated test results, self-reported by integrators</div></div>
+<label class="small" style="display:flex;flex-direction:column;color:#C9D4E8">Pointer<select data-nav style="min-height:40px;padding:6px 8px;border-radius:8px;background:#fff;color:#1E2530;border:0"><option value="index.html" selected>testing/main</option><option value="index-testing-stable-2026-02.html">testing/stable-2026.02</option><option value="index-testing-stable-2026-10.html">testing/stable-2026.10</option></select></label><nav aria-label="Views"><a href="index.html" aria-current="page">Overview</a><a href="detailed.html">Detailed</a><a href="coverage.html">Coverage</a></nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
+<input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
+<input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
+<main><section class="row"><h1>testing/main</h1><span class="muted">Tip <code>f45ba0d</code>, moved 2026-10-23</span></section>
+<p class="small muted" style="margin:0;max-width:80ch">A result counts for this pointer when its exact commit appears in the pointer's log.
+Conformance cells show self-run conformance test cases per standard. Accepted, inconclusive and skipped tests are listed beside the count and never counted as passed or failed.</p>
+<section class="summarybar" aria-label="Filter by verdict"><button type="button" data-f="passing" aria-pressed="false"><b>1</b><span class="small">passing</span></button><button type="button" data-f="failing" aria-pressed="false"><b>3</b><span class="small">failing</span></button><button type="button" data-f="regressed" aria-pressed="false"><b>▲ 2</b><span class="small">with confirmed regressions</span></button></section>
+<details class="card group" open><summary><b>Pionix GmbH</b> <span class="muted small">4 setups · 3 failing</span></summary><div class="scroll"><table><thead><tr><th scope="col">Setup</th><th scope="col">Verdict</th><th scope="col">Tested commit</th><th scope="col">Tested on</th><th scope="col">Env</th><th scope="col">ISO 15118-2<br><span class="muted" style="font-weight:400">via -4</span></th><th scope="col">ISO 15118-3<br><span class="muted" style="font-weight:400">via -5</span></th><th scope="col">ISO 15118-20<br><span class="muted" style="font-weight:400">via -21</span></th><th scope="col">DIN 70121<br><span class="muted" style="font-weight:400"></span></th><th scope="col">IEC 61851<br><span class="muted" style="font-weight:400"></span></th><th scope="col">Other tests<br><span class="muted" style="font-weight:400"></span></th></tr></thead><tbody><tr data-v="passing" data-reg="0"><th scope="row"><a href="setup/pionix-ac-basic.html">ac-basic</a></th><td><span class="pill v-passing">✓ passing</span></td><td class="small"><code>b328178</code> · 1 move behind</td><td class="small"><span data-fresh="current">2026-10-22</span></td><td>SIL</td><td><span class="cell none">–</span></td><td><span class="cell none">–</span></td><td><span class="cell none">–</span></td><td><span class="cell none">–</span></td><td><span class="cell ok">✓ 15/15</span></td><td><span class="cell none">–</span></td></tr><tr data-v="failing" data-reg="1"><th scope="row"><a href="setup/pionix-ac-dc100.html">ac-dc100</a></th><td><span class="pill v-failing">✕ failing</span> <span class="reg">▲ 1 regressed</span></td><td class="small"><code>b328178</code> · 1 move behind</td><td class="small"><span data-fresh="current">2026-10-22</span></td><td>SIL</td><td><span class="cell ok">✓ 2/2</span></td><td><span class="cell bad">✕ 1 failed, 1 passed</span><div class="cell muted">1 accepted</div></td><td><span class="cell none">–</span></td><td><span class="cell none">–</span></td><td><span class="cell none">–</span></td><td><span class="cell none">–</span></td></tr><tr data-v="failing" data-reg="0"><th scope="row"><a href="setup/pionix-ac-full-ocpp.html">ac-full-ocpp</a></th><td><span class="pill v-failing">✕ failing</span></td><td class="small"><code>b328178</code> · 1 move behind</td><td class="small"><span data-fresh="current">2026-10-22</span></td><td>SIL</td><td><span class="cell ok">✓ 37/37</span></td><td><span class="cell bad">✕ 1 failed, 8 passed</span><div class="cell muted">1 inconclusive</div></td><td><span class="cell bad">✕ 1 failed, 131 passed</span></td><td><span class="cell none">–</span></td><td><span class="cell none">–</span></td><td><span class="cell bad">✕ 1 failed, 11 passed</span></td></tr><tr data-v="failing" data-reg="1"><th scope="row"><a href="setup/pionix-dc-full-ocpp.html">dc-full-ocpp</a></th><td><span class="pill v-failing">✕ failing</span> <span class="reg">▲ 12 regressed</span></td><td class="small"><code>b328178</code> · 1 move behind</td><td class="small"><span data-fresh="current">2026-10-22</span></td><td>SIL</td><td><span class="cell ok">✓ 158/158</span></td><td><span class="cell ok">✓ 62/62</span></td><td><span class="cell bad">✕ 1 failed, 131 passed</span></td><td><span class="cell bad">✕ 12 failed, 103 passed</span></td><td><span class="cell none">–</span></td><td><span class="cell ok">✓ 12/12</span><div class="cell muted">1 skipped</div></td></tr></tbody></table></div></details></main>
+<footer>Built 2026-10-23 13:26 UTC from <code>results/</code>, <code>pointers.json</code> and
+<code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
+Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
 <script>
-/* One pointer branch at a time. Progressive enhancement on purpose:
-   every section is in the HTML, so with this script absent the page is the full
-   list. The choice lives in location.hash so a link can name a branch - people
-   share "the state of main", and localStorage cannot be shared. */
-(function () {
-  var nav = document.querySelector(".ptrnav");
-  if (!nav) return;
-  var btn = document.getElementById("pn-btn");
-  var menu = document.getElementById("pn-menu");
-  var cur = document.getElementById("pn-cur");
-  var items = [].slice.call(menu.querySelectorAll("button"));
-  var sections = [].slice.call(document.querySelectorAll("section.pointer"));
-
-  function open(state) {
-    menu.hidden = !state;
-    btn.setAttribute("aria-expanded", state ? "true" : "false");
-  }
-  function show(id, push) {
-    var hit = items.filter(function (b) { return b.dataset.target === id; })[0];
-    if (!hit) hit = items[0];
-    sections.forEach(function (s) { s.hidden = s.id !== hit.dataset.target; });
-    items.forEach(function (b) {
-      b.setAttribute("aria-checked", b === hit ? "true" : "false");
-    });
-    cur.textContent = hit.dataset.pointer;
-    if (push && location.hash.slice(1) !== hit.dataset.target) {
-      history.replaceState(null, "", "#" + hit.dataset.target);
-    }
-  }
-  btn.addEventListener("click", function () {
-    open(btn.getAttribute("aria-expanded") !== "true");
-  });
-  items.forEach(function (b) {
-    b.addEventListener("click", function () {
-      show(b.dataset.target, true);
-      open(false);
-      btn.focus();
-    });
-  });
-  document.addEventListener("click", function (e) {
-    if (!nav.contains(e.target)) open(false);
-  });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { open(false); }
-  });
-  window.addEventListener("hashchange", function () { show(location.hash.slice(1), false); });
-  show(location.hash.slice(1), false);
-})();
-</script>
-</body></html>
+const th=document.getElementById('theme');
+if(th){
+  const root=document.documentElement;
+  const sys=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  document.getElementById('th-'+(root.dataset.theme||sys)).checked=true;
+  th.addEventListener('change',e=>{
+    const v=e.target.value;root.dataset.theme=v;
+    try{localStorage.setItem('theme',v)}catch(e){}});
+}
+document.querySelectorAll('select[data-nav]').forEach(s=>s.addEventListener('change',()=>{location.href=s.value}));
+const bar=document.querySelector('.summarybar');
+if(bar){
+  const apply=f=>{
+    bar.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.f===f)));
+    document.querySelectorAll('tr[data-v]').forEach(tr=>{
+      const show=!f||tr.dataset.v===f||(f==='regressed'&&tr.dataset.reg==='1');tr.hidden=!show});
+    document.querySelectorAll('details.group').forEach(d=>{
+      const vis=[...d.querySelectorAll('tr[data-v]')].some(t=>!t.hidden);d.hidden=!vis;if(f&&vis)d.open=true});
+    try{history.replaceState(null,'',f?'#'+f:location.pathname)}catch(e){}
+  };
+  bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    const cur=location.hash.slice(1);apply(cur===b.dataset.f?'':b.dataset.f)}));
+  if(location.hash)apply(location.hash.slice(1));
+}
+const gb=document.getElementById('grpby'),od=document.getElementById('order'),box=document.getElementById('groups');
+if(gb&&box){
+  const all=[...box.querySelectorAll('details.tc')];
+  const ST=['Failed','Inconclusive','Accepted and waived','Skipped','Passed'];
+  const keyOf=(el,k)=>k==='status'?el.dataset.statusLabel:k==='std'?el.dataset.std:el.dataset.cluster;
+  const regroup=()=>{
+    const k=gb.value,o=od.value,open=new Set([...box.querySelectorAll('details.grp[open]')].map(d=>d.dataset.key));
+    const g=new Map();
+    all.forEach(el=>{const key=keyOf(el,k);if(!g.has(key))g.set(key,[]);g.get(key).push(el)});
+    let keys=[...g.keys()];
+    if(k==='status')keys.sort((a,b)=>ST.indexOf(a)-ST.indexOf(b));
+    else keys.sort((a,b)=>Math.max(...g.get(b).map(e=>+e.dataset.since))-Math.max(...g.get(a).map(e=>+e.dataset.since))||g.get(b).length-g.get(a).length);
+    box.replaceChildren(...keys.map(key=>{
+      const items=g.get(key).sort((a,b)=>o==='name'?a.dataset.name.localeCompare(b.dataset.name):(+b.dataset.since-+a.dataset.since)||a.dataset.name.localeCompare(b.dataset.name));
+      const d=document.createElement('details');d.className='card grp';d.dataset.key=key;if(open.has(key))d.open=true;
+      const s=document.createElement('summary');const b=document.createElement('b');b.textContent=key;
+      const c=document.createElement('span');c.className='muted';c.textContent=' · '+items.length;s.append(b,c);
+      const w=document.createElement('div');w.className='items';w.append(...items);d.append(s,w);return d}));
+  };
+  gb.addEventListener('change',regroup);od.addEventListener('change',regroup);
+  document.getElementById('expand').addEventListener('click',e=>{
+    const open=e.target.textContent==='Expand all';box.querySelectorAll('details.grp').forEach(d=>d.open=open);
+    e.target.textContent=open?'Collapse all':'Expand all'});
+}
+document.querySelectorAll('.seg button[data-env]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.seg button[data-env]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  document.querySelectorAll('[data-envmap]').forEach(s=>s.hidden=s.dataset.envmap!==b.dataset.env)}));
+document.querySelectorAll('button.cap[data-panel]').forEach(b=>b.addEventListener('click',()=>{
+  const sec=b.closest('[data-envmap]'),p=document.getElementById(b.dataset.panel),was=!p.hidden;
+  sec.querySelectorAll('.panel').forEach(x=>x.hidden=true);sec.querySelectorAll('button.cap[data-panel]').forEach(x=>x.setAttribute('aria-expanded','false'));
+  if(!was){p.hidden=false;b.setAttribute('aria-expanded','true');p.scrollIntoView({block:'nearest'})}}));
+const tf=document.getElementById('tagfilter');
+if(tf&&box){
+  const setTag=tag=>{
+    document.querySelectorAll('button.cap[data-tag]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tag===tag)));
+    box.querySelectorAll('details.tc').forEach(el=>el.hidden=!!tag&&!el.dataset.tags.split(' ').includes(tag));
+    box.querySelectorAll('details.grp').forEach(d=>{const n=[...d.querySelectorAll('details.tc')].filter(e=>!e.hidden).length;
+      d.hidden=n===0;d.querySelector('summary .muted').textContent=' · '+n});
+    tf.hidden=!tag;tf.querySelector('b').textContent=tag||'';
+    try{history.replaceState(null,'',tag?'#tag='+tag:location.pathname)}catch(e){}};
+  document.querySelectorAll('button.cap[data-tag]').forEach(b=>b.addEventListener('click',()=>{
+    setTag(b.getAttribute('aria-pressed')==='true'?'':b.dataset.tag);document.getElementById('results').scrollIntoView()}));
+  tf.querySelector('button').addEventListener('click',()=>setTag(''));
+  gb.addEventListener('change',()=>setTag(tf.hidden?'':tf.querySelector('b').textContent));
+  od.addEventListener('change',()=>setTag(tf.hidden?'':tf.querySelector('b').textContent));
+  const h=location.hash.match(/^#tag=(.+)$/);if(h)setTag(decodeURIComponent(h[1]));
+}
+const cmp=document.getElementById('cmp');
+if(cmp){const sync=()=>document.querySelectorAll('[data-cmp]').forEach(s=>s.hidden=s.dataset.cmp!==cmp.value);cmp.addEventListener('change',sync);sync()}
+</script></body></html>

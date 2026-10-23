@@ -821,16 +821,6 @@ def load_build_status(work):
     return mod
 
 
-def cards_of(page):
-    """Each rendered submission card, as its own chunk of HTML.
-
-    The page also renders freshness pills in its legend, so counting pills
-    across the whole document would pass even with every card unmarked.
-    """
-    return [c.split("</article>")[0] for c in page.split("<article ")[1:]
-            if c.startswith('class="card v-')]
-
-
 def suite_docs(work, verbose):
     """Facts the documentation states about the tooling, checked against it.
 
@@ -945,14 +935,14 @@ def suite_docs(work, verbose):
 
 
 def suite_build(work, verbose):
-    """Cover the status page, not just the exit code of the generator.
+    """Cover the status site, not just the exit code of the generator.
 
     `render()` made to return an empty string once shipped a zero-byte page with
     the whole suite green, and the generator's honesty rules - freshness always
-    rendered, a tag only claimed as covered when a phase carrying it passed -
+    rendered, a tag only claimed as covered when a test carrying it passed -
     could each be defeated with a one-line edit and nothing went red. So these
-    assert what is ON the page, and the last case drives render() directly
-    because the state that matters (stale AND failing at once) is not reachable
+    assert what is ON the pages, and the later cases drive build_site() directly
+    because the states that matter (stale AND failing at once) are not reachable
     from the committed data.
     """
     def check(label, cond, detail=""):
@@ -961,124 +951,132 @@ def suite_build(work, verbose):
             print(f"  {'ok  ' if cond else 'FAIL'} {label}"
                   + (f"   {detail}" if detail and not cond else ""))
 
-    r = sh(work, "build_status.py", "--offline")
+    def rows_of(page):
+        """Each overview row, as its own chunk of HTML."""
+        return [r.split("</tr>")[0] for r in page.split("<tr data-v=")[1:]]
+
+    r = sh(work, "build_status.py")
     check("status page generates", r.returncode == 0, r.stdout[-200:])
 
-    summary_path = os.path.join(work, "status", "summary.json")
-    page_path = os.path.join(work, "status", "index.html")
-    s = json.load(open(summary_path)) if os.path.exists(summary_path) else {}
-    page = open(page_path).read() if os.path.exists(page_path) else ""
+    out = os.path.join(work, "status")
+    s = {}
+    if os.path.exists(os.path.join(out, "summary.json")):
+        s = json.load(open(os.path.join(out, "summary.json")))
+    site = {}
+    for dp, _, fns in os.walk(out):
+        for fn in fns:
+            if fn.endswith(".html"):
+                site[os.path.relpath(os.path.join(dp, fn), out)] = open(os.path.join(dp, fn)).read()
+    page = site.get("index.html", "")
+    pointers = s.get("pointers") or {}
+    setups = [m for p in pointers.values() for m in p.get("setups") or []]
 
     check("summary.json has the expected shape",
-          "pointers" in s and s.get("internalFormat") == "openhtf")
+          s.get("version") == 2 and bool(pointers) and s.get("selfReported") is True)
 
     # A zero-byte page is the failure this suite exists for. Size alone is a weak
     # assertion, so the page must also carry its own headline and the caveat
     # that this page is the only home for.
     check("index.html is not empty", len(page) > 4_000, f"{len(page)} bytes")
-    check("page carries its headline", "<h1>Himalayas</h1>" in page
-          and "EVerest federated testing" in page)
+    check("page carries its headline", 'class="brand"' in page and ">Himalayas</a>" in page
+          and "EVerest federated test results" in page)
     check("page carries the self-reported caveat", "self-reported" in page)
 
-    # Every committed submission has to reach the page. load_results() made to
-    # return nothing was green, with all four submissions replaced by "nobody has
-    # reported" placeholders.
+    # Every committed submission has to reach the site. load_records() made to
+    # return nothing was green, with every setup replaced by an empty notice.
     files = [os.path.relpath(os.path.join(dp, fn), work).replace(os.sep, "/")
              for dp, _, fns in os.walk(os.path.join(work, "results"))
              for fn in fns if fn.endswith(".json")]
-    counted = sum(i["submissions"] for p in (s.get("pointers") or {}).values()
-                  for i in (p.get("integrators") or {}).values())
+    counted = (sum(m["submissions"] for m in setups)
+               + sum(len(p.get("unattributed") or []) for p in pointers.values()))
     check("summary.json counts every committed submission",
           bool(files) and counted == len(files), f"{counted} counted, {len(files)} on disk")
     # One check over all of them, not one per file: a per-file count grows with
     # the stored data, and EXPECT cannot guard a number that moves on its own.
-    unlinked = [rel for rel in sorted(files) if rel not in page]
-    check("the page links every committed submission",
+    every = "".join(site.values())
+    unlinked = [rel for rel in sorted(files) if f"../{rel}" not in every]
+    check("the pages link every committed submission",
           bool(files) and not unlinked, f"{len(unlinked)} unlinked: {unlinked[:3]}")
 
     # Freshness is never absent by construction: a missing marker reads as fresh.
-    cards = cards_of(page)
-    unmarked = [c for c in cards
-                if len(re.findall(r'class="pill (?:fresh|stale|unknown)"', c)) != 1]
-    check("every card carries exactly one freshness marker",
-          bool(cards) and not unmarked, f"{len(cards)} card(s), {len(unmarked)} unmarked")
+    rows = rows_of(page)
+    unmarked = [r for r in rows if len(re.findall(r'data-fresh="(?:current|stale|unknown)"', r)) != 1]
+    check("every overview row carries exactly one freshness marker",
+          bool(rows) and not unmarked, f"{len(rows)} row(s), {len(unmarked)} unmarked")
 
-    # A tag whose only phase was skipped must NOT be claimed as covered.
-    seen_states = {v for p in (s.get("pointers") or {}).values()
-                   for i in (p.get("integrators") or {}).values()
-                   for v in (i.get("coverage") or {}).values()}
-    check("a notrun tag survives the rollup",
-          "notrun" in seen_states and 'class="ptag notrun"' in page, f"states={sorted(seen_states)}")
+    # A tag whose only tests were skipped must NOT be claimed as covered.
+    judged = [(m, tag) for m in setups for tag, st in (m.get("coverage") or {}).items() if st == "none"]
+    tiles = []
+    for m, tag in judged:
+        sp = next((v for k, v in site.items() if k.startswith("setup") and m["record"] in v), "")
+        tiles += re.findall(rf'<button class="cap (\w+)"[^>]*data-tag="{re.escape(tag)}"[^>]*>.*?</span>', sp)
+    check("a skipped-only tag reads as not judged",
+          bool(judged) and bool(tiles) and all(t == "l1" for t in tiles)
+          and "none judged" in every, f"{len(judged)} tag(s), tiles={tiles}")
+    states = {st for m in setups for st in (m.get("coverage") or {}).values()}
     check("a failed tag survives the rollup",
-          "failed" in seen_states and 'class="ptag failed"' in page, f"states={sorted(seen_states)}")
+          "fail" in states and 'class="cap l3"' in every, f"states={sorted(states)}")
 
     # Measurements are the reason OpenHTF is the internal format, and a
     # measurement outside its limits is the one a reader must not miss.
-    mfail = sum(i.get("measurementsFailed") or 0
-                for p in (s.get("pointers") or {}).values()
-                for i in (p.get("integrators") or {}).values())
+    mfail = sum(m.get("measurementsFailed") or 0 for m in setups)
     check("a failing measurement reaches the page",
-          mfail >= 1 and 'class="mo no"' in page, f"{mfail} failing")
+          mfail >= 1 and 'class="meas-fail"' in every, f"{mfail} failing")
+
+    bs = load_build_status(work)
+    root = bs.pathlib.Path(work)
+    declared, logs = bs.load_pointers(root)
+    allow = bs.load_allowlist(root)
+    vocab = json.load(open(os.path.join(work, "schema", "vocabulary.json")))
+    recs = bs.load_records(root)
 
     # A declared pointer nobody has tested is an answer, so it is rendered.
+    empty = dict(declared, **{"testing/selftest-empty": {"tracks": "main"}})
+    files_e = bs.build_site([], empty, logs, allow, vocab)
     check("a declared pointer with no results is rendered",
-          'class="card empty"' in page)
+          'class="notice"' in files_e.get(bs.pointer_file("index", "testing/selftest-empty"), ""))
 
     # Stale and failing are orthogonal, and one must never suppress the other.
-    # Not reachable from the committed data - offline runs know no pointer tips -
-    # so drive render() with a moved tip and an aged row.
-    bs = load_build_status(work)
-    rows = bs.load_results()
-    row = None
-    for cand in rows:
-        if cand["phaseFailed"] and cand["commit"]:
-            row = cand
-            break
-    if row is None:
+    # Not reachable from the committed data, so age a failing record at a commit
+    # the pointer has since moved off.
+    main = bs.DEFAULT_POINTER
+    shas = [e["sha"] for e in logs.get(main, [])]
+    rec = next((x for x in recs if bs.verdict(x) == "failing"), None)
+    if rec is None or len(shas) < 2:
         check("sample data carries a failing submission to age", False,
-              "no committed submission has a failed phase")
-        check("a stale card still shows its failing verdict", False, "skipped")
-        check("a stale card still shows the stale marker", False, "skipped")
+              "no committed submission fails, or the pointer never moved")
+        check("a stale row still shows its failing verdict", False, "skipped")
+        check("a stale row still shows the stale marker", False, "skipped")
     else:
-        row = copy.deepcopy(row)
-        row["ranAt"] = int(bs.datetime.datetime.now(bs.datetime.timezone.utc)
-                           .timestamp() * 1000) - 60 * 86_400_000
-        tips = {row["pointer"]: "f" * 40}          # pointer has moved off it
-        page2 = bs.render({row["pointer"]: [row]}, tips, 14, "now",
-                          {row["pointer"]: {"tracks": "main"}})
-        card = (cards_of(page2) or [""])[0]
+        rec = dict(copy.deepcopy(rec), pointer=main, commit=shas[0])
+        rec["start"] = int(bs.NOW.timestamp() * 1000) - 60 * 86_400_000
+        row = (rows_of(bs.build_site([rec], declared, logs, allow, vocab, 14)["index.html"]) or [""])[0]
         check("sample data carries a failing submission to age", True)
-        check("a stale card still shows its failing verdict",
-              "phases failed" in card, card[:120])
-        check("a stale card still shows the stale marker",
-              'class="pill stale"' in card, card[:120])
+        check("a stale row still shows its failing verdict", row.startswith('"failing"'), row[:120])
+        check("a stale row still shows the stale marker", 'data-fresh="stale"' in row, row[:200])
 
-    # A submitted report link is rendered on the card, next to the run log.
-    if not rows:
-        check("a card links the submitted report", False, "no committed submission")
-    else:
-        row = copy.deepcopy(rows[0])
-        row["reportUrl"] = "https://reports.example/run-1/report.pdf"
-        page3 = bs.render({row["pointer"]: [row]}, {}, 14, "now",
-                          {row["pointer"]: {"tracks": "main"}})
-        card = (cards_of(page3) or [""])[0]
-        check("a card links the submitted report",
-              'href="https://reports.example/run-1/report.pdf">report</a>' in card, card[:160])
+    base = next((x for x in recs if x["pointer"] == main and x["commit"] in shas), None)
 
-    # Two SUT configurations of one integrator are two cards, not one card
+    # A submitted report link is rendered on the setup page.
+    if base is None:
+        check("a setup page links the submitted report", False, "no submission on the default pointer")
+        check("each configuration gets its own row", False, "no submission on the default pointer")
+        return
+    url = "https://reports.example/run-1/report.pdf"
+    one = dict(copy.deepcopy(base), report=url)
+    got = bs.build_site([one], declared, logs, allow, vocab)
+    sp = next((v for k, v in got.items() if k.startswith("setup/")), "")
+    check("a setup page links the submitted report", f'href="{url}">report</a>' in sp, sp[:160])
+
+    # Two SUT configurations of one integrator are two rows, not one row
     # showing whichever was submitted last.
-    if not rows:
-        check("each configuration gets its own card", False, "no committed submission")
-    else:
-        a, b = copy.deepcopy(rows[0]), copy.deepcopy(rows[0])
-        a["configuration"], b["configuration"] = "ac-basic", "dc-full"
-        b["ranAt"] = (a["ranAt"] or 0) + 1
-        page4 = bs.render({a["pointer"]: [a, b]}, {}, 14, "now",
-                          {a["pointer"]: {"tracks": "main"}})
-        cards = cards_of(page4)
-        check("each configuration gets its own card",
-              len(cards) == 2 and any("ac-basic" in c for c in cards)
-              and any("dc-full" in c for c in cards), f"{len(cards)} card(s)")
+    a, b = copy.deepcopy(base), copy.deepcopy(base)
+    a["config"], b["config"] = "ac-basic", "dc-full"
+    b["start"] = (a["start"] or 0) + 1
+    rows2 = rows_of(bs.build_site([a, b], declared, logs, allow, vocab)["index.html"])
+    check("each configuration gets its own row",
+          len(rows2) == 2 and any(">ac-basic<" in r for r in rows2)
+          and any(">dc-full<" in r for r in rows2), f"{len(rows2)} row(s)")
 
 
 SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normalise,

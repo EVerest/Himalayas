@@ -125,7 +125,7 @@ never be aged.
 | `scripts/refresh_module_names.py` | Regenerates `schema/everest-modules.txt` from EVerest's module manifests. Run by hand when the list goes stale |
 | `scripts/archive.py` | Strips traces and attachments off records older than 6 months. Run by hand |
 | `scripts/selftest.py` | 141 checks, almost all negative. Run after touching `scripts/` or `schema/` |
-| `scripts/build_status.py` | Generates `status/index.html` and `status/summary.json` |
+| `scripts/build_status.py` | Generates the status site: an overview, detailed and coverage page per pointer, a page per setup, and `summary.json` and `regressions.json` |
 | `status/` | Generated, and deployed to Pages |
 | `docs/design/` | Design records |
 
@@ -138,7 +138,7 @@ python3 -m pip install -r scripts/requirements.txt
 # --skip-commit-check works offline
 python3 scripts/validate_submission.py results/your-id/testing/main/20260909.json
 
-# rebuild the page; --offline skips looking up the pointer tips
+# rebuild the site from results/ and pointers.json; no network needed
 python3 scripts/build_status.py --grace-days 14
 open status/index.html
 
@@ -152,6 +152,8 @@ python3 scripts/selftest.py
 ## Machine-readable output
 
 [`status/summary.json`](status/summary.json) carries the latest result per pointer, per
-integrator and configuration: commit, environment, build status and targets, modules,
-pass, fail and skip counts, tag coverage, age in days, and the stale flag. Read it rather
-than scraping the page.
+integrator and configuration: commit, moves behind the tip, freshness, environment,
+submission count, outcome counts per standard, tag coverage, failing measurements, and
+the path of the record. It also lists records whose commit is not in the pointer's log.
+[`status/regressions.json`](status/regressions.json) lists each regression with its last
+good and first bad commit. Read these rather than scraping the pages.

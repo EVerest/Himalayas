@@ -1,48 +1,49 @@
 # Status page redesign
 
 Design record for the next version of the status page and the reporting conventions it
-depends on. Every decision below has the status **Decided, not implemented**: none of it is
-in `scripts/build_status.py`, `scripts/validate_submission.py` or the schemas yet. The
-contributor-facing summary is
+depends on. A decision marked **Implemented** is in `scripts/build_status.py`. One marked
+**Decided, not implemented** needs a change to `scripts/validate_submission.py`, the
+schemas or `integrators/allowlist.yaml` first; the page renders what records carry today.
+The contributor-facing summary is
 [CONTRIBUTING.md, section 10](../../CONTRIBUTING.md#10-reporting-conventions).
 
 ## Architecture
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Python renders a no-JS HTML baseline plus versioned JSON indexes (`summary.json`, and `regressions.json` per pointer). A small client layer adds filters, URL state, charts and diffs. | The page stays readable without JavaScript, and the JSON is a stable interface for other consumers. | Decided, not implemented |
-| No feed and no hosted service. | Pages hosting and a scheduled build are enough; nothing new to operate. | Decided, not implemented |
+| Python renders a no-JS HTML baseline plus versioned JSON indexes (`summary.json`, and `regressions.json` per pointer). A small client layer adds filters, URL state, charts and diffs. | The page stays readable without JavaScript, and the JSON is a stable interface for other consumers. | Implemented |
+| No feed and no hosted service. | Pages hosting and a scheduled build are enough; nothing new to operate. | Implemented |
 
 ## Views
 
 | Decision | Rationale | Status |
 |---|---|---|
-| One site with a default view and a detailed view, not split by audience. | Integrators and EVerest maintainers ask the same questions at different depths. | Decided, not implemented |
-| The default view opens on `testing/main` and has a pointer selector. | `testing/main` is where most results land. | Decided, not implemented |
-| Add a coverage view and a per-setup detail page. | Coverage gaps and the history of one setup do not fit in a row. | Decided, not implemented |
+| One site with a default view and a detailed view, not split by audience. | Integrators and EVerest maintainers ask the same questions at different depths. | Implemented |
+| The default view opens on `testing/main` and has a pointer selector. | `testing/main` is where most results land. | Implemented |
+| Add a coverage view and a per-setup detail page. | Coverage gaps and the history of one setup do not fit in a row. | Implemented |
 
 ### Default view
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Setups are grouped by integrator, and groups where everything passes are collapsed. | Attention goes to what is failing. | Decided, not implemented |
-| A summary bar whose segments filter the list; filter state lives in the URL. | A filtered view can be linked. | Decided, not implemented |
-| Each row shows the verdict, the tested commit with moves behind the tip, the test date in its own column, one conformance cell per standard (verdict plus counts), and other tests in their own column. | Conformance results and an integrator's own tests are different claims. | Decided, not implemented |
-| Within a group, passing setups are listed before failing ones; the summary bar follows the same order. | The page reads as what works first, then what does not. | Decided, not implemented |
-| A conformance cell names its counts: "✕ 1 failed, 1 passed", with accepted, inconclusive and skipped tests on a second line, never inside the count. | "1 of 2" was read as including the accepted test; one long line widened every column. | Decided, not implemented |
-| A standard without a test-spec mapping (DIN 70121, IEC 61851 today) is shown like any other: no subtitle in the column header and no marker on the counts. The missing mapping is noted on the coverage and detail pages only. | A marker on every cell was noise without telling the reader what to do. | Decided, not implemented |
-| A ▲ badge marks a confirmed regression. | Regressions are the main signal the pointers exist to produce. | Decided, not implemented |
+| Setups are grouped by integrator, and groups where everything passes are collapsed. | Attention goes to what is failing. | Implemented |
+| A summary bar whose segments filter the list; filter state lives in the URL. | A filtered view can be linked. | Implemented |
+| Each row shows the verdict, the tested commit with moves behind the tip, the test date in its own column, one conformance cell per standard (verdict plus counts), and other tests in their own column. | Conformance results and an integrator's own tests are different claims. | Implemented |
+| Within a group, passing setups are listed before failing ones; the summary bar follows the same order. | The page reads as what works first, then what does not. | Implemented |
+| A conformance cell names its counts: "✕ 1 failed, 1 passed", with accepted, inconclusive and skipped tests on a second line, never inside the count. | "1 of 2" was read as including the accepted test; one long line widened every column. | Implemented |
+| A standard without a test-spec mapping (DIN 70121, IEC 61851 today) is shown like any other: no subtitle in the column header and no marker on the counts. The missing mapping is noted on the coverage and detail pages only. | A marker on every cell was noise without telling the reader what to do. | Implemented, except the note on the coverage and detail pages |
+| A ▲ badge marks a confirmed regression. | Regressions are the main signal the pointers exist to produce. | Implemented |
 
 ### Detailed view
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Integrators appear under their display name, as in the default view. | The id is an internal key. | Decided, not implemented |
-| The build column is a ✓ or ✕, with the status in its tooltip. | It is nearly always "passed"; a mark saves the width. | Decided, not implemented |
-| Sections: regressions panel, setups table, comparison. | The history matrix was dropped (see History). | Decided, not implemented |
-| The regressions panel is collapsed by default. Within each state, every integrator is its own collapsed section with a test count, holding that integrator's table. | An integrator heading row read as part of the column titles, and the panel has to scale to many integrators. | Decided, not implemented |
-| The setups table has one results column: passed and failed on the first line, total tests and any accepted, inconclusive or skipped on the second. | Six count columns took most of the width. | Decided, not implemented |
-| Each row shows the last 14 runs as bricks, oldest first: green for no failed tests, red for one or more, with a legend under the table. | A line chart and a third color for partial verdicts were harder to read than two colors. | Decided, not implemented |
+| Integrators appear under their display name, as in the default view. | The id is an internal key. | Implemented |
+| The build column is a ✓ or ✕, with the status in its tooltip. | It is nearly always "passed"; a mark saves the width. | Implemented |
+| Sections: regressions panel, setups table, comparison. | The history matrix was dropped (see History). | Implemented |
+| The regressions panel is collapsed by default. Within each state, every integrator is its own collapsed section with a test count, holding that integrator's table. | An integrator heading row read as part of the column titles, and the panel has to scale to many integrators. | Implemented |
+| The setups table has one results column: passed and failed on the first line, total tests and any accepted, inconclusive or skipped on the second. | Six count columns took most of the width. | Implemented |
+| Each row shows the last 14 runs as bricks, oldest first: green for no failed tests, red for one or more, with a legend under the table. | A line chart and a third color for partial verdicts were harder to read than two colors. | Implemented |
 
 ### Detail page
 
@@ -62,47 +63,47 @@ Sections, in order:
 
 | Decision | Rationale | Status |
 |---|---|---|
-| The section order above. | The chart answers "is it getting better" before the reader opens individual tests. | Decided, not implemented |
-| The detail page shows the test date, not a freshness label. | The date is unambiguous; freshness belongs in the overview. | Decided, not implemented |
-| The integrator field shows the name only, without "self-reported". | The site header already says every result is self-reported. | Decided, not implemented |
+| The section order above. | The chart answers "is it getting better" before the reader opens individual tests. | Implemented |
+| The detail page shows the test date, not a freshness label. | The date is unambiguous; freshness belongs in the overview. | Implemented |
+| The integrator field shows the name only, without "self-reported". | The site header already says every result is self-reported. | Implemented |
 
 ## Verdicts and freshness
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Row verdicts, in precedence order: `build-failed` > `failing` > `passing-partial` > `passing` > `not-exercised` > `build-only`, plus `not-reported`. | One ordering resolves every mix of outcomes the same way. | Decided, not implemented |
-| A run in which every test was skipped is `not-exercised`. | Skips are not passes. | Decided, not implemented |
-| The row verdict counts all tests, not only conformance tests. | An integrator's own failing test is still a failure. | Decided, not implemented |
-| Freshness is `current`, `stale` or `unknown`, with a grace of 14 days. The page also shows how many moves the result is behind the pointer tip. | "Stale" alone hides whether the base is one move or forty behind. | Decided, not implemented |
+| Row verdicts, in precedence order: `build-failed` > `failing` > `passing-partial` > `passing` > `not-exercised` > `build-only`, plus `not-reported`. | One ordering resolves every mix of outcomes the same way. | Implemented, except `not-reported`, which waits on the setups list (see Not reported) |
+| A run in which every test was skipped is `not-exercised`. | Skips are not passes. | Implemented |
+| The row verdict counts all tests, not only conformance tests. | An integrator's own failing test is still a failure. | Implemented |
+| Freshness is `current`, `stale` or `unknown`, with a grace of 14 days. The page also shows how many moves the result is behind the pointer tip. | "Stale" alone hides whether the base is one move or forty behind. | Implemented |
 
 ## Test outcomes
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Outcomes are `passed`, `failed`, `skipped`, `accepted` (deviation), `inconclusive`, and `waived` (by EVerest). | Each answers a different question and is shown differently. | Decided, not implemented |
+| Outcomes are `passed`, `failed`, `skipped`, `accepted` (deviation), `inconclusive`, and `waived` (by EVerest). | Each answers a different question and is shown differently. | Implemented, except `waived`, which waits on `waivers.yaml` |
 
 ### Accepted deviations
 
 | Decision | Rationale | Status |
 |---|---|---|
-| `tests[].extra.acceptedDeviation {reason, clause, since}` is the source of truth. The test keeps `status: failed`. | The clause is structured data, and a deviation is not a pass. | Decided, not implemented |
-| An accepted deviation is never shown as a pass. | The test did not meet the clause. | Decided, not implemented |
-| The bare tag `x-accepted-deviation` draws a gate warning and is shown as "accepted (clause not declared)" for a transition period. This is today's Pionix encoding: `status: skipped`, `rawStatus: "FAIL EXPECTED"`, clause only in the message text. | Existing records keep rendering while producers move to the structured form. | Decided, not implemented |
+| `tests[].extra.acceptedDeviation {reason, clause, since}` is the source of truth. The test keeps `status: failed`. | The clause is structured data, and a deviation is not a pass. | Rendered by the builder; not yet in the schema or the gate |
+| An accepted deviation is never shown as a pass. | The test did not meet the clause. | Implemented |
+| The bare tag `x-accepted-deviation` draws a gate warning and is shown as "accepted (clause not declared)" for a transition period. This is today's Pionix encoding: `status: skipped`, `rawStatus: "FAIL EXPECTED"`, clause only in the message text. | Existing records keep rendering while producers move to the structured form. | Rendered as "clause not declared"; the gate warning is not implemented |
 
 ### Inconclusive
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Inconclusive is its own outcome: CTRF `status: "other"` plus `tests[].extra.inconclusive {reason}`. | Today the same harness verdict is emitted as `failed` (tag `x-inconclusive`) or as `skipped` (tag `x-rig-limitation`), inconsistently. | Decided, not implemented |
-| Never a pass or a failure. Shown amber; makes the row `passing-partial` at most. | No verdict was reached. | Decided, not implemented |
-| `passed` to `inconclusive` is not a regression. It is listed as "inconclusive since" on the detail page. | Nothing is known to have broken. | Decided, not implemented |
+| Inconclusive is its own outcome: CTRF `status: "other"` plus `tests[].extra.inconclusive {reason}`. | Today the same harness verdict is emitted as `failed` (tag `x-inconclusive`) or as `skipped` (tag `x-rig-limitation`), inconsistently. | Rendered by the builder; not yet in the schema or the gate |
+| Never a pass or a failure. Shown amber; makes the row `passing-partial` at most. | No verdict was reached. | Implemented |
+| `passed` to `inconclusive` is not a regression. It is listed as "inconclusive since" on the detail page. | Nothing is known to have broken. | Implemented |
 
 ### Rig limitations
 
 | Decision | Rationale | Status |
 |---|---|---|
-| `x-rig-limitation` is a skip reason: not exercised on this rig. | It describes the rig, not the software under test. | Decided, not implemented |
-| A passed test carrying the tag stays a pass, with a footnote. | Its outcome was reported as a pass. | Decided, not implemented |
+| `x-rig-limitation` is a skip reason: not exercised on this rig. | It describes the rig, not the software under test. | Implemented |
+| A passed test carrying the tag stays a pass, with a footnote. | Its outcome was reported as a pass. | Implemented |
 
 ### Waivers
 
@@ -120,7 +121,7 @@ Sections, in order:
 | A vocabulary group `conformanceSpecs` maps test spec to standard: `ISO15118-4` to ISO 15118-2, `ISO15118-5` to ISO 15118-3, `ISO15118-21` to ISO 15118-20, `DIN70122` to DIN 70121. | The cell belongs to the standard, the tag names the test specification. | Decided, not implemented |
 | OCPP tags `OCPP1.6-TestCases`, `OCPP2.0.1-Part6`, `OCPP2.1-Part6`, one cell per version. | OCPP versions are separate standards. | Decided, not implemented |
 | The `compliance` lifecycle tag is deprecated, with a warning. | It says nothing about which specification. | Decided, not implemented |
-| Wording for every standard: "Conformance test cases, self-run". Never "certified" or "compliant", and no logos. | Results are self-reported; certification is a separate process. | Decided, not implemented |
+| Wording for every standard: "Conformance test cases, self-run". Never "certified" or "compliant", and no logos. | Results are self-reported; certification is a separate process. | Implemented |
 
 ### Requirement IDs
 
@@ -140,20 +141,20 @@ Sections, in order:
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Provenance is self-declared at three levels: own harness (`results.tool.name`); reference test system (`testSystem {name, version}` from a vocabulary, plus an attached report); certified (only a link to OCA's Certified Products List). | The reader can tell what kind of claim a result is. | Decided, not implemented |
+| Provenance is self-declared at three levels: own harness (`results.tool.name`); reference test system (`testSystem {name, version}` from a vocabulary, plus an attached report); certified (only a link to OCA's Certified Products List). | The reader can tell what kind of claim a result is. | Implemented for own harness and reference test system; the certified level is not |
 | Optional `extra.reportSha256` next to `reportUrl`. | A hash pins the document a link pointed at. | Decided, not implemented |
 | A VDoC (the Vendor Declaration of Conformance PDF that OCTT generates) is submitted as the report. There is no separate VDoC field. | It is evidence like any other report; a second field adds nothing. | Decided, not implemented |
-| Evidence is labeled "linked by the integrator"; a link without a hash shows "unverified link", muted. | Linking is not verification. | Decided, not implemented |
-| The builder never fetches evidence, and reports are not mirrored into the repository. | No third-party content is hosted or vouched for. | Decided, not implemented |
+| Evidence is labeled "linked by the integrator"; a link without a hash shows "unverified link", muted. | Linking is not verification. | Implemented; every link shows as unverified until `reportSha256` exists |
+| The builder never fetches evidence, and reports are not mirrored into the repository. | No third-party content is hosted or vouched for. | Implemented |
 
 ## Attribution and comparison
 
 | Decision | Rationale | Status |
 |---|---|---|
-| A result counts for every pointer whose log in `pointers.json` contains its exact commit SHA, labeled "reported under ...". Freshness is computed against each pointer's own tip. | The same commit is often the tip of more than one pointer. | Decided, not implemented |
-| Comparison is a toggle in the detailed view: both verdicts plus a test diff (fails only on A, only on B, on both). | A diff answers "what differs" directly. | Decided, not implemented |
-| A test that ran on one side only is "not run", never "fixed". | Absence is not a pass. | Decided, not implemented |
-| Test identity is the test name, with a warning on duplicate names. | Names are the only identifier every record has. | Decided, not implemented |
+| A result counts for every pointer whose log in `pointers.json` contains its exact commit SHA, labeled "reported under ...". Freshness is computed against each pointer's own tip. | The same commit is often the tip of more than one pointer. | Implemented, except the "reported under ..." label |
+| Comparison is a toggle in the detailed view: both verdicts plus a test diff (fails only on A, only on B, on both). | A diff answers "what differs" directly. | Implemented |
+| A test that ran on one side only is "not run", never "fixed". | Absence is not a pass. | Implemented |
+| Test identity is the test name, with a warning on duplicate names. | Names are the only identifier every record has. | Implemented |
 
 ## History, regressions and flakiness
 
@@ -161,38 +162,36 @@ Sections, in order:
 
 | Decision | Rationale | Status |
 |---|---|---|
-| The detailed view has no history matrix. Each setup row carries a small line chart of failed tests over its last 14 runs instead. | The per-row chart shows the trend without a second table; colored run strips did not say what each color meant. | Decided, not implemented |
-| The detail page has a chart of failed tests per move, with test-count changes annotated. | A drop in failures from fewer tests is not an improvement. | Decided, not implemented |
+| The detailed view has no history matrix. Each setup row carries its last 14 runs as bricks instead (see Detailed view). | The per-row strip shows the trend without a second table. | Implemented |
+| The detail page has a chart of failed tests per move, with test-count changes annotated. | A drop in failures from fewer tests is not an improvement. | Implemented |
 
 ### Regressions
 
 | Decision | Rationale | Status |
 |---|---|---|
-| The detailed view's regressions panel is grouped by state (confirmed, suspected, flaky and failing now), then by integrator under its display name. | The reader triages by certainty first, then by who has to act. | Decided, not implemented |
-| A regression is a test that passed at the previous tested commit and fails at the next, reported as a range across any untested moves, and listed until the test passes again. | The range is all the data supports. | Decided, not implemented |
-| Two states. **Suspected**: one failing run; shown on the detail page, in the detailed panel, and in `regressions.json` with `confirmed: false`; no badge. **Confirmed**: a repeat failure, at the same commit or the next tested commit; gets the ▲ badge; the range is kept from the first failure. | A single failure is often noise. | Decided, not implemented |
-| The rule is uniform for all tests. | No per-test exceptions to maintain. | Decided, not implemented |
+| The detailed view's regressions panel is grouped by state (confirmed, suspected, flaky and failing now), then by integrator under its display name. | The reader triages by certainty first, then by who has to act. | Implemented |
+| A regression is a test that passed at the previous tested commit and fails at the next, reported as a range across any untested moves, and listed until the test passes again. | The range is all the data supports. | Implemented |
+| Two states. **Suspected**: one failing run; shown on the detail page, in the detailed panel, and in `regressions.json` with `confirmed: false`; no badge. **Confirmed**: a repeat failure, at the same commit or the next tested commit; gets the ▲ badge; the range is kept from the first failure. | A single failure is often noise. | Implemented |
+| The rule is uniform for all tests. | No per-test exceptions to maintain. | Implemented |
 
 ### Flaky tests
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Window: the last 10 runs, every run counted including repeats. Flaky means two or more flips, or disagreement at one commit, within the window. | Simple and computable from the records alone. | Decided, not implemented |
-| The current streak decides first: if every run in the current failing streak failed and it spans two or more tested commits, it is a steady failure (regression or long-standing), tagged "previously flaky". | A test that is now failing consistently needs attention whatever its past. | Decided, not implemented |
-| Flaky tests that pass now go in a collapsed "Flaky (passing now)" list with no verdict effect, and leave it after 10 consistent runs. | Visible without moving the verdict. | Decided, not implemented |
+| Window: the last 10 runs, every run counted including repeats. Flaky means two or more flips, or disagreement at one commit, within the window. | Simple and computable from the records alone. | Implemented |
+| The current streak decides first: if every run in the current failing streak failed and it spans two or more tested commits, it is a steady failure (regression or long-standing), tagged "previously flaky". | A test that is now failing consistently needs attention whatever its past. | Implemented |
+| Flaky tests that pass now go in a collapsed "Flaky (passing now)" list with no verdict effect, and leave it after 10 consistent runs. | Visible without moving the verdict. | Implemented |
 
 ### Failure clustering
 
 | Decision | Rationale | Status |
 |---|---|---|
-| The cluster key is the first line of the message with only volatile tokens blanked (hex addresses, decimals, ISO timestamps, UUIDs); integers are kept. | Integers often carry meaning, such as a response code or a step number. | Decided, not implemented |
-| An optional integrator-supplied `tests[].extra.failureKey` wins when present. | The producer knows its failure modes best. | Decided, not implemented |
-| The cluster title is the key; the raw message is behind a disclosure. | Titles stay short and comparable. | Decided, not implemented |
+| The cluster key is the first line of the message with only volatile tokens blanked (hex addresses, decimals, ISO timestamps, UUIDs); integers are kept. | Integers often carry meaning, such as a response code or a step number. | Implemented |
+| An optional integrator-supplied `tests[].extra.failureKey` wins when present. | The producer knows its failure modes best. | Implemented |
+| The cluster title is the key; the raw message is behind a disclosure. | Titles stay short and comparable. | Implemented |
 
 ## Coverage
 
-| Decision | Rationale | Status |
-|---|---|---|
 The coverage view answers which kinds of charging, which protocols and which features
 reported tests show working. It is a capability map: tiles in four groups, each tile
 one vocabulary tag.
@@ -204,15 +203,15 @@ one vocabulary tag.
 
 | Decision | Rationale | Status |
 |---|---|---|
-| "Supported" means evidenced by reported tests. EVerest's own feature claims and the modules a setup loads are not counted. | Every setup loads the OCPP and ISO 15118 modules, even when it does not test them, and a claims list would drift from the README. | Decided, not implemented |
-| A capability map of tiles replaces the table with one row per vocabulary entry. Tiles with no reports stay on the map, dashed. | The question is high level; gaps are as useful as coverage. | Decided, not implemented |
-| A feature tile lists its carriers as chips. A chip fills once a test carries both the feature tag and the carrier tag. Carriers: PnC, TLS and smart charging over ISO 15118-2, ISO 15118-20 and OCPP; reservation and Eichrecht over OCPP; V2X over AC and DC. | A feature only means something through a protocol: PnC over ISO 15118-2 is a different claim from PnC over OCPP. | Decided, not implemented |
-| The carrier list is fixed in `vocabulary.json`, next to the tags. | Tags are flat; only a fixed list can show a carrier as "possible, not reported". | Decided, not implemented |
-| Across setups, the best setup wins: a tile is green when any setup passes its tests. The caption keeps the failing count ("passing on 1 · 2 failing"). | The page answers whether EVerest supports a capability somewhere; the caption and the setup list keep failures visible. | Decided, not implemented |
-| Per setup, a tile passes when no test with its tag failed and at least one passed. Passing with no `compliance` test shows as "own tests only". | Accepted, inconclusive and skipped tests do not decide a tile, as in the conformance cells. | Decided, not implemented |
-| An All / SIL / HIL filter above the map. Build target is not on the map. | A HIL pass is a stronger claim; with best-setup-wins a SIL pass would otherwise speak for a HIL failure. A capability rarely passes on one target and fails on another. | Decided, not implemented |
-| Selecting a tile opens a list of the setups behind it, with each setup's counts for that tag only and its environment. Each setup links to its detail page, filtered to the tag. | A best-setup tile hides disagreement by design, so the selection has to show it. | Decided, not implemented |
-| The detail page carries the same map for its one setup, colored by that setup's result. | One setup needs no aggregation rule. | Decided, not implemented |
+| "Supported" means evidenced by reported tests. EVerest's own feature claims and the modules a setup loads are not counted. | Every setup loads the OCPP and ISO 15118 modules, even when it does not test them, and a claims list would drift from the README. | Implemented |
+| A capability map of tiles replaces the table with one row per vocabulary entry. Tiles with no reports stay on the map, dashed. | The question is high level; gaps are as useful as coverage. | Implemented |
+| A feature tile lists its carriers as chips. A chip fills once a test carries both the feature tag and the carrier tag. Carriers: PnC, TLS and smart charging over ISO 15118-2, ISO 15118-20 and OCPP; reservation and Eichrecht over OCPP; V2X over AC and DC. | A feature only means something through a protocol: PnC over ISO 15118-2 is a different claim from PnC over OCPP. | Implemented |
+| The carrier list is fixed in `vocabulary.json`, next to the tags. | Tags are flat; only a fixed list can show a carrier as "possible, not reported". | Implemented |
+| Across setups, the best setup wins: a tile is green when any setup passes its tests. The caption keeps the failing count ("passing on 1 · 2 failing"). | The page answers whether EVerest supports a capability somewhere; the caption and the setup list keep failures visible. | Implemented |
+| Per setup, a tile passes when no test with its tag failed and at least one passed. Passing with no `compliance` test shows as "own tests only". | Accepted, inconclusive and skipped tests do not decide a tile, as in the conformance cells. | Implemented |
+| An All / SIL / HIL filter above the map. Build target is not on the map. | A HIL pass is a stronger claim; with best-setup-wins a SIL pass would otherwise speak for a HIL failure. A capability rarely passes on one target and fails on another. | Implemented |
+| Selecting a tile opens a list of the setups behind it, with each setup's counts for that tag only and its environment. Each setup links to its detail page, filtered to the tag. | A best-setup tile hides disagreement by design, so the selection has to show it. | Implemented |
+| The detail page carries the same map for its one setup, colored by that setup's result. | One setup needs no aggregation rule. | Implemented |
 
 ## Test identity hygiene
 
@@ -220,7 +219,7 @@ one vocabulary tag.
 |---|---|---|
 | The gate warns on a test with no tag from the vocabulary groups. | An untagged test cannot appear in any per-standard view. | Decided, not implemented |
 | The gate warns on a record mixing naming schemes within one suite, for example a pytest node id `path.py::test_x[dut]` among `TC_` names. | Mixed schemes break identity across runs. Real case: Pionix's skipped DIN `ChargeParameterDiscovery_008` is emitted as a pytest node id without spec tags. | Decided, not implemented |
-| The builder puts untagged tests under "Other tests", marked untagged, and never infers a standard from the suite or name. | Inference would make claims the integrator did not make. | Decided, not implemented |
+| The builder puts untagged tests under "Other tests", marked untagged, and never infers a standard from the suite or name. | Inference would make claims the integrator did not make. | Implemented |
 
 ## Not reported
 
