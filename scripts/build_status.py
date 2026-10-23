@@ -842,7 +842,7 @@ def day_chart(P, days=90):
         tip = f'{d:%Y-%m-%d}: ' + (" · ".join(f"{v[i]} {DAY_SERIES[i][0]}" for i in used if v[i]) or "no setup reported yet")
         parts.append(f'<rect x="{cx - step / 2:.1f}" y="{top}" width="{step:.1f}" height="{y0 - top}" fill="transparent"><title>{tip}</title></rect>')
         if (len(rows) - 1 - k) % every == 0:
-            parts.append(f'<text x="{cx:.1f}" y="{y0 + 18}" text-anchor="middle" font-size="11" font-family="DM Mono,monospace" fill="var(--soft)">{d:%m-%d}</text>')
+            parts.append(f'<text x="{cx:.1f}" y="{y0 + 18}" text-anchor="middle" font-size="11" font-family="DM Mono,monospace" fill="var(--soft)">{d:%d-%m}</text>')
     legend = "".join(
         f'<span class="lg"><i style="{"border:1px dashed var(--dash)" if DAY_SERIES[i][2] == "none" else "background:" + DAY_SERIES[i][2]}"></i>{DAY_SERIES[i][0]}</span>'
         for i in used)
@@ -863,7 +863,7 @@ def run_strip(m, n=14):
     cells = []
     for r in runs:
         f = sum(1 for t in r["tests"] if t["outcome"] == "failed")
-        cells.append(f'<span class="s-{"failing" if f else "passing"}" title="{short(r["commit"])} {ms_to_dt(r["start"]):%m-%d %H:%M}: {f} failed"></span>')
+        cells.append(f'<span class="s-{"failing" if f else "passing"}" title="{short(r["commit"])} {ms_to_dt(r["start"]):%d-%m %H:%M}: {f} failed"></span>')
     return f'<div class="strip" role="img" aria-label="last {len(runs)} runs, oldest first">{"".join(cells)}</div>'
 
 

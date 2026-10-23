@@ -1034,6 +1034,11 @@ def suite_build(work, verbose):
     check("the contribute page carries every CONTRIBUTING section, and the overview links it",
           bool(want) and not missing and 'href="contribute.html"' in page, f"missing {missing[:3]}")
 
+    # Dates read YYYY-MM-DD or DD-MM, never month first.
+    src = open(os.path.join(work, "scripts", "build_status.py")).read()
+    bad_fmt = re.findall(r"(?<!%Y-)%m-%d|%m/%d", src)
+    check("dates are written YYYY-MM-DD or DD-MM", not bad_fmt, f"{len(bad_fmt)} month-first format(s)")
+
     # A sha a reader sees opens that commit in EVerest. A call site that skips
     # commit_link renders a bare <code> sha and nothing else would notice.
     bare = sorted({sha for sha in re.findall(r"(?<!/commit/[0-9a-f]{40}\">)<code>([0-9a-f]{7})</code>", every)})
@@ -1125,7 +1130,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 21, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 22, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
