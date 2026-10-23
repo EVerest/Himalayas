@@ -40,7 +40,7 @@ contributor-facing summary is
 | Integrators appear under their display name, as in the default view. | The id is an internal key. | Decided, not implemented |
 | The build column is a ✓ or ✕, with the status in its tooltip. | It is nearly always "passed"; a mark saves the width. | Decided, not implemented |
 | Sections: regressions panel, setups table, comparison. | The history matrix was dropped (see History). | Decided, not implemented |
-| The regressions panel is collapsed by default. Its tables carry the integrator as an ordinary first column, spanning that integrator's rows. | An integrator heading row read as part of the column titles. | Decided, not implemented |
+| The regressions panel is collapsed by default. Within each state, every integrator is its own collapsed section with a test count, holding that integrator's table. | An integrator heading row read as part of the column titles, and the panel has to scale to many integrators. | Decided, not implemented |
 | The setups table has one results column: passed and failed on the first line, total tests and any accepted, inconclusive or skipped on the second. | Six count columns took most of the width. | Decided, not implemented |
 | Each row shows the last 14 runs as bricks, oldest first: green for no failed tests, red for one or more, with a legend under the table. | A line chart and a third color for partial verdicts were harder to read than two colors. | Decided, not implemented |
 
