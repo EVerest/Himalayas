@@ -29,7 +29,7 @@ contributor-facing summary is
 | A summary bar whose segments filter the list; filter state lives in the URL. | A filtered view can be linked. | Decided, not implemented |
 | Each row shows the verdict, the tested commit with moves behind the tip, the test date in its own column, one conformance cell per standard (verdict plus counts), and other tests in their own column. | Conformance results and an integrator's own tests are different claims. | Decided, not implemented |
 | Within a group, passing setups are listed before failing ones; the summary bar follows the same order. | The page reads as what works first, then what does not. | Decided, not implemented |
-| A conformance cell names its counts: "✕ 1 failed, 1 passed · 1 accepted". Accepted, inconclusive and skipped tests are listed beside the count, never inside it. | "1 of 2" was read as including the accepted test. | Decided, not implemented |
+| A conformance cell names its counts: "✕ 1 failed, 1 passed", with accepted, inconclusive and skipped tests on a second line, never inside the count. | "1 of 2" was read as including the accepted test; one long line widened every column. | Decided, not implemented |
 | A standard without a test-spec mapping (DIN 70121, IEC 61851 today) is shown like any other: no subtitle in the column header and no marker on the counts. The missing mapping is noted on the coverage and detail pages only. | A marker on every cell was noise without telling the reader what to do. | Decided, not implemented |
 | A ▲ badge marks a confirmed regression. | Regressions are the main signal the pointers exist to produce. | Decided, not implemented |
 
@@ -39,7 +39,10 @@ contributor-facing summary is
 |---|---|---|
 | Integrators appear under their display name, as in the default view. | The id is an internal key. | Decided, not implemented |
 | The build column is a ✓ or ✕, with the status in its tooltip. | It is nearly always "passed"; a mark saves the width. | Decided, not implemented |
-| Sections: regressions panel, setups table with a per-row line chart of failed tests, comparison. | The history matrix was dropped (see History). | Decided, not implemented |
+| Sections: regressions panel, setups table, comparison. | The history matrix was dropped (see History). | Decided, not implemented |
+| The regressions panel is collapsed by default. Its tables carry the integrator as an ordinary first column, spanning that integrator's rows. | An integrator heading row read as part of the column titles. | Decided, not implemented |
+| The setups table has one results column: passed and failed on the first line, total tests and any accepted, inconclusive or skipped on the second. | Six count columns took most of the width. | Decided, not implemented |
+| Each row shows the last 14 runs as bricks, oldest first: green for no failed tests, red for one or more, with a legend under the table. | A line chart and a third color for partial verdicts were harder to read than two colors. | Decided, not implemented |
 
 ### Detail page
 
@@ -47,7 +50,8 @@ Sections, in order:
 
 1. Header: verdict, test date, commit and moves behind the pointer tip, environment,
    provenance, evidence, build, and the full module list (always shown, not folded).
-2. Conformance cells.
+2. Capability map for this setup (see Coverage). Selecting a tile filters the test
+   results to that tag.
 3. History chart: failed tests per pointer move, with test-count changes annotated.
 4. Test results: one collapsible group per status (failed, inconclusive, accepted and
    waived, skipped, passed), all collapsed by default. Each test is itself collapsible
@@ -60,6 +64,7 @@ Sections, in order:
 |---|---|---|
 | The section order above. | The chart answers "is it getting better" before the reader opens individual tests. | Decided, not implemented |
 | The detail page shows the test date, not a freshness label. | The date is unambiguous; freshness belongs in the overview. | Decided, not implemented |
+| The integrator field shows the name only, without "self-reported". | The site header already says every result is self-reported. | Decided, not implemented |
 
 ## Verdicts and freshness
 
@@ -188,8 +193,26 @@ Sections, in order:
 
 | Decision | Rationale | Status |
 |---|---|---|
-| One row per vocabulary entry: setups exercising it, setups passing it, integrators. Gaps are listed explicitly. | What nobody tests is the useful answer. | Decided, not implemented |
-| Coverage counts test tags only, plus build target and test environment. Loaded modules are shown raw on the detail page and never counted. | Every setup loads the OCPP and ISO 15118 modules, even when it does not test them. | Decided, not implemented |
+The coverage view answers which kinds of charging, which protocols and which features
+reported tests show working. It is a capability map: tiles in four groups, each tile
+one vocabulary tag.
+
+- Charging: AC, DC, bidirectional (V2X).
+- Vehicle communication: IEC 61851, ISO 15118-3, ISO 15118-2, ISO 15118-20, DIN 70121.
+- Backend and energy management: OCPP 1.6, OCPP 2.0.1, OCPP 2.1, EEBUS.
+- Features: Plug & Charge, TLS, smart charging, reservation, Eichrecht.
+
+| Decision | Rationale | Status |
+|---|---|---|
+| "Supported" means evidenced by reported tests. EVerest's own feature claims and the modules a setup loads are not counted. | Every setup loads the OCPP and ISO 15118 modules, even when it does not test them, and a claims list would drift from the README. | Decided, not implemented |
+| A capability map of tiles replaces the table with one row per vocabulary entry. Tiles with no reports stay on the map, dashed. | The question is high level; gaps are as useful as coverage. | Decided, not implemented |
+| A feature tile lists its carriers as chips. A chip fills once a test carries both the feature tag and the carrier tag. Carriers: PnC, TLS and smart charging over ISO 15118-2, ISO 15118-20 and OCPP; reservation and Eichrecht over OCPP; V2X over AC and DC. | A feature only means something through a protocol: PnC over ISO 15118-2 is a different claim from PnC over OCPP. | Decided, not implemented |
+| The carrier list is fixed in `vocabulary.json`, next to the tags. | Tags are flat; only a fixed list can show a carrier as "possible, not reported". | Decided, not implemented |
+| Across setups, the best setup wins: a tile is green when any setup passes its tests. The caption keeps the failing count ("passing on 1 · 2 failing"). | The page answers whether EVerest supports a capability somewhere; the caption and the setup list keep failures visible. | Decided, not implemented |
+| Per setup, a tile passes when no test with its tag failed and at least one passed. Passing with no `compliance` test shows as "own tests only". | Accepted, inconclusive and skipped tests do not decide a tile, as in the conformance cells. | Decided, not implemented |
+| An All / SIL / HIL filter above the map. Build target is not on the map. | A HIL pass is a stronger claim; with best-setup-wins a SIL pass would otherwise speak for a HIL failure. A capability rarely passes on one target and fails on another. | Decided, not implemented |
+| Selecting a tile opens a list of the setups behind it, with each setup's counts for that tag only and its environment. Each setup links to its detail page, filtered to the tag. | A best-setup tile hides disagreement by design, so the selection has to show it. | Decided, not implemented |
+| The detail page carries the same map for its one setup, colored by that setup's result. | One setup needs no aggregation rule. | Decided, not implemented |
 
 ## Test identity hygiene
 
