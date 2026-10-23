@@ -1148,7 +1148,7 @@ def suite_build(work, verbose):
     check("the run strip sizes failing runs by their failed count",
           [c for c, _ in bars] == ["s-passing", "s-failing", "s-failing", "s-not-exercised", "s-build-failed"]
           and int(bars[1][1]) < int(bars[2][1]) == bs.STRIP_H and int(bars[0][1]) < int(bars[1][1])
-          and "3 failed of 103 judged" in strip, f"{bars}")
+          and 'title="97.1% passed · 3 failed of 103 judged · ' in strip, f"{bars}")
 
     # summary.json carries the unrounded rate for other consumers.
     rates = [(st.get("passRate", "missing"), st["counts"]) for st in setups]

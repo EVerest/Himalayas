@@ -943,10 +943,10 @@ def run_strip(m, n=14):
             cls, h, tip = "s-not-exercised", 4, "no judged tests"
         elif c["failed"]:
             cls, h = "s-failing", 6 + round((STRIP_H - 6) * c["failed"] / worst)
-            tip = f'{c["failed"]} failed of {c["passed"] + c["failed"]} judged · {pct(rate, c["failed"])} passed'
+            tip = f'{pct(rate, c["failed"])} passed · {c["failed"]} failed of {c["passed"] + c["failed"]} judged'
         else:
-            cls, h, tip = "s-passing", 4, f'none failed of {c["passed"]} judged'
-        cells.append(f'<span class="{cls}" style="height:{h}px" title="{when}: {tip}"></span>')
+            cls, h, tip = "s-passing", 4, f'100% passed · none failed of {c["passed"]} judged'
+        cells.append(f'<span class="{cls}" style="height:{h}px" title="{tip} · {when}"></span>')
     return f'<div class="strip" role="img" aria-label="last {len(runs)} runs, oldest first">{"".join(cells)}</div>'
 
 
