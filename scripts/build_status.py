@@ -731,9 +731,26 @@ def pointer_file(base, name):
     return f"{base}.html" if name == DEFAULT_POINTER else f"{base}-{slug(name)}.html"
 
 
-def pointer_select(base, current, pointers):
+POINTER_KINDS = ("development", "stable")
+
+
+def pointer_meta(name, spec):
+    """How a pointer is named on the site: the EVerest line it follows, its kind, any note."""
+    spec = spec or {}
+    return {"label": spec.get("label") or name, "kind": spec.get("kind"), "note": spec.get("note")}
+
+
+def pointer_sub(P):
+    """"stable · stops moving soon · branch testing/stable-2026.02", the branch kept for git fetch."""
+    return " · ".join([esc(x) for x in (P["kind"], P["note"]) if x] + [f'branch <code>{esc(P["name"])}</code>'])
+
+
+def pointer_select(base, current, pointers, meta):
+    def text(p):
+        m = meta[p]
+        return esc(m["label"] + (f' ({m["note"]})' if m["note"] else ""))
     opts = "".join(
-        f'<option value="{pointer_file(base, p)}"{" selected" if p == current else ""}>{esc(p)}</option>' for p in pointers)
+        f'<option value="{pointer_file(base, p)}"{" selected" if p == current else ""}>{text(p)}</option>' for p in pointers)
     return (f'<label class="small" style="display:flex;flex-direction:column;color:#C9D4E8">Pointer'
             f'<select data-nav style="min-height:40px;padding:6px 8px;border-radius:8px;background:#fff;color:#1E2530;border:0">{opts}</select></label>')
 
@@ -851,11 +868,11 @@ def overview(P, pointers):
             f'<th scope="col">Env</th><th scope="col">Vehicle communication</th><th scope="col">Backend</th><th scope="col">Other tests</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div></details>')
     tip = P["tip"]
-    tipline = (f'Tip {commit_link(tip)}, moved {P["log"][-1]["at"][:10]}'
-               if tip else "No moves logged yet")
-    empty = "" if setups else (f'<p class="notice">No submission tested a commit in {esc(P["name"])}\'s log yet. '
+    tipline = (f'tip {commit_link(tip)}, moved {P["log"][-1]["at"][:10]}'
+               if tip else "no moves logged yet")
+    empty = "" if setups else (f'<p class="notice">No submission tested a commit in {esc(P["label"])}\'s log yet. '
                                 f'Results at other commits are not attributed here. <a href="contribute.html">Report a run</a>.</p>')
-    return f"""<section class="row"><h1>{esc(P['name'])}</h1><span class="muted">{tipline}</span></section>
+    return f"""<section class="row"><h1>{esc(P['label'])}</h1><span class="muted">{pointer_sub(P)} · {tipline}</span></section>
 <p class="cta">Run EVerest on your own hardware or CI? <a href="contribute.html">Report your results</a>: register once, then open one pull request per run.</p>
 {all_integrators(P) if setups else ""}{empty}<section class="summarybar" aria-label="Filter by verdict">{btns if setups else ""}</section>
 {''.join(body)}"""
@@ -995,7 +1012,7 @@ def detail_row(m):
 
 
 def detail_shell(P, bodies):
-    return f"""<section class="card" style="padding:0"><h2 style="padding:16px 20px 0">Setups on {esc(P['name'])}</h2><div class="scroll"><table>
+    return f"""<section class="card" style="padding:0"><h2 style="padding:16px 20px 0">Setups on {esc(P['label'])}</h2><div class="scroll"><table>
 <thead><tr><th>Integrator</th><th>Setup</th><th>Verdict</th><th>Results</th><th>Tested commit</th><th>Tested on</th><th>Env</th><th>Build</th><th>Harness</th>
 <th>Last 14 runs</th><th>Evidence</th></tr></thead>
 {bodies or '<tbody><tr><td colspan="11" class="muted">No setups.</td></tr></tbody>'}</table></div>
@@ -1005,7 +1022,7 @@ def detail_shell(P, bodies):
 def comparison(P, others):
     if not others:
         return ""
-    opts = "".join(f'<option value="{slug(o["name"])}">{esc(o["name"])}</option>' for o in others)
+    opts = "".join(f'<option value="{slug(o["name"])}">{esc(o["label"])}</option>' for o in others)
     secs = []
     for O in others:
         omap = {(m["integ"], m["config"]): m for m in O["setups"]}
@@ -1013,7 +1030,7 @@ def comparison(P, others):
         for m in P["setups"]:
             o = omap.get((m["integ"], m["config"]))
             if not o:
-                rows.append(f'<tr><td>{esc(m["integ"])} / {esc(m["config"])}</td><td>{vpill(m["verdict"])}</td><td>{vpill("not-reported")}</td><td colspan="3" class="muted small">no result under {esc(O["name"])}</td></tr>')
+                rows.append(f'<tr><td>{esc(m["integ"])} / {esc(m["config"])}</td><td>{vpill(m["verdict"])}</td><td>{vpill("not-reported")}</td><td colspan="3" class="muted small">no result under {esc(O["label"])}</td></tr>')
                 continue
             a = {t["name"] for t in m["latest"]["tests"] if t["outcome"] == "failed"}
             b = {t["name"] for t in o["latest"]["tests"] if t["outcome"] == "failed"}
@@ -1024,7 +1041,7 @@ def comparison(P, others):
             notrun = len((a - ran_b) | (b - ran_a))
             rows.append(f'<tr><td>{esc(m["integ"])} / {esc(m["config"])}</td><td>{vpill(m["verdict"])}</td><td>{vpill(o["verdict"])}</td>'
                         f'<td class="num">{only_a}</td><td class="num">{only_b}</td><td class="num">{len(a & b)}</td><td class="num">{notrun}</td></tr>')
-        secs.append(f'<div data-cmp="{slug(O["name"])}" class="scroll"><table><thead><tr><th>Setup</th><th>{esc(P["name"])}</th><th>{esc(O["name"])}</th>'
+        secs.append(f'<div data-cmp="{slug(O["name"])}" class="scroll"><table><thead><tr><th>Setup</th><th>{esc(P["label"])}</th><th>{esc(O["label"])}</th>'
                     f'<th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead>'
                     f'<tbody>{"".join(rows)}</tbody></table></div>')
     return f"""<section class="card"><div class="row" style="margin-bottom:8px"><h2 style="margin:0">Compare with</h2>
@@ -1038,12 +1055,12 @@ def unattributed(P):
     lis = "".join(f'<li><a href="{esc(r["path"])}">{esc(r["path"])}</a> · {esc(r["integ"])} / {esc(r["config"])} · '
                   f'commit {commit_link(r["commit"])}</li>' for r in P["unattributed"])
     return (f'<details class="card"><summary><h2 style="display:inline">Not attributed · {len(P["unattributed"])}</h2></summary>'
-            f'<p class="small muted">Filed under {esc(P["name"])}, but the tested commit is not in its pointer log, '
+            f'<p class="small muted">Filed under {esc(P["label"])}, but the tested commit is not in its pointer log, '
             f'so these results are not counted anywhere on this site.</p><ul class="small">{lis}</ul></details>')
 
 
 def detailed(P, others):
-    return (f'<section class="row"><h1>Detailed · {esc(P["name"])}</h1></section>'
+    return (f'<section class="row"><h1>Detailed · {esc(P["label"])}</h1></section>'
             + regressions_panel(P) + detail_table(P) + comparison(P, others) + unattributed(P))
 
 
@@ -1157,7 +1174,7 @@ def coverage(P, vocab):
     envs = [("all", "All", P["setups"])] + [(e.lower(), e, [m for m in P["setups"] if m["latest"]["env"] == e]) for e in vocab["testEnvironment"]]
     seg = "".join(f'<button type="button" data-env="{k}" aria-pressed="{str(k == "all").lower()}">{lab} · {len(ms)}</button>' for k, lab, ms in envs)
     maps = "".join(f'<section class="card" data-envmap="{k}"{"" if k == "all" else " hidden"}>{capability_map(ms, k)}</section>' for k, _, ms in envs)
-    return f"""<section class="row"><h1>Coverage · {esc(P['name'])}</h1><span class="muted">{len(P['setups'])} setups reporting</span></section>
+    return f"""<section class="row"><h1>Coverage · {esc(P['label'])}</h1><span class="muted">{len(P['setups'])} setups reporting</span></section>
 <p class="small muted" style="margin:0;max-width:80ch">What reported tests show working, from each setup's latest run. A tile is green when any setup passes its tests, and the caption keeps the failing count.
 Select a tile to see the setups behind it. Loaded modules and EVerest's own feature claims are not counted.</p>
 <div class="seg" role="group" aria-label="Test environment">{seg}</div>
@@ -1306,7 +1323,7 @@ def setup_page(m, P):
     reg += f' <span class="reg" style="border-style:dashed">▵ {nsus} suspected</span>' if nsus else ""
     evidence = (f'<a href="{esc(L["report"])}">report</a> · linked by the integrator · <span class="muted">unverified link (no hash)</span>'
                 if L["report"] else "none")
-    return f"""<nav aria-label="Breadcrumb" class="small muted"><a href="../{pointer_file("index", P["name"])}">{esc(P['name'])}</a> › {esc(m['integ_name'])} › {esc(m['config'])}</nav>
+    return f"""<nav aria-label="Breadcrumb" class="small muted"><a href="../{pointer_file("index", P["name"])}">{esc(P['label'])}</a> › {esc(m['integ_name'])} › {esc(m['config'])}</nav>
 <section class="card" style="display:flex;flex-direction:column;gap:14px"><div class="row"><h1>{esc(m['config'])}</h1>{vpill(m['verdict'])}{reg}
 <span class="muted">{oc['passed']} passed · {oc['failed']} failed · {oc['inconclusive']} inconclusive · {oc['accepted']} accepted · {oc['skipped']} skipped of {len(L['tests'])}{f" · {pct(m['rate'], m['failed_n'])} of judged tests passed" if m['rate'] is not None else ""}</span></div>
 <dl class="grid" style="margin:0">
@@ -1322,7 +1339,7 @@ def setup_page(m, P):
 <section class="card"><h2>Failed tests per pointer move</h2>{chart(m, P)}
 <p class="small muted" style="margin:0">Test count changes are marked, so fewer failures from removed tests do not read as a fix.</p></section>
 {test_results(m, P)}
-<section class="card" style="padding:0"><h2 style="padding:16px 20px 0">{len(m['runs'])} runs on {esc(P['name'])}</h2><div class="scroll"><table>
+<section class="card" style="padding:0"><h2 style="padding:16px 20px 0">{len(m['runs'])} runs on {esc(P['label'])}</h2><div class="scroll"><table>
 <thead><tr><th>Ran (UTC)</th><th>Commit</th><th class="num">Tests</th><th class="num">Failed</th><th class="num">Not judged</th><th>Verdict</th><th>Evidence</th></tr></thead>
 <tbody>{''.join(runs)}</tbody></table></div></section>"""
 
@@ -1483,15 +1500,18 @@ def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS, docs=N
         if r["pointer"] not in names:
             r["pointer"] = default
     models = {p: build_pointer(p, logs.get(p, []), recs, allow, grace_days) for p in names}
+    meta = {p: pointer_meta(p, declared.get(p)) for p in names}
+    for p, P in models.items():
+        P.update(meta[p])
     out = {}
     for p, P in models.items():
         others = [models[o] for o in names if o != p]
-        out[pointer_file("index", p)] = page(f"Himalayas · {p}", "overview", overview(P, names),
-                                             pointer_sel=pointer_select("index", p, names))
-        out[pointer_file("detailed", p)] = page(f"Himalayas detailed · {p}", "detailed", detailed(P, others),
-                                                pointer_sel=pointer_select("detailed", p, names))
-        out[pointer_file("coverage", p)] = page(f"Himalayas coverage · {p}", "coverage", coverage(P, vocab),
-                                                pointer_sel=pointer_select("coverage", p, names))
+        out[pointer_file("index", p)] = page(f"Himalayas · {P['label']}", "overview", overview(P, names),
+                                             pointer_sel=pointer_select("index", p, names, meta))
+        out[pointer_file("detailed", p)] = page(f"Himalayas detailed · {P['label']}", "detailed", detailed(P, others),
+                                                pointer_sel=pointer_select("detailed", p, names, meta))
+        out[pointer_file("coverage", p)] = page(f"Himalayas coverage · {P['label']}", "coverage", coverage(P, vocab),
+                                                pointer_sel=pointer_select("coverage", p, names, meta))
         for m in P["setups"]:
             out[m["href"]] = page(f"{m['integ_name']} / {m['config']}", "", setup_page(m, P), depth=1)
     summary = {

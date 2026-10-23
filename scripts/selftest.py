@@ -1127,6 +1127,21 @@ def suite_build(work, verbose):
            if r != bs.pass_rate(sum(v.get("passed", 0) for v in c.values()), sum(v.get("failed", 0) for v in c.values()))]
     check("summary.json carries each setup's pass rate", bool(rates) and not off, f"{off[:3]}")
 
+    # A pointer is named by the EVerest line it follows; its branch stays on
+    # the page because integrators fetch it.
+    specs = json.load(open(os.path.join(work, "pointers.json")))["pointers"]
+    bad_spec = [n for n, sp in specs.items()
+                if not sp.get("label") or sp.get("kind") not in bs.POINTER_KINDS]
+    labels = [sp.get("label") for sp in specs.values()]
+    check("every declared pointer has a label and a known kind",
+          not bad_spec and len(set(labels)) == len(labels), f"{bad_spec}")
+    main_spec = specs.get(bs.DEFAULT_POINTER, {})
+    opts = re.findall(r"<option [^>]*>([^<]*)</option>", page)
+    check("pages name a pointer by its label and keep its branch",
+          f"<h1>{main_spec.get('label')}</h1>" in page and f"branch <code>{bs.DEFAULT_POINTER}</code>" in page
+          and all(any(o.startswith(l) for o in opts) for l in labels)
+          and f"<title>Himalayas · {main_spec.get('label')}" in page, f"options {opts}")
+
     # Dates read YYYY-MM-DD or DD-MM, never month first.
     src = open(os.path.join(work, "scripts", "build_status.py")).read()
     bad_fmt = re.findall(r"(?<!%Y-)%m-%d|%m/%d", src)
@@ -1216,7 +1231,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 29, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 31, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
