@@ -74,6 +74,17 @@ def short(sha):
     return sha[:7] if sha else "?"
 
 
+EVEREST_COMMIT = "https://github.com/EVerest/EVerest/commit/"
+# EVerest's own logo, copied from EVerest/EVerest docs/images.
+LOGO_SRC = "docs/images/everest_horizontal-color.svg"
+LOGO = "everest-logo.svg"
+
+
+def commit_link(sha):
+    """A short sha, linked to that commit in EVerest."""
+    return f'<a href="{EVEREST_COMMIT}{esc(sha)}"><code>{short(sha)}</code></a>' if sha else "<code>?</code>"
+
+
 def slug(s):
     return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
 
@@ -397,6 +408,8 @@ a{color:var(--link)}code,.mono{font-family:var(--mono);font-size:.92em}
 button,select,summary{font:inherit;cursor:pointer;color:inherit}
 :focus-visible{outline:3px solid #2F96D0;outline-offset:2px}
 header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+header.top .logo{display:flex;background:#fff;border-radius:8px;padding:6px 10px}header.top .logo img{display:block;height:40px;width:auto}
+svg a:hover text{fill:var(--link);text-decoration:underline}
 header.top .brand{font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{font-size:13px;color:#C9D4E8}
 header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 14px;border-radius:8px}
 header.top nav a[aria-current]{background:#21407A}.bar{height:4px;background:var(--lime)}
@@ -554,7 +567,8 @@ def page(title, active, body, depth=0, pointer_sel=""):
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>{CSS}</style>
 <script>try{{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script></head><body>
-<header class="top"><div class="in"><div><a class="brand" href="{up}index.html" style="color:#fff;text-decoration:none">Himalayas</a>
+<header class="top"><div class="in"><a class="logo" href="https://github.com/EVerest/EVerest"><img src="{up}{LOGO}" alt="LF Energy EVerest" width="136" height="40"></a>
+<div><a class="brand" href="{up}index.html" style="color:#fff;text-decoration:none">Himalayas</a>
 <div class="sub">EVerest federated test results, self-reported by integrators</div></div>
 {pointer_sel}<nav aria-label="Views">{nav}</nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
@@ -604,7 +618,7 @@ def std_cell(c, std):
 
 def commit_txt(m):
     behind = "at tip" if m["behind"] == 0 else f'{m["behind"]} move{"s" * (m["behind"] != 1)} behind'
-    return f'<code>{short(m["latest"]["commit"])}</code> · {behind}'
+    return f'{commit_link(m["latest"]["commit"])} · {behind}'
 
 
 def tested_txt(m):
@@ -677,7 +691,7 @@ def overview(P, pointers):
             f'<th scope="col">Env</th><th scope="col">Vehicle communication</th><th scope="col">Backend</th><th scope="col">Other tests</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div></details>')
     tip = P["tip"]
-    tipline = (f'Tip <code>{short(tip)}</code>, moved {P["log"][-1]["at"][:10]}'
+    tipline = (f'Tip {commit_link(tip)}, moved {P["log"][-1]["at"][:10]}'
                if tip else "No moves logged yet")
     empty = "" if setups else (f'<p class="notice">No submission tested a commit in {esc(P["name"])}\'s log yet. '
                                 f'Results at other commits are not attributed here. <a href="contribute.html">Report a run</a>.</p>')
@@ -724,12 +738,12 @@ def regressions_panel(P):
                 groups.setdefault((m["slug"], norm_msg(r["message"], r.get("key")), r.get("range")), (m, r, []))[2].append(r)
             for (sl, msg, rng), (m, r, rs) in groups.items():
                 if rng:
-                    unt = f' ({", ".join(short(s) for s in r["untested"])} untested)' if r["untested"] else ""
-                    where = f'<code>{short(rng[0])}..{short(rng[1])}</code>{unt}'
+                    unt = f' ({", ".join(commit_link(s) for s in r["untested"])} untested)' if r["untested"] else ""
+                    where = f'{commit_link(rng[0])}..{commit_link(rng[1])}{unt}'
                     if any(x.get("previously_flaky") for x in rs):
                         where += '<br><span class="muted">previously flaky</span>'
                 else:
-                    where = f'since <code>{short(r["since"])}</code>'
+                    where = f'since {commit_link(r["since"])}'
                 names = "<br>".join(f"<code>{esc(x['name'])}</code>" for x in rs[:4]) + (f"<br>+{len(rs) - 4} more" if len(rs) > 4 else "")
                 rows.append(f'<tr><td><a href="{m["href"]}">{esc(m["config"])}</a></td>'
                             f'<td>{STD_LABEL.get(r["std"], r["std"])} · {len(rs)}</td><td class="small">{names}</td>'
@@ -816,7 +830,7 @@ def unattributed(P):
     if not P["unattributed"]:
         return ""
     lis = "".join(f'<li><a href="{esc(r["path"])}">{esc(r["path"])}</a> · {esc(r["integ"])} / {esc(r["config"])} · '
-                  f'commit <code>{short(r["commit"])}</code></li>' for r in P["unattributed"])
+                  f'commit {commit_link(r["commit"])}</li>' for r in P["unattributed"])
     return (f'<details class="card"><summary><h2 style="display:inline">Not attributed · {len(P["unattributed"])}</h2></summary>'
             f'<p class="small muted">Filed under {esc(P["name"])}, but the tested commit is not in its pointer log, '
             f'so these results are not counted anywhere on this site.</p><ul class="small">{lis}</ul></details>')
@@ -964,7 +978,7 @@ def chart(m, P):
              f'<text x="34" y="{y0 - hgt + 4}" text-anchor="end" font-size="11" fill="var(--muted)">{vmax}</text>']
     prev, prev_n = None, None
     for k, (i, v, n) in enumerate(pts):
-        parts.append(f'<text x="{X(k)}" y="192" text-anchor="middle" font-size="11" font-family="DM Mono,monospace" fill="var(--soft)">{short(P["shas"][i])}</text>')
+        parts.append(f'<a href="{EVEREST_COMMIT}{esc(P["shas"][i])}"><text x="{X(k)}" y="192" text-anchor="middle" font-size="11" font-family="DM Mono,monospace" fill="var(--soft)">{short(P["shas"][i])}</text></a>')
         if v is None:
             parts.append(f'<rect x="{X(k) - 6}" y="{y0 - 20}" width="12" height="20" fill="none" stroke="var(--dash)" stroke-dasharray="3 3"/>')
             parts.append(f'<text x="{X(k)}" y="208" text-anchor="middle" font-size="11" fill="var(--muted)">untested</text>')
@@ -998,18 +1012,18 @@ def test_item(t, m, P, marks):
                 badge = '<span class="reg">▲ regression</span>'
             else:
                 badge = '<span class="reg" style="border-style:dashed">▵ suspected</span>'
-            unt = f' ({", ".join(short(x) for x in r["untested"])} untested)' if r["untested"] else ""
-            when = f'began in <code>{short(r["range"][0])}..{short(r["range"][1])}</code>{unt}'
+            unt = f' ({", ".join(commit_link(x) for x in r["untested"])} untested)' if r["untested"] else ""
+            when = f'began in {commit_link(r["range"][0])}..{commit_link(r["range"][1])}{unt}'
             if r["previously_flaky"]:
                 when += " · previously flaky"
         elif kind == "flaky":
             badge = '<span class="pill v-passing-partial">flaky</span>'
-            when = f'failing since <code>{short(r["since"])}</code>'
+            when = f'failing since {commit_link(r["since"])}'
         elif kind == "long":
             badge = '<span class="pill v-not-exercised">long-standing</span>'
-            when = f'never passed; {r["runs_failed"]} failing runs since first appearance at <code>{short(r["since"])}</code>'
+            when = f'never passed; {r["runs_failed"]} failing runs since first appearance at {commit_link(r["since"])}'
         else:
-            when = f'inconclusive since <code>{short(r["since"])}</code>'
+            when = f'inconclusive since {commit_link(r["since"])}'
     else:
         when = ""
     notes = []
@@ -1071,13 +1085,13 @@ def setup_page(m, P):
         prov.append(f"own harness · {esc(L['tool'])}")
     if L["test_system"]:
         prov.append(f"reference test system · {esc(L['test_system'].get('name', ''))} {esc(L['test_system'].get('version', ''))}")
-    behind = "at tip" if m["behind"] == 0 else f'{m["behind"]} move{"s" * (m["behind"] != 1)} behind tip <code>{short(P["tip"])}</code>'
+    behind = "at tip" if m["behind"] == 0 else f'{m["behind"]} move{"s" * (m["behind"] != 1)} behind tip {commit_link(P["tip"])}'
     runs = []
     for r in reversed(m["runs"]):
         f = sum(1 for t in r["tests"] if t["outcome"] == "failed")
         s = sum(1 for t in r["tests"] if t["outcome"] in ("skipped", "accepted", "inconclusive"))
         rep = f'<a href="{esc(r["report"])}">report</a> · ' if r["report"] else ""
-        runs.append(f'<tr><td>{ms_to_dt(r["start"]):%Y-%m-%d %H:%M}</td><td><code>{short(r["commit"])}</code></td><td class="num">{len(r["tests"])}</td>'
+        runs.append(f'<tr><td>{ms_to_dt(r["start"]):%Y-%m-%d %H:%M}</td><td>{commit_link(r["commit"])}</td><td class="num">{len(r["tests"])}</td>'
                     f'<td class="num">{f}</td><td class="num">{s}</td><td>{vpill(verdict(r))}</td>'
                     f'<td class="small">{rep}<a href="../{r["path"]}">{esc(r["path"].split("/")[-1])}</a></td></tr>')
     dupes = f'<p class="notice">Duplicate test names in the latest run: {", ".join(map(esc, L["dupes"]))}</p>' if L["dupes"] else ""
@@ -1091,7 +1105,7 @@ def setup_page(m, P):
 <span class="muted">{oc['passed']} passed · {oc['failed']} failed · {oc['inconclusive']} inconclusive · {oc['accepted']} accepted · {oc['skipped']} skipped of {len(L['tests'])}</span></div>
 <dl class="grid" style="margin:0">
 <div><dt class="small muted">Integrator</dt><dd style="margin:0">{esc(m['integ_name'])}</dd></div>
-<div><dt class="small muted">Tested commit</dt><dd style="margin:0"><code>{short(L['commit'])}</code> · {behind}</dd></div>
+<div><dt class="small muted">Tested commit</dt><dd style="margin:0">{commit_link(L['commit'])} · {behind}</dd></div>
 <div><dt class="small muted">Tested on</dt><dd style="margin:0">{ms_to_dt(L['start']):%Y-%m-%d %H:%M} UTC</dd></div>
 <div><dt class="small muted">Environment</dt><dd style="margin:0">{" · ".join(esc(x) for x in (L['env'], L['os']) if x)} · build {build_mark(L['build'])}</dd></div>
 <div><dt class="small muted">Provenance</dt><dd style="margin:0">{'<br>'.join(prov) or 'not declared'}</dd></div>
@@ -1249,7 +1263,7 @@ This page is generated from <a href="{REPO_BLOB}README.md">README.md</a> and <a 
 
 
 def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS, docs=None):
-    """Every output file of the site, as {relative path: text}. `docs` holds README.md and CONTRIBUTING.md."""
+    """Every output file of the site, as {relative path: text}. `docs` holds README.md, CONTRIBUTING.md and LOGO_SRC."""
     VOCAB_TAGS.clear()
     for g, vals in vocab.get("testTags", {}).items():
         if g not in ("lifecycle", "escapeHatch") and isinstance(vals, list):
@@ -1297,6 +1311,7 @@ def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS, docs=N
          "bad": r["range"][1], "untested": r["untested"], "confirmed": r["confirmed"]}
         for m in M["setups"] for r in m["regs"]] for p, M in models.items()}}
     if docs:
+        out[LOGO] = docs[LOGO_SRC]
         out["contribute.html"] = page("Himalayas · contribute", "contribute", contribute(docs["README.md"], docs["CONTRIBUTING.md"]))
     out["summary.json"] = json.dumps(summary, indent=1) + "\n"
     out["regressions.json"] = json.dumps(regs, indent=1) + "\n"
@@ -1311,7 +1326,7 @@ def main():
     declared, logs = load_pointers()
     vocab = json.loads((ROOT / "schema" / "vocabulary.json").read_text())
     recs = load_records()
-    docs = {n: (ROOT / n).read_text() for n in ("README.md", "CONTRIBUTING.md")}
+    docs = {n: (ROOT / n).read_text() for n in ("README.md", "CONTRIBUTING.md", LOGO_SRC)}
     files = build_site(recs, declared, logs, load_allowlist(), vocab, args.grace_days, docs)
     out = pathlib.Path(args.out_dir)
     for rel, text in files.items():

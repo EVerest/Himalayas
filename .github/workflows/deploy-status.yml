@@ -16,6 +16,7 @@ on:
       - 'schema/**'
       - 'README.md'
       - 'CONTRIBUTING.md'
+      - 'docs/images/**'
       - 'integrators/**'
       - 'pointers.json'
   # Two reasons for a schedule, not one:

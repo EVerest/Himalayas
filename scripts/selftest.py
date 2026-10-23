@@ -1034,6 +1034,13 @@ def suite_build(work, verbose):
     check("the contribute page carries every CONTRIBUTING section, and the overview links it",
           bool(want) and not missing and 'href="contribute.html"' in page, f"missing {missing[:3]}")
 
+    # A sha a reader sees opens that commit in EVerest. A call site that skips
+    # commit_link renders a bare <code> sha and nothing else would notice.
+    bare = sorted({sha for sha in re.findall(r"(?<!/commit/[0-9a-f]{40}\">)<code>([0-9a-f]{7})</code>", every)})
+    check("every commit on the pages links to EVerest",
+          'href="https://github.com/EVerest/EVerest/commit/' in every and not bare,
+          f"{len(bare)} unlinked: {bare[:3]}")
+
     bs = load_build_status(work)
     root = bs.pathlib.Path(work)
     declared, logs = bs.load_pointers(root)
@@ -1104,7 +1111,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 18, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 19, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
