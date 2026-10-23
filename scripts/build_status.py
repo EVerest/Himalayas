@@ -1038,7 +1038,7 @@ def comparison(P, others):
         for m in P["setups"]:
             o = omap.get((m["integ"], m["config"]))
             if not o:
-                rows.append(f'<tr><td>{esc(m["integ"])} / {esc(m["config"])}</td><td>{vpill(m["verdict"])}</td><td>{vpill("not-reported")}</td><td colspan="3" class="muted small">no result under {esc(O["label"])}</td></tr>')
+                rows.append(f'<tr><td>{esc(m["integ"])} / {esc(m["config"])}</td><td>{vpill(m["verdict"])}{rate_line(m)}</td><td>{vpill("not-reported")}</td><td colspan="3" class="muted small">no result under {esc(O["label"])}</td></tr>')
                 continue
             a = {t["name"] for t in m["latest"]["tests"] if t["outcome"] == "failed"}
             b = {t["name"] for t in o["latest"]["tests"] if t["outcome"] == "failed"}
@@ -1047,7 +1047,7 @@ def comparison(P, others):
             only_a = len((a - b) & ran_b)
             only_b = len((b - a) & ran_a)
             notrun = len((a - ran_b) | (b - ran_a))
-            rows.append(f'<tr><td>{esc(m["integ"])} / {esc(m["config"])}</td><td>{vpill(m["verdict"])}</td><td>{vpill(o["verdict"])}</td>'
+            rows.append(f'<tr><td>{esc(m["integ"])} / {esc(m["config"])}</td><td>{vpill(m["verdict"])}{rate_line(m)}</td><td>{vpill(o["verdict"])}{rate_line(o)}</td>'
                         f'<td class="num">{only_a}</td><td class="num">{only_b}</td><td class="num">{len(a & b)}</td><td class="num">{notrun}</td></tr>')
         secs.append(f'<div data-cmp="{slug(O["name"])}" class="scroll"><table><thead><tr><th>Setup</th><th>{esc(P["label"])}</th><th>{esc(O["label"])}</th>'
                     f'<th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead>'

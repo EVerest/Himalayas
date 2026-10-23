@@ -1131,6 +1131,12 @@ def suite_build(work, verbose):
           shades == [("97.1", "97.1"), ("75", "75"), ("100", "100")]
           and "color-mix(in oklch,var(--ok) var(--p),var(--bad))" in page, f"{shades}")
 
+    # The compare table shows each side's rate under its verdict.
+    det = site.get("detailed.html", "")
+    cmp_ = det[det.find('id="cmp"'):]
+    check("the compare table shows pass rates under verdicts",
+          'data-cmp=' in cmp_ and 'class="rate small"' in cmp_)
+
     # summary.json carries the unrounded rate for other consumers.
     rates = [(st.get("passRate", "missing"), st["counts"]) for st in setups]
     off = [r for r, c in rates
@@ -1241,7 +1247,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 32, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 33, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
