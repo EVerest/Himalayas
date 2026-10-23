@@ -28,11 +28,12 @@ The contributor-facing summary is
 |---|---|---|
 | Setups are grouped by integrator, and groups where everything passes are collapsed. | Attention goes to what is failing. | Implemented |
 | A summary bar whose segments filter the list; filter state lives in the URL. | A filtered view can be linked. | Implemented |
-| Each row shows the verdict, the tested commit with moves behind the tip, the test date in its own column, one conformance cell per standard (verdict plus counts), and other tests in their own column. | Conformance results and an integrator's own tests are different claims. | Implemented |
+| Each row shows the verdict, then one Tested column (the commit with moves behind the tip, and the test date under it), the environment, and three result columns: Vehicle communication (IEC 61851, ISO 15118, DIN 70121), Backend (OCPP) and Other tests. A result column holds one chip per standard the setup reported, in a fixed order. | One column per standard left most cells empty, and three OCPP versions would have added three more. Grouping keeps OCPP in a predictable place. Conformance results and an integrator's own tests are different claims. | Implemented |
 | Within a group, passing setups are listed before failing ones; the summary bar follows the same order. | The page reads as what works first, then what does not. | Implemented |
-| A conformance cell names its counts: "✕ 1 failed, 1 passed", with accepted, inconclusive and skipped tests on a second line, never inside the count. | "1 of 2" was read as including the accepted test; one long line widened every column. | Implemented |
-| A standard without a test-spec mapping (DIN 70121, IEC 61851 today) is shown like any other: no subtitle in the column header and no marker on the counts. The missing mapping is noted on the coverage and detail pages only. | A marker on every cell was noise without telling the reader what to do. | Implemented, except the note on the coverage and detail pages |
-| A ▲ badge marks a confirmed regression. | Regressions are the main signal the pointers exist to produce. | Implemented |
+| A standard's chip names its counts: "✕ 1 failed, 1 passed", with accepted, inconclusive and skipped tests on a second line, never inside the count. | "1 of 2" was read as including the accepted test; one long line widened every column. | Implemented |
+| A standard without a test-spec mapping (DIN 70121, IEC 61851 today) is shown like any other: no marker on its chip. The missing mapping is noted on the coverage and detail pages only. | A marker on every cell was noise without telling the reader what to do. | Implemented, except the note on the coverage and detail pages |
+| A ▲ badge marks a confirmed regression, on its own line under the verdict. | Regressions are the main signal the pointers exist to produce. | Implemented |
+| A build-only verdict takes the build's color: green when it passed, red when it failed. | A dashed pill read as "nothing happened", when the build is the one thing that was reported. | Implemented |
 
 ### Detailed view
 
@@ -119,7 +120,7 @@ Sections, in order:
 |---|---|---|
 | A conformance test is a test carrying a conformance-spec tag. | Explicit tagging, never inference from names. | Decided, not implemented |
 | A vocabulary group `conformanceSpecs` maps test spec to standard: `ISO15118-4` to ISO 15118-2, `ISO15118-5` to ISO 15118-3, `ISO15118-21` to ISO 15118-20, `DIN70122` to DIN 70121. | The cell belongs to the standard, the tag names the test specification. | Decided, not implemented |
-| OCPP tags `OCPP1.6-TestCases`, `OCPP2.0.1-Part6`, `OCPP2.1-Part6`, one cell per version. | OCPP versions are separate standards. | Decided, not implemented |
+| OCPP tags `OCPP1.6-TestCases`, `OCPP2.0.1-Part6`, `OCPP2.1-Part6`, one chip per version. | OCPP versions are separate standards. | Decided, not implemented |
 | The `compliance` lifecycle tag is deprecated, with a warning. | It says nothing about which specification. | Decided, not implemented |
 | Wording for every standard: "Conformance test cases, self-run". Never "certified" or "compliant", and no logos. | Results are self-reported; certification is a separate process. | Implemented |
 
@@ -129,7 +130,7 @@ Sections, in order:
 |---|---|---|
 | Requirement-derived conformance tests are allowed for any standard. | Not every standard has a published test specification. | Decided, not implemented |
 | Requirement IDs become tags (`V2G2-`, `V2G3-`, `V2G20-`, `V2G-DC-`, `IEC61851-1-`, `OCPP2.0.1-`...), mapped to a standard by prefix in a `requirementIds` vocabulary group. | Prefix mapping needs no list of every requirement. | Decided, not implemented |
-| If a test has both, the spec tag wins and the IDs are kept. Cells split into spec cases and requirement cases. | Spec cases and requirement-derived cases are different claims. | Decided, not implemented |
+| If a test has both, the spec tag wins and the IDs are kept. Chips split into spec cases and requirement cases. | Spec cases and requirement-derived cases are different claims. | Decided, not implemented |
 
 ### Tag aliases
 
@@ -208,7 +209,7 @@ one vocabulary tag.
 | A feature tile lists its carriers as chips. A chip fills once a test carries both the feature tag and the carrier tag. Carriers: PnC, TLS and smart charging over ISO 15118-2, ISO 15118-20 and OCPP; reservation and Eichrecht over OCPP; V2X over AC and DC. | A feature only means something through a protocol: PnC over ISO 15118-2 is a different claim from PnC over OCPP. | Implemented |
 | The carrier list is fixed in `vocabulary.json`, next to the tags. | Tags are flat; only a fixed list can show a carrier as "possible, not reported". | Implemented |
 | Across setups, the best setup wins: a tile is green when any setup passes its tests. The caption keeps the failing count ("passing on 1 · 2 failing"). | The page answers whether EVerest supports a capability somewhere; the caption and the setup list keep failures visible. | Implemented |
-| Per setup, a tile passes when no test with its tag failed and at least one passed. Passing with no `compliance` test shows as "own tests only". | Accepted, inconclusive and skipped tests do not decide a tile, as in the conformance cells. | Implemented |
+| Per setup, a tile passes when no test with its tag failed and at least one passed. Passing with no `compliance` test shows as "own tests only". | Accepted, inconclusive and skipped tests do not decide a tile, as in the conformance chips. | Implemented |
 | An All / SIL / HIL filter above the map. Build target is not on the map. | A HIL pass is a stronger claim; with best-setup-wins a SIL pass would otherwise speak for a HIL failure. A capability rarely passes on one target and fails on another. | Implemented |
 | Selecting a tile opens a list of the setups behind it, with each setup's counts for that tag only and its environment. Each setup links to its detail page, filtered to the tag. | A best-setup tile hides disagreement by design, so the selection has to show it. | Implemented |
 | The detail page carries the same map for its one setup, colored by that setup's result. | One setup needs no aggregation rule. | Implemented |

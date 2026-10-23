@@ -32,6 +32,12 @@ h2{margin:0 0 10px;font-size:18px;color:var(--ink)}h3{margin:0 0 6px;font-size:1
 th,td{text-align:left;vertical-align:top;padding:8px 12px;border-top:1px solid var(--line2)}thead th{background:var(--line2);color:var(--soft);font-size:12px;border-top:0;white-space:nowrap}
 th[scope=row] a,td>a{white-space:nowrap}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.chips2{display:flex;flex-wrap:wrap;gap:4px;max-width:340px}
+.schip{display:inline-flex;flex-direction:column;border-radius:6px;padding:2px 7px;font-size:12px;line-height:1.35;white-space:nowrap}
+.schip b{font-weight:700}.schip .n{font-size:11px;opacity:.85}
+.schip.ok{background:var(--okbg);color:var(--ok)}.schip.bad{background:var(--badbg);color:var(--bad)}.schip.none{border:1px dashed var(--dash);color:var(--soft)}
+td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
+.pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
@@ -79,10 +85,10 @@ details.integ[open]>summary{border-radius:8px 8px 0 0}
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
 <main><section class="row"><h1>testing/stable-2026.02</h1><span class="muted">Tip <code>a30b832</code>, moved 2026-10-23</span></section>
 <p class="small muted" style="margin:0;max-width:80ch">A result counts for this pointer when its exact commit appears in the pointer's log.
-Conformance cells show self-run conformance test cases per standard. Accepted, inconclusive and skipped tests are listed beside the count and never counted as passed or failed.</p>
+Each standard a setup reported gets a chip with its self-run conformance test cases. Accepted, inconclusive and skipped tests are listed beside the count and never counted as passed or failed.</p>
 <p class="notice">No submission tested a commit in testing/stable-2026.02's log yet. Results at other commits are not attributed here.</p><section class="summarybar" aria-label="Filter by verdict"></section>
 </main>
-<footer>Built 2026-10-23 13:26 UTC from <code>results/</code>, <code>pointers.json</code> and
+<footer>Built 2026-10-23 13:40 UTC from <code>results/</code>, <code>pointers.json</code> and
 <code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
 Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
 <script>

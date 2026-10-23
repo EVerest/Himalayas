@@ -413,6 +413,12 @@ h2{margin:0 0 10px;font-size:18px;color:var(--ink)}h3{margin:0 0 6px;font-size:1
 th,td{text-align:left;vertical-align:top;padding:8px 12px;border-top:1px solid var(--line2)}thead th{background:var(--line2);color:var(--soft);font-size:12px;border-top:0;white-space:nowrap}
 th[scope=row] a,td>a{white-space:nowrap}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.chips2{display:flex;flex-wrap:wrap;gap:4px;max-width:340px}
+.schip{display:inline-flex;flex-direction:column;border-radius:6px;padding:2px 7px;font-size:12px;line-height:1.35;white-space:nowrap}
+.schip b{font-weight:700}.schip .n{font-size:11px;opacity:.85}
+.schip.ok{background:var(--okbg);color:var(--ok)}.schip.bad{background:var(--badbg);color:var(--bad)}.schip.none{border:1px dashed var(--dash);color:var(--soft)}
+td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
+.pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
@@ -601,11 +607,36 @@ def tested_txt(m):
     return f'<span data-fresh="{m["fresh"]}">{when}{pill}</span>'
 
 
-def present_stds(models):
-    seen = set()
-    for m in models:
-        seen.update(m["counts"])
-    return [s for s in STANDARDS if s[0] in seen]
+VEHICLE_STDS = ["IEC61851", "ISO15118-2", "ISO15118-3", "ISO15118-20", "DIN70121"]
+BACKEND_STDS = ["OCPP1.6", "OCPP2.0.1", "OCPP2.1"]
+
+
+def std_chip(c, std):
+    notes = [f'{c[k]} {k}' for k in ("accepted", "inconclusive", "skipped") if c[k]]
+    if c["failed"]:
+        cls, txt = "bad", f'✕ {c["failed"]} failed, {c["passed"]} passed'
+    elif c["passed"] == 0:
+        cls, txt = "none", "○ none judged"
+    else:
+        cls, txt = "ok", f'✓ {c["passed"]}/{c["passed"] + c["failed"]}'
+    n = f'<span class="n">{" · ".join(notes)}</span>' if notes else ""
+    return f'<span class="schip {cls}"><span><b>{STD_LABEL[std]}</b> {txt}</span>{n}</span>'
+
+
+def std_chips(m, stds):
+    cs = [std_chip(m["counts"][k], k) for k in stds if k in m["counts"]]
+    return f'<div class="chips2">{"".join(cs)}</div>' if cs else '<span class="cell none">–</span>'
+
+
+def verdict_cell(m):
+    """The verdict pill, with any regression badge on its own line. Build only takes the build's color."""
+    if m["verdict"] == "build-only":
+        ok = m["latest"]["build"] == "passed"
+        pill = f'<span class="pill v-build-only {"b-ok" if ok else "b-bad"}">{"✓" if ok else "✕"} build only</span>'
+    else:
+        pill = vpill(m["verdict"])
+    reg = f'<span class="reg">▲ {len(m["confirmed"])} regressed</span>' if m["confirmed"] else ""
+    return f'<td class="vcol">{pill}{reg}</td>'
 
 
 # ---------------------------------------------------------------- views
@@ -618,8 +649,6 @@ def overview(P, pointers):
         f'<button type="button" data-f="{v}" aria-pressed="false"><b>{cnt[v]}</b><span class="small">{VERDICT_LABEL[v][2:]}</span></button>'
         for v in DISPLAY_ORDER if cnt[v])
     btns += f'<button type="button" data-f="regressed" aria-pressed="false"><b>▲ {nreg}</b><span class="small">with confirmed regressions</span></button>'
-    stds = present_stds(setups)
-    head = "".join(f'<th scope="col">{n}<br><span class="muted" style="font-weight:400">{via if via != "†" else ""}</span></th>' for _, n, via in stds)
     groups = collections.OrderedDict()
     for m in setups:
         groups.setdefault(m["integ"], []).append(m)
@@ -629,17 +658,16 @@ def overview(P, pointers):
         allpass = all(m["verdict"] == "passing" for m in ms)
         rows = []
         for m in sorted(ms, key=lambda m: (DISPLAY_ORDER.index(m["verdict"]), m["config"])):
-            cells = "".join(f"<td>{std_cell(m['counts'].get(k), k)}</td>" for k, _, _ in stds)
-            reg = f' <span class="reg">▲ {len(m["confirmed"])} regressed</span>' if m["confirmed"] else ""
             rows.append(
                 f'<tr data-v="{m["verdict"]}" data-reg="{int(bool(m["confirmed"]))}"><th scope="row"><a href="{m["href"]}">{esc(m["config"])}</a></th>'
-                f'<td>{vpill(m["verdict"])}{reg}</td><td class="small">{commit_txt(m)}</td><td class="small">{tested_txt(m)}</td>'
-                f'<td>{esc(m["latest"]["env"])}</td>{cells}</tr>')
+                f'{verdict_cell(m)}<td class="small tested">{commit_txt(m)}<br>{tested_txt(m)}</td><td>{esc(m["latest"]["env"])}</td>'
+                f'<td>{std_chips(m, VEHICLE_STDS)}</td><td>{std_chips(m, BACKEND_STDS)}</td>'
+                f'<td>{std_cell(m["counts"].get("other"), "other")}</td></tr>')
         summ = f'{len(ms)} setup{"s" * (len(ms) != 1)}' + (" · all passing" if allpass else f" · {failing} failing")
         body.append(
             f'<details class="card group"{"" if allpass else " open"}><summary><b>{esc(ms[0]["integ_name"])}</b> <span class="muted small">{summ}</span></summary>'
-            f'<div class="scroll"><table><thead><tr><th scope="col">Setup</th><th scope="col">Verdict</th><th scope="col">Tested commit</th>'
-            f'<th scope="col">Tested on</th><th scope="col">Env</th>{head}</tr></thead>'
+            f'<div class="scroll"><table><thead><tr><th scope="col">Setup</th><th scope="col">Verdict</th><th scope="col">Tested</th>'
+            f'<th scope="col">Env</th><th scope="col">Vehicle communication</th><th scope="col">Backend</th><th scope="col">Other tests</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div></details>')
     tip = P["tip"]
     tipline = (f'Tip <code>{short(tip)}</code>, moved {P["log"][-1]["at"][:10]}'
@@ -648,7 +676,7 @@ def overview(P, pointers):
                                 f'Results at other commits are not attributed here.</p>')
     return f"""<section class="row"><h1>{esc(P['name'])}</h1><span class="muted">{tipline}</span></section>
 <p class="small muted" style="margin:0;max-width:80ch">A result counts for this pointer when its exact commit appears in the pointer's log.
-Conformance cells show self-run conformance test cases per standard. Accepted, inconclusive and skipped tests are listed beside the count and never counted as passed or failed.</p>
+Each standard a setup reported gets a chip with its self-run conformance test cases. Accepted, inconclusive and skipped tests are listed beside the count and never counted as passed or failed.</p>
 {empty}<section class="summarybar" aria-label="Filter by verdict">{btns if setups else ""}</section>
 {''.join(body)}"""
 
