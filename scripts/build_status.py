@@ -846,13 +846,9 @@ def day_chart(P, days=90):
     legend = "".join(
         f'<span class="lg"><i style="{"border:1px dashed var(--dash)" if DAY_SERIES[i][2] == "none" else "background:" + DAY_SERIES[i][2]}"></i>{DAY_SERIES[i][0]}</span>'
         for i in used)
-    head = "".join(f'<th scope="col" class="num">{DAY_SERIES[i][0]}</th>' for i in used)
-    trs = "".join(f'<tr><td>{d:%Y-%m-%d}</td>{"".join(f"<td class=num>{v[i]}</td>" for i in used)}</tr>' for d, v in reversed(rows))
     return (f'<h3 class="small" style="margin:6px 0 0">Setups by verdict, per day</h3><div class="legend small">{legend}</div>'
             f'<div class="scroll"><svg viewBox="0 0 {W} {H}" role="img" aria-label="Setups by verdict per day, {span[0]:%Y-%m-%d} to {span[-1]:%Y-%m-%d}" '
             f'style="width:100%;min-width:620px;height:auto;display:block">{"".join(parts)}</svg></div>'
-            f'<details class="small"><summary>Daily counts as a table</summary><div class="scroll"><table><thead><tr><th scope="col">Day</th>{head}</tr></thead>'
-            f'<tbody>{trs}</tbody></table></div></details>'
             f'<p class="small muted" style="margin:0">Each day counts every setup\'s latest result up to that day, so a bar can mix commits. '
             f'Per-commit history is on each setup\'s page.</p>')
 
