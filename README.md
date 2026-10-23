@@ -26,7 +26,7 @@ All EVerest documentation and issue tracking lives in the
 2. **Pick a pointer and record the exact SHA.** Fetch `testing/main` (or a stable pointer)
    from `EVerest/EVerest`, note the full 40-character commit with `git rev-parse`, and build
    and test at it. ([details](CONTRIBUTING.md#2-pick-a-pointer-and-record-the-commit))
-3. **Produce CTRF or OpenHTF with the required fields:** commit, pointer, SIL or HIL, real
+3. **Produce [CTRF](https://ctrf.io) or [OpenHTF](https://github.com/google/openhtf) with the required fields:** commit, pointer, SIL or HIL, real
    start and stop times, a passed build with its module list, and your integrator id. Tag
    each test. ([minimal example](CONTRIBUTING.md#31-a-minimal-working-ctrf-record),
    [field table](CONTRIBUTING.md#32-field-by-field-ctrf))
