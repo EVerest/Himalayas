@@ -1105,6 +1105,28 @@ def suite_build(work, verbose):
     committed = bs.logo_audit(bs.pathlib.Path(ROOT), bs.load_allowlist(bs.pathlib.Path(ROOT)))
     check("every committed logo is a safe SVG for a public integrator", not committed, f"{committed[:3]}")
 
+    # A pass rate is passed over judged (passed plus failed) tests, and a
+    # setup with any failure never reads 100%.
+    cases = [((3, 1), "75%"), ((187, 3), "98.4%"), ((1999, 1), "99.9%"), ((15, 0), "100%")]
+    wrong = [(c, bs.pct(bs.pass_rate(*c), c[1])) for c, want in cases if bs.pct(bs.pass_rate(*c), c[1]) != want]
+    check("a pass rate is passed over judged tests, never 100% with a failure",
+          not wrong and bs.pass_rate(0, 0) is None, f"{wrong}")
+
+    # The pooled rate sums judged tests over the setups that have one, and
+    # names the lowest so a large suite cannot hide a small broken one.
+    def fake(cfg, p, f):
+        return {"config": cfg, "integ_name": "Example", "passed_n": p, "failed_n": f, "rate": bs.pass_rate(p, f)}
+    txt = bs.pooled_txt([fake("big", 466, 13), fake("small", 3, 1), fake("none", 0, 0)])
+    check("a pooled pass rate sums judged tests and names the lowest setup",
+          txt.startswith("97.1% passed") and "lowest 75%" in txt and "Example / small" in txt
+          and bs.pooled_txt([fake("none", 0, 0)]) == "" and bs.pooled_txt([fake("one", 3, 1)]) == "75% passed", txt)
+
+    # summary.json carries the unrounded rate for other consumers.
+    rates = [(st.get("passRate", "missing"), st["counts"]) for st in setups]
+    off = [r for r, c in rates
+           if r != bs.pass_rate(sum(v.get("passed", 0) for v in c.values()), sum(v.get("failed", 0) for v in c.values()))]
+    check("summary.json carries each setup's pass rate", bool(rates) and not off, f"{off[:3]}")
+
     # Dates read YYYY-MM-DD or DD-MM, never month first.
     src = open(os.path.join(work, "scripts", "build_status.py")).read()
     bad_fmt = re.findall(r"(?<!%Y-)%m-%d|%m/%d", src)
@@ -1194,7 +1216,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 26, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 29, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

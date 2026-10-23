@@ -360,6 +360,41 @@ def verdict(rec):
     return "passing"
 
 
+def pass_rate(passed, failed):
+    """Passed over judged tests (passed plus failed), or None when none were judged."""
+    return passed / (passed + failed) if passed + failed else None
+
+
+def pct(rate, failed):
+    """One decimal, trailing .0 dropped. Never reads 100% while anything failed."""
+    v = round(rate * 100, 1)
+    if failed and v >= 100:
+        v = 99.9
+    return f"{v:.1f}".removesuffix(".0") + "%"
+
+
+def pooled(setups):
+    """(passed, failed, lowest setup) over the setups that have a rate, or None."""
+    rated = [m for m in setups if m["rate"] is not None]
+    if not rated:
+        return None
+    return (sum(m["passed_n"] for m in rated), sum(m["failed_n"] for m in rated),
+            min(rated, key=lambda m: (m["rate"], m["config"])))
+
+
+def pooled_txt(setups):
+    """"97.5% passed · lowest 75%", naming the lowest setup on hover; "" with nothing rated."""
+    pl = pooled(setups)
+    if not pl:
+        return ""
+    passed, failed, low = pl
+    head = f"{pct(pass_rate(passed, failed), failed)} passed"
+    if len([m for m in setups if m["rate"] is not None]) < 2 or low["rate"] == pass_rate(passed, failed):
+        return head
+    return (f'{head} · <span title="{esc(low["integ_name"])} / {esc(low["config"])}">'
+            f'lowest {pct(low["rate"], low["failed_n"])}</span>')
+
+
 def std_counts(rec):
     out = collections.OrderedDict()
     for t in rec["tests"]:
@@ -421,12 +456,14 @@ def build_pointer(name, log, recs, allow, grace_days=GRACE_DAYS):
         stale = is_stale({"pointer": name, "commit": latest["commit"], "ranAt": latest["start"]},
                          {name: tip}, grace_days)
         h = phase_history(tested, shas, latest)
+        oc = collections.Counter(t["outcome"] for t in latest["tests"])
         model.append({
             "integ": integ, "integ_name": latest["display"] or f"{integ} (anonymous)", "config": cfg,
             "latest": latest, "runs": runs, "by_move": by_move, "first_tested": first_tested,
             "verdict": verdict(latest), "behind": behind,
             "fresh": "unknown" if stale is None else "stale" if stale else "current",
-            "counts": std_counts(latest), "regs": h["regs"], "flaky": h["flaky"], "long": h["long"],
+            "counts": std_counts(latest), "regs": h["regs"],
+            "passed_n": oc["passed"], "failed_n": oc["failed"], "rate": pass_rate(oc["passed"], oc["failed"]), "flaky": h["flaky"], "long": h["long"],
             "flaky_passing": h["flaky_passing"], "inconclusive": h["inconclusive"],
             "confirmed": [r for r in h["regs"] if r["confirmed"]],
             "slug": slug(f"{integ}-{cfg}"),
@@ -538,7 +575,9 @@ td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;wi
 .lslot{display:inline-block;width:104px;vertical-align:middle}.lslot .ilogo{margin-right:0}
 .allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
-.summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
+.summarybar button b,.rtile b{font-size:20px;display:block;line-height:1.1}
+.rtile{min-height:52px;padding:6px 14px;border-radius:10px;border:1px dashed var(--line);display:flex;flex-direction:column;justify-content:center}
+.vcol .rate{display:block;margin-top:4px}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
 details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
 .strip{display:flex;gap:2px}.strip span{width:12px;height:18px;border-radius:2px;display:inline-block}
 .s-passing{background:#1E8F64}.s-failing,.s-build-failed{background:#C0392B}.s-passing-partial{background:#D9922B}.s-not-exercised,.s-build-only{background:#8792A4}
@@ -756,6 +795,10 @@ def std_chips(m, stds):
     return f'<div class="chips2">{"".join(cs)}</div>' if cs else '<span class="cell none">–</span>'
 
 
+def rate_line(m):
+    return f'<span class="rate small">{pct(m["rate"], m["failed_n"])} passed</span>' if m["rate"] is not None else ""
+
+
 def verdict_cell(m):
     """The verdict pill, with any regression badge on its own line. Build only takes the build's color."""
     if m["verdict"] == "build-only":
@@ -764,7 +807,7 @@ def verdict_cell(m):
     else:
         pill = vpill(m["verdict"])
     reg = f'<span class="reg">▲ {len(m["confirmed"])} regressed</span>' if m["confirmed"] else ""
-    return f'<td class="vcol">{pill}{reg}</td>'
+    return f'<td class="vcol">{pill}{rate_line(m)}{reg}</td>'
 
 
 # ---------------------------------------------------------------- views
@@ -779,6 +822,10 @@ def overview(P, pointers):
         f'<button type="button" data-f="{v}" aria-pressed="false"><b>{cnt[v]}</b><span class="small">{VERDICT_LABEL[v][2:]}</span></button>'
         for v in DISPLAY_ORDER if cnt[v])
     btns += f'<button type="button" data-f="regressed" aria-pressed="false"><b>▲ {nreg}</b><span class="small">with confirmed regressions</span></button>'
+    rate = pooled_txt(cur)
+    if rate:
+        head, _, low = rate.partition(" passed")
+        btns = f'<div class="rtile"><b>{head}</b><span class="small">of tests passed{low}</span></div>' + btns
     if nstale:
         btns += f'<button type="button" data-f="stale" aria-pressed="false"><b>{nstale}</b><span class="small">stale, left out</span></button>'
     groups = collections.OrderedDict()
@@ -795,7 +842,9 @@ def overview(P, pointers):
                 f'{verdict_cell(m)}<td class="small tested">{commit_txt(m)}<br>{tested_txt(m)}</td><td>{esc(m["latest"]["env"])}</td>'
                 f'<td>{std_chips(m, VEHICLE_STDS)}</td><td>{std_chips(m, BACKEND_STDS)}</td>'
                 f'<td>{std_cell(m["counts"].get("other"), "other")}</td></tr>')
-        summ = f'{len(ms)} setup{"s" * (len(ms) != 1)}' + (" · all passing" if allpass else f" · {failing} failing")
+        rate = pooled_txt(current(ms))
+        summ = (f'{len(ms)} setup{"s" * (len(ms) != 1)}' + (" · all passing" if allpass else f" · {failing} failing")
+                + (f" · {rate}" if rate else ""))
         body.append(
             f'<details class="card group" id="integ-{slug(integ)}"{"" if allpass else " open"}><summary>{integ_logo(P, integ)}<b>{esc(ms[0]["integ_name"])}</b> <span class="muted small">{summ}</span></summary>'
             f'<div class="scroll"><table><thead><tr><th scope="col">Setup</th><th scope="col">Verdict</th><th scope="col">Tested</th>'
@@ -837,16 +886,17 @@ def all_integrators(P):
         last = max(m["latest"]["start"] or 0 for m in ms)
         rows.append(f'<tr><th scope="row">{slot(integ)}<a href="#integ-{slug(integ)}">{esc(ms[0]["integ_name"])}</a></th>'
                     f'<td class="num"><a href="{detailed}#detail-{slug(integ)}">{len(ms)}</a></td><td><div class="pills">{"".join(pills)}</div></td>'
+                    f'<td class="small">{pooled_txt(cur) or "–"}</td>'
                     f'<td>{f"{ms_to_dt(last):%Y-%m-%d}" if last else "unknown"}</td></tr>')
     for a in P["silent"]:
         name = a["name"] if a["name"] != a["id"] else f'{a["id"]} (anonymous)'
         rows.append(f'<tr><th scope="row">{slot(a["id"])}{esc(name)}</th><td class="num">0</td>'
-                    f'<td><span class="pill v-not-reported">{VERDICT_LABEL["not-reported"][0]} not reported yet</span></td><td>–</td></tr>')
+                    f'<td><span class="pill v-not-reported">{VERDICT_LABEL["not-reported"][0]} not reported yet</span></td><td>–</td><td>–</td></tr>')
     n, k = len(groups) + len(P["silent"]), len(groups)
     return (f'<details class="card allint"><summary><h2 style="display:inline">All integrators</h2> '
             f'<span class="muted small">{n} integrator{"s" * (n != 1)}, {k} reporting · {len(P["setups"])} setup{"s" * (len(P["setups"]) != 1)}</span></summary>'
             f'<div class="scroll"><table><thead><tr><th scope="col">Integrator</th><th scope="col" class="num">Setups</th>'
-            f'<th scope="col">Verdicts</th><th scope="col">Last reported</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></details>')
+            f'<th scope="col">Verdicts</th><th scope="col">Tests passed</th><th scope="col">Last reported</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></details>')
 
 
 def run_strip(m, n=14):
@@ -939,7 +989,7 @@ def detail_row(m):
     oc = collections.Counter(t["outcome"] for t in L["tests"])
     rep = f'<a href="{esc(L["report"])}">report</a>' if L["report"] else '<span class="muted">none</span>'
     return (f'<tr><td>{esc(m["integ_name"])}</td><th scope="row"><a href="{m["href"]}">{esc(m["config"])}</a></th>'
-            f'<td>{vpill(m["verdict"])}</td><td>{results_cell(oc, len(L["tests"]))}</td>'
+            f'<td>{vpill(m["verdict"])}{rate_line(m)}</td><td>{results_cell(oc, len(L["tests"]))}</td>'
             f'<td class="small">{commit_txt(m)}</td><td class="small">{tested_txt(m)}</td><td>{esc(L["env"])}</td><td>{build_mark(L["build"])}</td>'
             f'<td class="small">{esc(L["tool"]) or "–"}</td><td>{run_strip(m)}</td><td class="small">{rep}</td></tr>')
 
@@ -1258,7 +1308,7 @@ def setup_page(m, P):
                 if L["report"] else "none")
     return f"""<nav aria-label="Breadcrumb" class="small muted"><a href="../{pointer_file("index", P["name"])}">{esc(P['name'])}</a> › {esc(m['integ_name'])} › {esc(m['config'])}</nav>
 <section class="card" style="display:flex;flex-direction:column;gap:14px"><div class="row"><h1>{esc(m['config'])}</h1>{vpill(m['verdict'])}{reg}
-<span class="muted">{oc['passed']} passed · {oc['failed']} failed · {oc['inconclusive']} inconclusive · {oc['accepted']} accepted · {oc['skipped']} skipped of {len(L['tests'])}</span></div>
+<span class="muted">{oc['passed']} passed · {oc['failed']} failed · {oc['inconclusive']} inconclusive · {oc['accepted']} accepted · {oc['skipped']} skipped of {len(L['tests'])}{f" · {pct(m['rate'], m['failed_n'])} of judged tests passed" if m['rate'] is not None else ""}</span></div>
 <dl class="grid" style="margin:0">
 <div><dt class="small muted">Integrator</dt><dd style="margin:0">{integ_logo(P, m['integ'], "../")}{esc(m['integ_name'])}</dd></div>
 <div><dt class="small muted">Tested commit</dt><dd style="margin:0">{commit_link(L['commit'])} · {behind}</dd></div>
@@ -1451,7 +1501,7 @@ def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS, docs=N
             "unattributed": [r["path"] for r in M["unattributed"]],
             "setups": [{
                 "integrator": m["integ"], "displayName": m["latest"]["display"], "configuration": m["config"],
-                "verdict": m["verdict"], "commit": m["latest"]["commit"], "behind": m["behind"],
+                "verdict": m["verdict"], "passRate": m["rate"], "commit": m["latest"]["commit"], "behind": m["behind"],
                 "freshness": m["fresh"], "environment": m["latest"]["env"], "testedAt": m["latest"]["start"],
                 "record": m["latest"]["path"], "submissions": len(m["runs"]),
                 "counts": {k: dict(v) for k, v in m["counts"].items()},
