@@ -18,7 +18,7 @@ button,select,summary{font:inherit;cursor:pointer;color:inherit}
 header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
 header.top .lockup{display:flex;align-items:center;gap:14px}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
 svg a:hover text{fill:var(--link);text-decoration:underline}
-header.top .brand{font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{font-size:13px;color:#C9D4E8}
+header.top .brand{font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{font-size:13px;color:#C9D4E8;max-width:34ch}
 header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 12px;border-radius:8px}
 header.top nav a[aria-current]{background:#21407A}.bar{height:4px;background:var(--lime)}
 main{max-width:1320px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px;display:flex;flex-direction:column;gap:18px}
@@ -41,6 +41,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
 .pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
+.allint{display:flex;flex-direction:column;gap:8px}.legend{display:flex;flex-wrap:wrap;gap:4px 14px}.lg{display:inline-flex;align-items:center;gap:6px}.lg i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
 details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
@@ -87,7 +88,7 @@ details.integ[open]>summary{border-radius:8px 8px 0 0}
 <script>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script></head><body>
 <header class="top"><div class="in"><div class="lockup"><a class="logo" href="https://github.com/EVerest/EVerest"><img src="everest-logo.svg" alt="LF Energy EVerest" width="116" height="34"></a>
 <div><a class="brand" href="index.html" style="color:#fff;text-decoration:none">Himalayas</a>
-<div class="sub">EVerest federated test results, self-reported by integrators</div></div></div>
+<div class="sub">EVerest test results, self-reported by the companies that build on it</div></div></div>
 <label class="small" style="display:flex;flex-direction:column;color:#C9D4E8">Pointer<select data-nav style="min-height:40px;padding:6px 8px;border-radius:8px;background:#fff;color:#1E2530;border:0"><option value="detailed.html">testing/main</option><option value="detailed-testing-stable-2026-02.html">testing/stable-2026.02</option><option value="detailed-testing-stable-2026-10.html" selected>testing/stable-2026.10</option></select></label><nav aria-label="Views"><a href="index.html">Overview</a><a href="detailed.html" aria-current="page">Detailed</a><a href="coverage.html">Coverage</a><a href="contribute.html">Contribute</a></nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
@@ -97,7 +98,7 @@ details.integ[open]>summary{border-radius:8px 8px 0 0}
 <tbody><tr><td colspan="11" class="muted">No setups.</td></tr></tbody></table></div>
 <p class="small muted" style="padding:0 20px 14px;margin:8px 0 0">Last 14 runs, oldest first: <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-passing"></span></span> no failed tests · <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-failing"></span></span> one or more failed tests</p></section><section class="card"><div class="row" style="margin-bottom:8px"><h2 style="margin:0">Compare with</h2>
 <select id="cmp" style="min-height:40px;padding:6px 8px;border-radius:8px"><option value="testing-main">testing/main</option><option value="testing-stable-2026-02">testing/stable-2026.02</option></select></div><div data-cmp="testing-main" class="scroll"><table><thead><tr><th>Setup</th><th>testing/stable-2026.10</th><th>testing/main</th><th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead><tbody></tbody></table></div><div data-cmp="testing-stable-2026-02" class="scroll"><table><thead><tr><th>Setup</th><th>testing/stable-2026.10</th><th>testing/stable-2026.02</th><th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead><tbody></tbody></table></div></section></main>
-<footer>Built 2026-10-23 14:06 UTC from <code>results/</code>, <code>pointers.json</code> and
+<footer>Built 2026-10-23 14:23 UTC from <code>results/</code>, <code>pointers.json</code> and
 <code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
 <a href="contribute.html">How to contribute</a> ·
 Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
@@ -111,13 +112,15 @@ if(th){
     const v=e.target.value;root.dataset.theme=v;
     try{localStorage.setItem('theme',v)}catch(e){}});
 }
+document.querySelectorAll('.allint>.scroll').forEach(e=>{e.scrollLeft=e.scrollWidth});
 document.querySelectorAll('select[data-nav]').forEach(s=>s.addEventListener('change',()=>{location.href=s.value}));
 const bar=document.querySelector('.summarybar');
 if(bar){
   const apply=f=>{
     bar.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.f===f)));
     document.querySelectorAll('tr[data-v]').forEach(tr=>{
-      const show=!f||tr.dataset.v===f||(f==='regressed'&&tr.dataset.reg==='1');tr.hidden=!show});
+      const st=tr.dataset.stale==='1';
+      const show=!f||(f==='stale'?st:!st&&(tr.dataset.v===f||(f==='regressed'&&tr.dataset.reg==='1')));tr.hidden=!show});
     document.querySelectorAll('details.group').forEach(d=>{
       const vis=[...d.querySelectorAll('tr[data-v]')].some(t=>!t.hidden);d.hidden=!vis;if(f&&vis)d.open=true});
     try{history.replaceState(null,'',f?'#'+f:location.pathname)}catch(e){}

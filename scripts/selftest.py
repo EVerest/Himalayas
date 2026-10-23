@@ -30,7 +30,7 @@ has no count guard because growing is what it does. Fixtures the repository
 owns - examples/ - are covered here, since they change only when someone
 edits them and that is exactly what the count guard exists to surface.
 """
-import argparse, base64, copy, json, os, re, shutil, subprocess, sys, tempfile
+import argparse, base64, collections, copy, json, os, re, shutil, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PY = sys.executable
@@ -979,7 +979,7 @@ def suite_build(work, verbose):
     # that this page is the only home for.
     check("index.html is not empty", len(page) > 4_000, f"{len(page)} bytes")
     check("page carries its headline", 'class="brand"' in page and ">Himalayas</a>" in page
-          and "EVerest federated test results" in page)
+          and "EVerest test results, self-reported" in page)
     check("page carries the self-reported caveat", "self-reported" in page)
 
     # Every committed submission has to reach the site. load_records() made to
@@ -1065,6 +1065,7 @@ def suite_build(work, verbose):
               "no committed submission fails, or the pointer never moved")
         check("a stale row still shows its failing verdict", False, "skipped")
         check("a stale row still shows the stale marker", False, "skipped")
+        check("a stale setup is left out of the summary and offered under stale", False, "skipped")
     else:
         rec = dict(copy.deepcopy(rec), pointer=main, commit=shas[0])
         rec["start"] = int(bs.NOW.timestamp() * 1000) - 60 * 86_400_000
@@ -1072,6 +1073,19 @@ def suite_build(work, verbose):
         check("sample data carries a failing submission to age", True)
         check("a stale row still shows its failing verdict", row.startswith('"failing"'), row[:120])
         check("a stale row still shows the stale marker", 'data-fresh="stale"' in row, row[:200])
+        # The summary counts current setups only, so the aged failure must leave the
+        # headline and the verdict buttons and be offered under its own button.
+        aged = bs.build_site([rec], declared, logs, allow, vocab, 14)["index.html"]
+        check("a stale setup is left out of the summary and offered under stale",
+              "No setup has reported recently." in aged and 'data-f="stale"' in aged
+              and 'data-f="failing"' not in aged, aged[aged.find("All integrators"):][:300])
+
+    # The daily chart replays the headline, so its last day must count what the
+    # headline counts, or the chart and the sentence disagree.
+    P = bs.build_pointer(main, logs.get(main, []), recs, allow, 14)
+    want = collections.Counter("stale" if m["fresh"] == "stale" else m["verdict"] for m in P["setups"])
+    got = bs.as_of(P, bs.NOW.timestamp() * 1000)
+    check("the daily chart's last day equals the summary", bool(want) and got == want, f"{dict(got)} vs {dict(want)}")
 
     base = next((x for x in recs if x["pointer"] == main and x["commit"] in shas), None)
 
@@ -1111,7 +1125,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 19, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 21, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

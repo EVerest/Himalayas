@@ -24,6 +24,10 @@ The contributor-facing summary is
 | A Contribute page, generated at build time from the README's five-step quick start and the whole of CONTRIBUTING.md, linked from the header, the overview and the footer. | A reader who wants to report results should not have to find the repository first, and a generated page cannot drift from the guide. | Implemented |
 | Every commit sha shown as text links to that commit in EVerest/EVerest, including the chart's axis labels. Tooltips stay plain text. | A reader chasing a regression range wants the diff one click away. | Implemented |
 | EVerest's logo in the header beside the site name, linking to the EVerest repository. The build turns its navy fills white. | The site belongs to the project, and the navy wordmark would vanish on the navy header. A white plate around it crowded the header onto two rows. | Implemented |
+| An "All integrators" card at the top of each pointer's overview: one sentence counting setups by verdict and saying how close they are to the tip, then one chip per standard saying on how many of the setups that judged it it fails. | Answers "how good is this pointer right now" before the per-company detail. Setups are the unit, never tests, and there are no percentages: a test count is dominated by the biggest suite and moves when tests are added or dropped. | Implemented |
+| Stale setups are left out of the summary and the verdict buttons, and offered under their own "stale, left out" button. | A setup that stopped reporting should not make today look better or worse. | Implemented |
+| A daily chart under the summary: setups by verdict per day over the last 90 days, each day replaying the summary as it would have read then, with a table view. | The last day always equals the summary, so the chart and the sentence cannot disagree. A day can mix commits; per-commit history stays on the setup page. | Implemented |
+| No overview that mixes pointers, and no flat table mixing every company's setups. | Mixing pointers mixes results from different EVerest commits. Readers look for a company first, and the verdict buttons already slice across companies. | Rejected |
 
 ### Default view
 
