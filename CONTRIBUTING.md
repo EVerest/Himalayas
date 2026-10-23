@@ -1,6 +1,7 @@
 # Submitting test results to Himalayas
 
-A submission is one JSON file, CTRF or OpenHTF, added by pull request under
+A submission is one JSON file, [CTRF](https://ctrf.io) or
+[OpenHTF](https://github.com/google/openhtf), added by pull request under
 `results/<your-id>/<pointer>/`. This guide walks through it in order. The contract itself
 is [SCHEMA.md](SCHEMA.md), and the authority on what is rejected is the `REJECTS` block at
 the top of [`scripts/validate_submission.py`](scripts/validate_submission.py).
