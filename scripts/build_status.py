@@ -1576,7 +1576,18 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
     ap.add_argument("--grace-days", type=int, default=GRACE_DAYS)
     ap.add_argument("--out-dir", default=str(ROOT / "status"))
+    ap.add_argument("--check-logos", action="store_true",
+                    help="check integrators/logos/ against the logo rules and exit, building nothing")
     args = ap.parse_args()
+    if args.check_logos:
+        allow = load_allowlist()
+        problems = logo_audit(ROOT, allow)
+        for rel, problem in problems:
+            print(f"{rel}: {problem}")
+        if problems:
+            return 1
+        print(f"ok: {sum(1 for a in allow if a.get('logo'))} logo(s) will be shown")
+        return 0
     declared, logs = load_pointers()
     vocab = json.loads((ROOT / "schema" / "vocabulary.json").read_text())
     recs = load_records()

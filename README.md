@@ -44,6 +44,12 @@ All EVerest documentation and issue tracking lives in the
 [CONTRIBUTING.md](CONTRIBUTING.md) is the full walkthrough, including a fully automated
 submission from any CI. [SCHEMA.md](SCHEMA.md) is the contract.
 
+### Add your logo
+
+Optional, for a public integrator: add `integrators/logos/<your-id>.svg`, check it with
+`python3 scripts/build_status.py --check-logos`, and open a PR. The site shows it beside your
+name. See [Adding a logo](CONTRIBUTING.md#adding-a-logo) for the rules and an example.
+
 ## What the gate checks
 
 About the *result*:
@@ -128,7 +134,7 @@ never be aged.
 | `scripts/record_pointer_move.py` | Appends one pointer move to the log. Called by a workflow, never by hand |
 | `scripts/refresh_module_names.py` | Regenerates `schema/everest-modules.txt` from EVerest's module manifests. Run by hand when the list goes stale |
 | `scripts/archive.py` | Strips traces and attachments off records older than 6 months. Run by hand |
-| `scripts/selftest.py` | 158 checks, almost all negative. Run after touching `scripts/` or `schema/` |
+| `scripts/selftest.py` | 159 checks, almost all negative. Run after touching `scripts/` or `schema/` |
 | `scripts/build_status.py` | Generates the status site: an overview, detailed and coverage page per pointer, a page per setup, a contribute page generated from this README and CONTRIBUTING.md, and `summary.json` and `regressions.json` |
 | `status/` | Generated, and deployed to Pages |
 | `docs/design/` | Design records |
@@ -150,7 +156,7 @@ open status/index.html
 # check the pointer branches and the log agree
 python3 scripts/verify_pointers.py
 
-# assert the gate still rejects what it should; all 158 checks must pass
+# assert the gate still rejects what it should; all 159 checks must pass
 python3 scripts/selftest.py
 ```
 

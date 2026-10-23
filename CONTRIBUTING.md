@@ -66,24 +66,41 @@ the allowlist says. Without it the page shows `your-id (anonymous)`.
 ### Adding a logo
 
 A public integrator may add its logo, which the status site shows beside its name on the
-overview and on its setup pages. Add it as `integrators/logos/<your-id>.svg`, in the
-allowlist PR or a later PR of its own; either way a code owner reviews it. By adding it you
-confirm your organization may have it shown there.
+overview and on its setup pages. By adding it you confirm your organization may have it
+shown there. A code owner reviews it like the allowlist.
+
+1. **Start from your vector logo for light backgrounds.** It is shown about 20 px tall on a
+   small white plate, in light and dark mode alike. A mark without the wordmark reads best
+   at that size, since your name is printed beside it.
+2. **Reduce it to static shapes.** Convert text to paths, and remove links, embedded images
+   and fonts. In Inkscape: select all, **Path > Object to Path**, then save as
+   **Plain SVG**. Some design tools wrap shapes in empty `<a>` links on export; remove those.
+3. **Save it as `integrators/logos/<your-id>.svg`.**
+4. **Check it** in a checkout of this repository:
+
+   ```bash
+   python3 scripts/build_status.py --check-logos
+   ```
+
+   It names each rule a logo breaks and exits 1, or prints how many logos will be shown.
+5. **Open a PR** with the logo, in your allowlist PR or one of its own. Like the allowlist,
+   it is not a results PR, so keep it out of your results PRs.
+
+The rules the check applies:
 
 - **SVG only**, at most 32 KiB, starting with `<svg` (an `<?xml?>` declaration and comments
   before it are fine).
 - **Static shapes only.** Paths, basic shapes, groups, gradients, clip paths, masks and a
   `<style>` for fills. No `<script>`, event handlers, links (`<a>`), `<image>`, `<text>`,
   animation or `<foreignObject>`, and no `href`, `url()` or `@import` that points outside the
-  file. Convert text to paths, and remove the link wrappers some design tools export.
-  The site publishes the logo as re-written from these parts, not your file byte for byte.
-- **Readable on white.** It is shown about 20 px tall on a small white plate, in light and
-  dark mode alike, so use the version made for light backgrounds.
+  file. The site publishes the logo as re-written from these parts, not your file byte for
+  byte.
 - **Not for anonymous ids.** A logo would name you, so an id without `display_name` gets
   none.
 
 A logo that breaks a rule is left off the site, and the self-test names it. For an
-example, see [`integrators/logos/pionix.svg`](integrators/logos/pionix.svg).
+example, see [`integrators/logos/pionix.svg`](integrators/logos/pionix.svg), the mark from
+Pionix's logo.
 
 ---
 
@@ -385,7 +402,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 158 checks, all of which must pass
+python3 scripts/selftest.py        # 159 checks, all of which must pass
 ```
 
 ---

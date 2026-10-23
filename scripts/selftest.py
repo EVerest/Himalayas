@@ -1070,8 +1070,14 @@ def suite_build(work, verbose):
     check("an anonymous integrator's logo is refused",
           "example-anonymous.svg" not in str(list(site_l))
           and "anonymous" in audit.get(f"{bs.INTEG_LOGO_DIR}/example-anonymous.svg", ""))
+    bad_run = sh(work, "build_status.py", "--check-logos")
     for who in ("example-integrator", "example-anonymous"):
         (logos / f"{who}.svg").unlink()
+    good_run = sh(work, "build_status.py", "--check-logos")
+    check("--check-logos names a refused logo and passes the committed ones",
+          bad_run.returncode == 1 and "example-anonymous.svg: belongs to an anonymous id" in bad_run.stdout
+          and good_run.returncode == 0 and good_run.stdout.startswith("ok:"),
+          f"rc={bad_run.returncode}/{good_run.returncode} {bad_run.stdout[:120]!r}")
 
     # Each kind of active or external content is refused on its own, in an
     # otherwise valid SVG, and what is published is the re-serialized tree.
@@ -1260,7 +1266,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 34, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 35, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
