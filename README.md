@@ -73,6 +73,7 @@ EVerest maintains **floating pointer branches** that a CI job force-pushes forwa
 |---|---|
 | `testing/main` | `main` |
 | `testing/stable-2026.02` | `stable/2026.02` |
+| `testing/stable-2026.10` | `stable/2026.10` |
 
 Fetch one to get the agreed base to test against. They are **not releases**: no support
 promise, no backports, and they are **ungated** — a pointer can point at a broken `main`. That
