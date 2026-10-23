@@ -696,8 +696,6 @@ def overview(P, pointers):
     empty = "" if setups else (f'<p class="notice">No submission tested a commit in {esc(P["name"])}\'s log yet. '
                                 f'Results at other commits are not attributed here. <a href="contribute.html">Report a run</a>.</p>')
     return f"""<section class="row"><h1>{esc(P['name'])}</h1><span class="muted">{tipline}</span></section>
-<p class="small muted" style="margin:0;max-width:80ch">A result counts for this pointer when its exact commit appears in the pointer's log.
-Each standard a setup reported gets a chip with its self-run conformance test cases. Accepted, inconclusive and skipped tests are listed beside the count and never counted as passed or failed.</p>
 <p class="cta">Run EVerest on your own hardware or CI? <a href="contribute.html">Report your results</a>: register once, then open one pull request per run.</p>
 {empty}<section class="summarybar" aria-label="Filter by verdict">{btns if setups else ""}</section>
 {''.join(body)}"""
