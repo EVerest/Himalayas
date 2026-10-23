@@ -29,11 +29,11 @@
       "healthy": true,
       "osPlatform": "linux",
       "osVersion": "6.6.0-yocto-standard",
-      "buildUrl": "https://ci.deadbeef-charge.example/pipelines/48213",
-      "reportName": "deadbeef-charge HIL DC"
+      "buildUrl": "https://ci.example.com/pipelines/48213",
+      "reportName": "example-integrator HIL DC"
     },
     "extra": {
-      "reportUrl": "https://ci.deadbeef-charge.example/pipelines/48213/report.pdf",
+      "reportUrl": "https://ci.example.com/pipelines/48213/report.pdf",
       "configuration": "dc-150kw",
       "build": {
         "status": "passed",
@@ -65,8 +65,8 @@
         ]
       },
       "integrator": {
-        "id": "deadbeef-charge",
-        "displayName": "DEADBEEF Charge GmbH"
+        "id": "example-integrator",
+        "displayName": "Example Integrator GmbH"
       },
       "hardware": {
         "bsp": "yeti-fw-1.4.2",

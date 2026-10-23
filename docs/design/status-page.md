@@ -240,7 +240,7 @@ one vocabulary tag.
 
 | Decision | Rationale | Status |
 |---|---|---|
-| The fixture integrator ids `deadbeef-charge` and `anon-7f3a` move out of the production allowlist into `testdata/allowlist.yaml`, loaded only by the self-test. The gate tests and the references in `examples/` are updated with it. | Fixture ids should not be able to publish real results. | Decided, not implemented |
+| The example integrator ids, renamed `example-integrator` and `example-anonymous`, live in `testdata/allowlist.yaml`, which the self-test appends to its throwaway copy of the allowlist. The production allowlist, the PR template and the gate's messages name no example id; they say `your-id`. | Example ids should not be able to publish real results, nor show on the status page as integrators. | Implemented |
 
 ## Open questions
 

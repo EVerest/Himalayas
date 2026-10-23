@@ -70,16 +70,16 @@ def suite_gate(work, verbose):
     ctrf = json.load(open(os.path.join(work, "examples", "ctrf-hil-dc.json")))
     htf = json.load(open(os.path.join(work, "examples", "openhtf-hil-dc.json")))
     mini = json.load(open(os.path.join(work, "examples", "minimal-ctrf.json")))
-    P = "results/deadbeef-charge/testing/main/20260901.json"
+    P = "results/example-integrator/testing/main/20260901.json"
 
     # (label, base, mutation, expected code(s), path). A tuple means EVERY code
     # listed must appear - which is how the hand-written branches get pinned: each
     # of them fires alongside a schema rule that says the same thing less well, so
     # asserting only one code lets the other be deleted with the suite still green.
     cases = [
-        ("path: wrong filename", ctrf, None, "bad-path", "results/deadbeef-charge/testing/main/nope.json"),
-        ("path: missing pointer dir", ctrf, None, "bad-path", "results/deadbeef-charge/20260901.json"),
-        ("path: -1 suffix", ctrf, None, "bad-path", "results/deadbeef-charge/testing/main/20260901-1.json"),
+        ("path: wrong filename", ctrf, None, "bad-path", "results/example-integrator/testing/main/nope.json"),
+        ("path: missing pointer dir", ctrf, None, "bad-path", "results/example-integrator/20260901.json"),
+        ("path: -1 suffix", ctrf, None, "bad-path", "results/example-integrator/testing/main/20260901-1.json"),
         ("format: not CTRF or OpenHTF", {"hello": "world"}, None, "unknown-format", P),
         ("ctrf: invalid CTRF", ctrf, lambda d: d["results"]["summary"].pop("passed"), "ctrf-schema", P),
         ("ctrf: missing specVersion", ctrf, lambda d: d.pop("specVersion"), "ctrf-schema", P),
@@ -192,7 +192,7 @@ def suite_gate(work, verbose):
     # And a path naming a pointer nobody declared is rejected.
     d = copy.deepcopy(ctrf)
     d["results"]["environment"]["appVersion"] = "testing/main"
-    rc, cs, _ = gate(work, d, "results/deadbeef-charge/testing/stable-1999.01/20260901.json")
+    rc, cs, _ = gate(work, d, "results/example-integrator/testing/stable-1999.01/20260901.json")
     ok = rc == 1 and "pointer-unknown" in cs
     report("reject a path naming an undeclared pointer", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
@@ -223,14 +223,14 @@ def suite_gate(work, verbose):
     # An integrator id lists the GitHub accounts allowed to publish as it.
     # Without this the page's premise - attributed self-reporting - is unenforced:
     # any GitHub account could publish an auto-merged result as any integrator.
-    authorised = "deadbeef-charge-ci"
+    authorised = "example-integrator-ci"
     rc, cs, _ = gate(work, copy.deepcopy(ctrf), P, extra=("--author", authorised))
     ok = rc == 0
     report("accept a submission from an authorised account", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept authorised author              rc={rc}")
 
-    rc, cs, _ = gate(work, copy.deepcopy(ctrf), P, extra=("--author", "DEADBEEF-Charge-CI"))
+    rc, cs, _ = gate(work, copy.deepcopy(ctrf), P, extra=("--author", "Example-Integrator-CI"))
     ok = rc == 0
     report("account match is case-insensitive", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
@@ -476,8 +476,8 @@ def suite_intake(work, verbose):
         return r.returncode, got, accepted, (open(verdict).read()
                                              if os.path.exists(verdict) else "")
 
-    SUB = "results/deadbeef-charge/testing/main/20260909.json"
-    OTHER = "results/anon-7f3a/testing/main/20260909.json"
+    SUB = "results/example-integrator/testing/main/20260909.json"
+    OTHER = "results/example-anonymous/testing/main/20260909.json"
     cases = [
         # (label, files, expected kind, expected reason, must accept nothing)
         ("deletion-only pull request",
@@ -488,23 +488,23 @@ def suite_intake(work, verbose):
         ("edit of an existing record",
          [{"status": "modified", "filename": SUB}], "refuse", "append-only"),
         ("rename that re-dates a record",
-         [{"status": "renamed", "filename": "results/deadbeef-charge/testing/main/20260910.json",
+         [{"status": "renamed", "filename": "results/example-integrator/testing/main/20260910.json",
            "previous_filename": OTHER}], "refuse", "append-only"),
         ("rename out of results/",
          [{"status": "renamed", "filename": "docs/x.json",
            "previous_filename": SUB}], "refuse", "append-only"),
         ("an add alongside a deletion",
-         [{"status": "added", "filename": "results/deadbeef-charge/testing/main/20260910.json"},
+         [{"status": "added", "filename": "results/example-integrator/testing/main/20260910.json"},
           {"status": "removed", "filename": OTHER}], "refuse", "append-only"),
         ("a submission that also changes code",
-         [{"status": "added", "filename": "results/deadbeef-charge/testing/main/20260910.json"},
+         [{"status": "added", "filename": "results/example-integrator/testing/main/20260910.json"},
           {"status": "modified", "filename": "scripts/validate_submission.py"}],
          "refuse", "mixed"),
         ("a path that escapes results/",
          [{"status": "added", "filename": "results/../../etc/cron.d/x.json"}],
          "refuse", "bad-path"),
         ("a filename the gate would not accept",
-         [{"status": "added", "filename": "results/deadbeef-charge/testing/main/nope.json"}],
+         [{"status": "added", "filename": "results/example-integrator/testing/main/nope.json"}],
          "refuse", "bad-path"),
         # An allowlist pull request must not be refused and must not deadlock: the
         # required check has to report on a pull request that is not a submission.
@@ -513,7 +513,7 @@ def suite_intake(work, verbose):
          "not-a-submission", ""),
         ("a pull request that changes nothing", [], "not-a-submission", ""),
         ("a genuine submission",
-         [{"status": "added", "filename": "results/deadbeef-charge/testing/main/20260910.json"}],
+         [{"status": "added", "filename": "results/example-integrator/testing/main/20260910.json"}],
          "submission", ""),
     ]
     for label, files, want_kind, want_reason in cases:
@@ -735,14 +735,14 @@ def suite_archive(work, verbose):
                                                  "size": 1000, "data": base64.b64encode(b"y" * 1000).decode()}}
     src["phases"][0]["codeinfo"] = {"name": "p", "docstring": "d", "sourcecode": "secret"}
     src["phases"][1].setdefault("outcome_details", []).append({"code": "trace", "description": "T" * 500})
-    rel = "results/deadbeef-charge/testing/main/20200913.json"
+    rel = "results/example-integrator/testing/main/20200913.json"
     full = os.path.join(work, rel)
     os.makedirs(os.path.dirname(full), exist_ok=True)
     with open(full, "w") as f:
         json.dump(src, f, indent=2)
 
     r = sh(work, "archive.py", "--months", "6", "--apply")
-    dst = os.path.join(work, "archive", "deadbeef-charge", "testing", "main", "20200913.json")
+    dst = os.path.join(work, "archive", "example-integrator", "testing", "main", "20200913.json")
     ok = r.returncode == 0 and os.path.exists(dst) and not os.path.exists(full)
     report("archive moves an old record", ok, r.stdout[-200:])
     if verbose or not ok:
@@ -1161,6 +1161,11 @@ def main():
         if os.path.isdir(fixtures):
             shutil.copytree(fixtures, os.path.join(work, "results"),
                             dirs_exist_ok=True)
+        # The ids they publish under exist only here, so the shipped allowlist
+        # cannot be used to publish as an example.
+        with open(os.path.join(ROOT, "testdata", "allowlist.yaml")) as src, \
+                open(os.path.join(work, "integrators", "allowlist.yaml"), "a") as dst:
+            dst.write(src.read())
         for name in ran:
             print(f"\n== {name} ==")
             before = RUN

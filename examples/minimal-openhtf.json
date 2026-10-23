@@ -1,6 +1,6 @@
 {
   "dut_id": "sil",
-  "station_id": "anon-7f3a",
+  "station_id": "example-anonymous",
   "outcome": "PASS",
   "start_time_millis": 1788944942564,
   "end_time_millis": 1788945589177,
@@ -14,7 +14,7 @@
       "status": "passed",
       "modules": ["EvseManager"]
     },
-    "integrator": { "id": "anon-7f3a" }
+    "integrator": { "id": "example-anonymous" }
   },
   "phases": []
 }

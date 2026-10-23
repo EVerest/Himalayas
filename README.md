@@ -117,6 +117,7 @@ never be aged.
 | `pointers.json` | Append-only log of where each pointer has pointed |
 | `results/<id>/<pointer>/<YYYYMMDD>.json` | Submissions |
 | `testdata/results/` | Fixture submissions used by the self-test |
+| `testdata/allowlist.yaml` | The example integrator ids, allowlisted only inside the self-test |
 | `scripts/validate_submission.py` | The intake gate. Run it locally before you push |
 | `scripts/normalise.py` | Detects CTRF or OpenHTF and normalizes to OpenHTF |
 | `scripts/classify_pr_files.py` | Decides what a PR is, and refuses any change to an existing record |

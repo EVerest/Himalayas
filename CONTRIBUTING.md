@@ -159,6 +159,11 @@ The smallest legal records, with zero tests, are
 than the example on [ctrf.io](https://ctrf.io), which omits the required `reportFormat` and
 `specVersion` and does not validate.
 
+The examples publish as `example-integrator` (Example Integrator GmbH) and
+`example-anonymous`. Those ids are allowlisted only inside the self-test, so a copied example
+is rejected with `not-allowlisted` until you replace the integrator `id`, and `displayName`
+if present, with your own. The `example.com` URLs are placeholders for your CI's.
+
 ### 3.2 Field by field (CTRF)
 
 **Required** means the gate rejects the record without it. **Encouraged** means it is
