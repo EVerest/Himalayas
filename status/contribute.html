@@ -325,7 +325,7 @@ curl -fsSL -X POST &quot;${H[@]}&quot; &quot;$API/repos/$UPSTREAM/pulls&quot; \
 <p>Put the stable cause of a failure on the <strong>first line</strong> of <code>message</code>, and volatile detail after it. <em>Planned:</em> failures will be grouped by that first line with hex addresses, decimals, ISO timestamps and UUIDs blanked (integers are kept). To choose the group yourself, set <code>tests[].extra.failureKey</code> to a short string. It is accepted today and ignored.</p>
 <h4 id="evidence-hashes-and-test-systems">Evidence hashes and test systems</h4>
 <p><em>Planned, and rejected today:</em> <code>extra.reportSha256</code> (a SHA-256 of the file at <code>reportUrl</code>) and a <code>testSystem</code> (<code>{name, version}</code>) for runs made with a reference test system. <code>results.extra</code> is closed, so the gate rejects each of them with <code>extra-contract</code>. A Vendor Declaration of Conformance (VDoC) is not a separate field: link it as the report. <strong>Do not emit them</strong> until the schema adds them. Use <code>extra.reportUrl</code> for the report link today.</p></section></main>
-<footer>Built 2026-10-23 15:05 UTC from <code>results/</code>, <code>pointers.json</code> and
+<footer>Built 2026-10-23 15:08 UTC from <code>results/</code>, <code>pointers.json</code> and
 <code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
 <a href="contribute.html">How to contribute</a> ·
 Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
