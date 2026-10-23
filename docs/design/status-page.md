@@ -23,7 +23,7 @@ The contributor-facing summary is
 | Add a coverage view and a per-setup detail page. | Coverage gaps and the history of one setup do not fit in a row. | Implemented |
 | A Contribute page, generated at build time from the README's five-step quick start and the whole of CONTRIBUTING.md, linked from the header, the overview and the footer. | A reader who wants to report results should not have to find the repository first, and a generated page cannot drift from the guide. | Implemented |
 | Every commit sha shown as text links to that commit in EVerest/EVerest, including the chart's axis labels. Tooltips stay plain text. | A reader chasing a regression range wants the diff one click away. | Implemented |
-| EVerest's logo, unaltered, on a white plate in the header, linking to the EVerest repository. | The site belongs to the project; the navy wordmark would vanish on the navy header if it were not on a plate. | Implemented |
+| EVerest's logo in the header beside the site name, linking to the EVerest repository. The build turns its navy fills white. | The site belongs to the project, and the navy wordmark would vanish on the navy header. A white plate around it crowded the header onto two rows. | Implemented |
 
 ### Default view
 

@@ -78,6 +78,17 @@ EVEREST_COMMIT = "https://github.com/EVerest/EVerest/commit/"
 # EVerest's own logo, copied from EVerest/EVerest docs/images.
 LOGO_SRC = "docs/images/everest_horizontal-color.svg"
 LOGO = "everest-logo.svg"
+# The header is navy, so the logo's two navy fills turn white, as in the
+# project's reversed artwork.
+LOGO_REVERSE = {".st4{fill:#0C2351;}": ".st4{fill:#FFFFFF;}", ".st9{fill:#1B3964;}": ".st9{fill:#FFFFFF;}"}
+
+
+def reversed_logo(svg):
+    for old, new in LOGO_REVERSE.items():
+        if old not in svg:
+            raise ValueError(f"{LOGO_SRC}: fill {old} not found")
+        svg = svg.replace(old, new)
+    return svg
 
 
 def commit_link(sha):
@@ -407,11 +418,11 @@ CSS = """
 a{color:var(--link)}code,.mono{font-family:var(--mono);font-size:.92em}
 button,select,summary{font:inherit;cursor:pointer;color:inherit}
 :focus-visible{outline:3px solid #2F96D0;outline-offset:2px}
-header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
-header.top .logo{display:flex;background:#fff;border-radius:8px;padding:6px 10px}header.top .logo img{display:block;height:40px;width:auto}
+header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+header.top .lockup{display:flex;align-items:center;gap:14px}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
 svg a:hover text{fill:var(--link);text-decoration:underline}
 header.top .brand{font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{font-size:13px;color:#C9D4E8}
-header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 14px;border-radius:8px}
+header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 12px;border-radius:8px}
 header.top nav a[aria-current]{background:#21407A}.bar{height:4px;background:var(--lime)}
 main{max-width:1320px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px;display:flex;flex-direction:column;gap:18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 20px;min-width:0}
@@ -567,9 +578,9 @@ def page(title, active, body, depth=0, pointer_sel=""):
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>{CSS}</style>
 <script>try{{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script></head><body>
-<header class="top"><div class="in"><a class="logo" href="https://github.com/EVerest/EVerest"><img src="{up}{LOGO}" alt="LF Energy EVerest" width="136" height="40"></a>
+<header class="top"><div class="in"><div class="lockup"><a class="logo" href="https://github.com/EVerest/EVerest"><img src="{up}{LOGO}" alt="LF Energy EVerest" width="116" height="34"></a>
 <div><a class="brand" href="{up}index.html" style="color:#fff;text-decoration:none">Himalayas</a>
-<div class="sub">EVerest federated test results, self-reported by integrators</div></div>
+<div class="sub">EVerest federated test results, self-reported by integrators</div></div></div>
 {pointer_sel}<nav aria-label="Views">{nav}</nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
@@ -1309,7 +1320,7 @@ def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS, docs=N
          "bad": r["range"][1], "untested": r["untested"], "confirmed": r["confirmed"]}
         for m in M["setups"] for r in m["regs"]] for p, M in models.items()}}
     if docs:
-        out[LOGO] = docs[LOGO_SRC]
+        out[LOGO] = reversed_logo(docs[LOGO_SRC])
         out["contribute.html"] = page("Himalayas · contribute", "contribute", contribute(docs["README.md"], docs["CONTRIBUTING.md"]))
     out["summary.json"] = json.dumps(summary, indent=1) + "\n"
     out["regressions.json"] = json.dumps(regs, indent=1) + "\n"
