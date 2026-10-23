@@ -1034,6 +1034,15 @@ def suite_build(work, verbose):
     check("the contribute page carries every CONTRIBUTING section, and the overview links it",
           bool(want) and not missing and 'href="contribute.html"' in page, f"missing {missing[:3]}")
 
+    # The All integrators list is the index of who may report, so an allowlisted
+    # integrator with nothing on the pointer still gets a row.
+    card = page[page.find('class="card allint"'):].split("</details>")[0]
+    names = [a["name"] if a["name"] != a["id"] else f'{a["id"]} (anonymous)'
+             for a in load_build_status(work).load_allowlist(load_build_status(work).pathlib.Path(work))]
+    absent = [n for n in names if f">{n}<" not in card]
+    check("the All integrators list names every allowlisted integrator",
+          bool(names) and not absent and "not reported yet" in card, f"missing {absent[:3]}")
+
     # Dates read YYYY-MM-DD or DD-MM, never month first.
     src = open(os.path.join(work, "scripts", "build_status.py")).read()
     bad_fmt = re.findall(r"(?<!%Y-)%m-%d|%m/%d", src)
@@ -1123,7 +1132,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 21, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 22, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

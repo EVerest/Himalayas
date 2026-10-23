@@ -444,7 +444,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
 .pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
-.allint table{margin-top:10px}
+.allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
 details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
@@ -726,25 +726,31 @@ def current(setups):
 
 
 def all_integrators(P):
-    """Every integrator reporting on this pointer, one row each, linking to its card."""
+    """Every allowlisted integrator on this pointer: reporting ones link to their card and their
+    rows on the detailed page, silent ones are listed as not reported yet."""
     groups = collections.OrderedDict()
     for m in P["setups"]:
         groups.setdefault(m["integ"], []).append(m)
+    detailed = pointer_file("detailed", P["name"])
     rows = []
     for integ, ms in groups.items():
         cur = current(ms)
         cnt = collections.Counter(m["verdict"] for m in cur)
-        verdicts = " · ".join(f'{cnt[v]} {VERDICT_LABEL[v][2:]}' for v in DISPLAY_ORDER if cnt[v])
-        nstale = len(ms) - len(cur)
-        if nstale:
-            verdicts += f'{" · " if verdicts else ""}{nstale} stale'
+        pills = [f'<span class="pill v-{v}">{VERDICT_LABEL[v][0]} {cnt[v]} {VERDICT_LABEL[v][2:]}</span>'
+                 for v in DISPLAY_ORDER if cnt[v]]
+        if len(ms) > len(cur):
+            pills.append(f'<span class="pill v-not-exercised">{len(ms) - len(cur)} stale</span>')
         last = max(m["latest"]["start"] or 0 for m in ms)
         rows.append(f'<tr><th scope="row"><a href="#integ-{slug(integ)}">{esc(ms[0]["integ_name"])}</a></th>'
-                    f'<td class="num">{len(ms)}</td><td>{verdicts}</td>'
+                    f'<td class="num"><a href="{detailed}#detail-{slug(integ)}">{len(ms)}</a></td><td><div class="pills">{"".join(pills)}</div></td>'
                     f'<td>{f"{ms_to_dt(last):%Y-%m-%d}" if last else "unknown"}</td></tr>')
-    n = len(groups)
+    for a in P["silent"]:
+        name = a["name"] if a["name"] != a["id"] else f'{a["id"]} (anonymous)'
+        rows.append(f'<tr><th scope="row">{esc(name)}</th><td class="num">0</td>'
+                    f'<td><span class="pill v-not-reported">{VERDICT_LABEL["not-reported"][0]} not reported yet</span></td><td>–</td></tr>')
+    n, k = len(groups) + len(P["silent"]), len(groups)
     return (f'<details class="card allint"><summary><h2 style="display:inline">All integrators</h2> '
-            f'<span class="muted small">{n} integrator{"s" * (n != 1)} · {len(P["setups"])} setup{"s" * (len(P["setups"]) != 1)}</span></summary>'
+            f'<span class="muted small">{n} integrator{"s" * (n != 1)}, {k} reporting · {len(P["setups"])} setup{"s" * (len(P["setups"]) != 1)}</span></summary>'
             f'<div class="scroll"><table><thead><tr><th scope="col">Integrator</th><th scope="col" class="num">Setups</th>'
             f'<th scope="col">Verdicts</th><th scope="col">Last reported</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></details>')
 
@@ -826,19 +832,29 @@ def results_cell(oc, n):
 
 
 def detail_table(P):
-    rows = []
-    for m in P["setups"]:
-        L = m["latest"]
-        oc = collections.Counter(t["outcome"] for t in L["tests"])
-        rep = f'<a href="{esc(L["report"])}">report</a>' if L["report"] else '<span class="muted">none</span>'
-        rows.append(f'<tr><td>{esc(m["integ_name"])}</td><th scope="row"><a href="{m["href"]}">{esc(m["config"])}</a></th>'
-                    f'<td>{vpill(m["verdict"])}</td><td>{results_cell(oc, len(L["tests"]))}</td>'
-                    f'<td class="small">{commit_txt(m)}</td><td class="small">{tested_txt(m)}</td><td>{esc(L["env"])}</td><td>{build_mark(L["build"])}</td>'
-                    f'<td class="small">{esc(L["tool"]) or "–"}</td><td>{run_strip(m)}</td><td class="small">{rep}</td></tr>')
+    groups = collections.OrderedDict()
+    for m in sorted(P["setups"], key=lambda m: m["integ_name"].lower()):
+        groups.setdefault(m["integ"], []).append(m)
+    bodies = "".join(f'<tbody id="detail-{slug(integ)}">{"".join(map(detail_row, ms))}</tbody>'
+                     for integ, ms in groups.items())
+    return detail_shell(P, bodies)
+
+
+def detail_row(m):
+    L = m["latest"]
+    oc = collections.Counter(t["outcome"] for t in L["tests"])
+    rep = f'<a href="{esc(L["report"])}">report</a>' if L["report"] else '<span class="muted">none</span>'
+    return (f'<tr><td>{esc(m["integ_name"])}</td><th scope="row"><a href="{m["href"]}">{esc(m["config"])}</a></th>'
+            f'<td>{vpill(m["verdict"])}</td><td>{results_cell(oc, len(L["tests"]))}</td>'
+            f'<td class="small">{commit_txt(m)}</td><td class="small">{tested_txt(m)}</td><td>{esc(L["env"])}</td><td>{build_mark(L["build"])}</td>'
+            f'<td class="small">{esc(L["tool"]) or "–"}</td><td>{run_strip(m)}</td><td class="small">{rep}</td></tr>')
+
+
+def detail_shell(P, bodies):
     return f"""<section class="card" style="padding:0"><h2 style="padding:16px 20px 0">Setups on {esc(P['name'])}</h2><div class="scroll"><table>
 <thead><tr><th>Integrator</th><th>Setup</th><th>Verdict</th><th>Results</th><th>Tested commit</th><th>Tested on</th><th>Env</th><th>Build</th><th>Harness</th>
 <th>Last 14 runs</th><th>Evidence</th></tr></thead>
-<tbody>{''.join(rows) or '<tr><td colspan="11" class="muted">No setups.</td></tr>'}</tbody></table></div>
+{bodies or '<tbody><tr><td colspan="11" class="muted">No setups.</td></tr></tbody>'}</table></div>
 <p class="small muted" style="padding:0 20px 14px;margin:8px 0 0">Last 14 runs, oldest first: <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-passing"></span></span> no failed tests · <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-failing"></span></span> one or more failed tests</p></section>"""
 
 
