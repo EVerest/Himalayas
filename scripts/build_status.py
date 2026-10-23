@@ -573,7 +573,7 @@ td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;wi
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
 .ilogo{height:20px;width:auto;max-width:96px;vertical-align:middle;margin-right:8px;padding:2px 4px;background:#fff;border-radius:4px}
 .allint td.lcell{width:1%;padding-right:0}.lcell .ilogo{margin-right:0}
-.allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
+.allint .rate{margin-top:4px}.allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b,.rtile b{font-size:20px;display:block;line-height:1.1}
 .rtile{min-height:52px;padding:6px 14px;border-radius:10px;border:1px dashed var(--line);display:flex;flex-direction:column;justify-content:center}
@@ -885,18 +885,18 @@ def all_integrators(P):
             pills.append(f'<span class="pill v-not-exercised">{len(ms) - len(cur)} stale</span>')
         last = max(m["latest"]["start"] or 0 for m in ms)
         rows.append(f'<tr>{slot(integ)}<th scope="row"><a href="#integ-{slug(integ)}">{esc(ms[0]["integ_name"])}</a></th>'
-                    f'<td class="num"><a href="{detailed}#detail-{slug(integ)}">{len(ms)}</a></td><td><div class="pills">{"".join(pills)}</div></td>'
-                    f'<td class="small">{pooled_txt(cur) or "–"}</td>'
+                    f'<td class="num"><a href="{detailed}#detail-{slug(integ)}">{len(ms)}</a></td><td><div class="pills">{"".join(pills)}</div>'
+                    f'{f"<div class=\"small rate\">{rate}</div>" if (rate := pooled_txt(cur)) else ""}</td>'
                     f'<td>{f"{ms_to_dt(last):%Y-%m-%d}" if last else "unknown"}</td></tr>')
     for a in P["silent"]:
         name = a["name"] if a["name"] != a["id"] else f'{a["id"]} (anonymous)'
         rows.append(f'<tr>{slot(a["id"])}<th scope="row">{esc(name)}</th><td class="num">0</td>'
-                    f'<td><span class="pill v-not-reported">{VERDICT_LABEL["not-reported"][0]} not reported yet</span></td><td>–</td><td>–</td></tr>')
+                    f'<td><span class="pill v-not-reported">{VERDICT_LABEL["not-reported"][0]} not reported yet</span></td><td>–</td></tr>')
     n, k = len(groups) + len(P["silent"]), len(groups)
     return (f'<details class="card allint"><summary><h2 style="display:inline">All integrators</h2> '
             f'<span class="muted small">{n} integrator{"s" * (n != 1)}, {k} reporting · {len(P["setups"])} setup{"s" * (len(P["setups"]) != 1)}</span></summary>'
             f'<div class="scroll"><table><thead><tr>{'<th scope="col" aria-label="Logo"></th>' if P["logos"] else ""}<th scope="col">Integrator</th><th scope="col" class="num">Setups</th>'
-            f'<th scope="col">Verdicts</th><th scope="col">Tests passed</th><th scope="col">Last reported</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></details>')
+            f'<th scope="col">Verdicts</th><th scope="col">Last reported</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></details>')
 
 
 def run_strip(m, n=14):
