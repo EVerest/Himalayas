@@ -27,26 +27,39 @@ contributor-facing summary is
 |---|---|---|
 | Setups are grouped by integrator, and groups where everything passes are collapsed. | Attention goes to what is failing. | Decided, not implemented |
 | A summary bar whose segments filter the list; filter state lives in the URL. | A filtered view can be linked. | Decided, not implemented |
-| Each row shows the verdict, freshness, one conformance cell per standard (verdict plus counts), and other tests in their own column. | Conformance results and an integrator's own tests are different claims. | Decided, not implemented |
+| Each row shows the verdict, the tested commit with moves behind the tip, the test date in its own column, one conformance cell per standard (verdict plus counts), and other tests in their own column. | Conformance results and an integrator's own tests are different claims. | Decided, not implemented |
+| Within a group, passing setups are listed before failing ones; the summary bar follows the same order. | The page reads as what works first, then what does not. | Decided, not implemented |
+| A conformance cell names its counts: "✕ 1 failed, 1 passed · 1 accepted". Accepted, inconclusive and skipped tests are listed beside the count, never inside it. | "1 of 2" was read as including the accepted test. | Decided, not implemented |
+| A standard without a test-spec mapping shows no subtitle in the column header; the † stays on the counts. | The header is not the place for the caveat. | Decided, not implemented |
 | A ▲ badge marks a confirmed regression. | Regressions are the main signal the pointers exist to produce. | Decided, not implemented |
+
+### Detailed view
+
+| Decision | Rationale | Status |
+|---|---|---|
+| Integrators appear under their display name, as in the default view. | The id is an internal key. | Decided, not implemented |
+| The build column is a ✓ or ✕, with the status in its tooltip. | It is nearly always "passed"; a mark saves the width. | Decided, not implemented |
+| Sections: regressions panel, setups table with a per-row line chart of failed tests, comparison. | The history matrix was dropped (see History). | Decided, not implemented |
 
 ### Detail page
 
 Sections, in order:
 
-1. Header: verdict, freshness, commit and moves behind the pointer tip, environment,
-   provenance, evidence, build, modules.
+1. Header: verdict, test date, commit and moves behind the pointer tip, environment,
+   provenance, evidence, build, and the full module list (always shown, not folded).
 2. Conformance cells.
-3. Failure clusters, newest first, each with "failing since"; regression clusters first.
-4. Accepted and waived.
-5. Skipped.
-6. Passing, collapsed by standard.
-7. History chart: failed tests per pointer move, with test-count changes annotated.
-8. Runs table, with report and record links.
+3. History chart: failed tests per pointer move, with test-count changes annotated.
+4. Test results: one collapsible group per status (failed, inconclusive, accepted and
+   waived, skipped, passed), all collapsed by default. Each test is itself collapsible
+   and shows everything its record says: message, raw status, tags, file, and its
+   regression, flaky or long-standing marker with "failing since". The reader can
+   regroup by status, standard or failure message, and order by newest failure or name.
+5. Runs table, with report and record links.
 
 | Decision | Rationale | Status |
 |---|---|---|
-| The section order above. | What needs action comes before what does not. | Decided, not implemented |
+| The section order above. | The chart answers "is it getting better" before the reader opens individual tests. | Decided, not implemented |
+| The detail page shows the test date, not a freshness label. | The date is unambiguous; freshness belongs in the overview. | Decided, not implemented |
 
 ## Verdicts and freshness
 
@@ -122,8 +135,9 @@ Sections, in order:
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Provenance is self-declared at three levels: own harness (`results.tool.name`); reference test system (`testSystem {name, version}` from a vocabulary, plus an attached report or VDoC, the Vendor Declaration of Conformance PDF that OCTT generates); certified (only a link to OCA's Certified Products List). | The reader can tell what kind of claim a result is. | Decided, not implemented |
-| Optional `extra.reportSha256` next to `reportUrl`, and `extra.vdoc {url, sha256}`. | A hash pins the document a link pointed at. | Decided, not implemented |
+| Provenance is self-declared at three levels: own harness (`results.tool.name`); reference test system (`testSystem {name, version}` from a vocabulary, plus an attached report); certified (only a link to OCA's Certified Products List). | The reader can tell what kind of claim a result is. | Decided, not implemented |
+| Optional `extra.reportSha256` next to `reportUrl`. | A hash pins the document a link pointed at. | Decided, not implemented |
+| A VDoC (the Vendor Declaration of Conformance PDF that OCTT generates) is submitted as the report. There is no separate VDoC field. | It is evidence like any other report; a second field adds nothing. | Decided, not implemented |
 | Evidence is labeled "linked by the integrator"; a link without a hash shows "unverified link", muted. | Linking is not verification. | Decided, not implemented |
 | The builder never fetches evidence, and reports are not mirrored into the repository. | No third-party content is hosted or vouched for. | Decided, not implemented |
 
@@ -142,14 +156,14 @@ Sections, in order:
 
 | Decision | Rationale | Status |
 |---|---|---|
-| A commit x setup matrix in the detailed view, one column or row per pointer move; untested moves are dashed. | Gaps in testing stay visible. | Decided, not implemented |
-| Repeated runs show the latest, with a ≠ marker when they disagree. | One cell per move, without hiding disagreement. | Decided, not implemented |
+| The detailed view has no history matrix. Each setup row carries a small line chart of failed tests over its last 14 runs instead. | The per-row chart shows the trend without a second table; colored run strips did not say what each color meant. | Decided, not implemented |
 | The detail page has a chart of failed tests per move, with test-count changes annotated. | A drop in failures from fewer tests is not an improvement. | Decided, not implemented |
 
 ### Regressions
 
 | Decision | Rationale | Status |
 |---|---|---|
+| The detailed view's regressions panel is grouped by state (confirmed, suspected, flaky and failing now), then by integrator under its display name. | The reader triages by certainty first, then by who has to act. | Decided, not implemented |
 | A regression is a test that passed at the previous tested commit and fails at the next, reported as a range across any untested moves, and listed until the test passes again. | The range is all the data supports. | Decided, not implemented |
 | Two states. **Suspected**: one failing run; shown on the detail page, in the detailed panel, and in `regressions.json` with `confirmed: false`; no badge. **Confirmed**: a repeat failure, at the same commit or the next tested commit; gets the ▲ badge; the range is kept from the first failure. | A single failure is often noise. | Decided, not implemented |
 | The rule is uniform for all tests. | No per-test exceptions to maintain. | Decided, not implemented |

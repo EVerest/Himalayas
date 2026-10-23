@@ -582,8 +582,8 @@ ignored.
 
 ### Evidence hashes and test systems
 
-*Planned, and rejected today:* `extra.reportSha256` (a SHA-256 of the file at `reportUrl`),
-`extra.vdoc` (`{url, sha256}`, a Vendor Declaration of Conformance) and a `testSystem`
-(`{name, version}`) for runs made with a reference test system. `results.extra` is closed,
-so the gate rejects each of them with `extra-contract`. **Do not emit them** until the
+*Planned, and rejected today:* `extra.reportSha256` (a SHA-256 of the file at `reportUrl`)
+and a `testSystem` (`{name, version}`) for runs made with a reference test system.
+`results.extra` is closed, so the gate rejects each of them with `extra-contract`. A
+Vendor Declaration of Conformance (VDoC) is not a separate field: link it as the report. **Do not emit them** until the
 schema adds them. Use `extra.reportUrl` for the report link today.
