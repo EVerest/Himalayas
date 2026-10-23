@@ -14,6 +14,8 @@ on:
       - 'results/**'
       - 'scripts/build_status.py'
       - 'schema/**'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
       - 'integrators/**'
       - 'pointers.json'
   # Two reasons for a schedule, not one:

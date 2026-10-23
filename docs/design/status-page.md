@@ -21,6 +21,7 @@ The contributor-facing summary is
 | One site with a default view and a detailed view, not split by audience. | Integrators and EVerest maintainers ask the same questions at different depths. | Implemented |
 | The default view opens on `testing/main` and has a pointer selector. | `testing/main` is where most results land. | Implemented |
 | Add a coverage view and a per-setup detail page. | Coverage gaps and the history of one setup do not fit in a row. | Implemented |
+| A Contribute page, generated at build time from the README's five-step quick start and the whole of CONTRIBUTING.md, linked from the header, the overview and the footer. | A reader who wants to report results should not have to find the repository first, and a generated page cannot drift from the guide. | Implemented |
 
 ### Default view
 

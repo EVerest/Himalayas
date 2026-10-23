@@ -124,8 +124,8 @@ never be aged.
 | `scripts/record_pointer_move.py` | Appends one pointer move to the log. Called by a workflow, never by hand |
 | `scripts/refresh_module_names.py` | Regenerates `schema/everest-modules.txt` from EVerest's module manifests. Run by hand when the list goes stale |
 | `scripts/archive.py` | Strips traces and attachments off records older than 6 months. Run by hand |
-| `scripts/selftest.py` | 141 checks, almost all negative. Run after touching `scripts/` or `schema/` |
-| `scripts/build_status.py` | Generates the status site: an overview, detailed and coverage page per pointer, a page per setup, and `summary.json` and `regressions.json` |
+| `scripts/selftest.py` | 142 checks, almost all negative. Run after touching `scripts/` or `schema/` |
+| `scripts/build_status.py` | Generates the status site: an overview, detailed and coverage page per pointer, a page per setup, a contribute page generated from this README and CONTRIBUTING.md, and `summary.json` and `regressions.json` |
 | `status/` | Generated, and deployed to Pages |
 | `docs/design/` | Design records |
 
@@ -145,7 +145,7 @@ open status/index.html
 # check the pointer branches and the log agree
 python3 scripts/verify_pointers.py
 
-# assert the gate still rejects what it should; all 141 checks must pass
+# assert the gate still rejects what it should; all 142 checks must pass
 python3 scripts/selftest.py
 ```
 

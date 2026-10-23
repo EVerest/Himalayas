@@ -427,6 +427,11 @@ details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.
 .s-passing{background:#1E8F64}.s-failing,.s-build-failed{background:#C0392B}.s-passing-partial{background:#D9922B}.s-not-exercised,.s-build-only{background:#8792A4}
 .mx td{text-align:center;font-family:var(--mono);font-size:13px}.mx td.untested{color:var(--dash);border:1px dashed var(--dash)}.mx td.z{color:var(--ok)}.mx td.f{color:var(--bad);font-weight:700}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.cta{margin:0;padding:10px 14px;border-radius:10px;background:var(--infobg);color:var(--info);font-size:14px;max-width:80ch}.cta a{color:inherit;font-weight:700}
+.md{max-width:100%}.md p,.md li{max-width:80ch}.md h2{margin-top:0}.md h3{margin:22px 0 8px;font-size:17px}.md h4{margin:18px 0 6px;font-size:15px;color:var(--ink)}
+.md pre{background:var(--line2);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:13px}.md li{margin:3px 0}
+.md blockquote{margin:10px 0;padding:2px 14px;border-left:4px solid var(--lime);background:var(--bg);border-radius:0 8px 8px 0}
+.md hr{border:0;border-top:1px solid var(--line);margin:18px 0}.md td{white-space:normal;vertical-align:top}
 .notice{border-left:0;background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 14px;font-size:14px}
 footer{max-width:1320px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left)) 32px;font-size:12px;color:var(--muted)}
 [hidden]{display:none!important}
@@ -541,7 +546,8 @@ def page(title, active, body, depth=0, pointer_sel=""):
     nav = "".join(
         f'<a href="{up}{href}"{" aria-current=\"page\"" if key == active else ""}>{label}</a>'
         for key, href, label in [("overview", "index.html", "Overview"), ("detailed", "detailed.html", "Detailed"),
-                                 ("coverage", "coverage.html", "Coverage")])
+                                 ("coverage", "coverage.html", "Coverage"),
+                                 ("contribute", "contribute.html", "Contribute")])
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title>
@@ -556,6 +562,7 @@ def page(title, active, body, depth=0, pointer_sel=""):
 <main>{body}</main>
 <footer>Built {NOW:%Y-%m-%d %H:%M} UTC from <code>results/</code>, <code>pointers.json</code> and
 <code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
+<a href="{up}contribute.html">How to contribute</a> ·
 Data: <a href="{up}summary.json">summary.json</a> · <a href="{up}regressions.json">regressions.json</a></footer>
 <script>{JS}</script></body></html>"""
 
@@ -673,10 +680,11 @@ def overview(P, pointers):
     tipline = (f'Tip <code>{short(tip)}</code>, moved {P["log"][-1]["at"][:10]}'
                if tip else "No moves logged yet")
     empty = "" if setups else (f'<p class="notice">No submission tested a commit in {esc(P["name"])}\'s log yet. '
-                                f'Results at other commits are not attributed here.</p>')
+                                f'Results at other commits are not attributed here. <a href="contribute.html">Report a run</a>.</p>')
     return f"""<section class="row"><h1>{esc(P['name'])}</h1><span class="muted">{tipline}</span></section>
 <p class="small muted" style="margin:0;max-width:80ch">A result counts for this pointer when its exact commit appears in the pointer's log.
 Each standard a setup reported gets a chip with its self-run conformance test cases. Accepted, inconclusive and skipped tests are listed beside the count and never counted as passed or failed.</p>
+<p class="cta">Run EVerest on your own hardware or CI? <a href="contribute.html">Report your results</a>: register once, then open one pull request per run.</p>
 {empty}<section class="summarybar" aria-label="Filter by verdict">{btns if setups else ""}</section>
 {''.join(body)}"""
 
@@ -1099,8 +1107,149 @@ def setup_page(m, P):
 <tbody>{''.join(runs)}</tbody></table></div></section>"""
 
 
-def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS):
-    """Every output file of the site, as {relative path: text}."""
+# ---------------------------------------------------------------- contribute page
+
+REPO_BLOB = "https://github.com/EVerest/Himalayas/blob/main/"
+GUIDE_ID = "submitting-test-results-to-himalayas"
+MD_MARKER = re.compile(r"( {0,3})([-*]|\d+\.)( +)")
+MD_FENCE = re.compile(r"\s*(```+)")
+
+
+def md_slug(text, seen):
+    """GitHub's heading anchor, so links written against the repository still work here."""
+    s = re.sub(r"[^\w\- ]", "", re.sub(r"[`*]", "", text).lower()).replace(" ", "-")
+    n = seen.get(s, 0)
+    seen[s] = n + 1
+    return f"{s}-{n}" if n else s
+
+
+def md_href(h):
+    if re.match(r"[a-z]+:", h) or h.startswith("#"):
+        return h
+    path, _, frag = h.partition("#")
+    if path in ("CONTRIBUTING.md", "README.md#submit-your-first-test-report-in-5-steps"):
+        return "#" + (frag or GUIDE_ID)
+    return REPO_BLOB + path + (f"#{frag}" if frag else "")
+
+
+def md_inline(t):
+    code = []
+    t = re.sub(r"`([^`]+)`", lambda m: code.append(m.group(1)) or f"\x00{len(code) - 1}\x00", t)
+    t = esc(t, quote=False)
+    t = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", lambda m: f'<a href="{esc(md_href(m.group(2)))}">{m.group(1)}</a>', t)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    t = re.sub(r"(?<![\w*])\*([^*\s][^*]*?)\*(?![\w*])", r"<em>\1</em>", t)
+    return re.sub("\x00(\\d+)\x00", lambda m: f"<code>{esc(code[int(m.group(1))])}</code>", t)
+
+
+def md_block_start(line):
+    s = line.lstrip()
+    return (s.startswith(("#", "```", ">", "|")) or MD_MARKER.match(line) is not None
+            or re.fullmatch(r"-{3,}", line.strip()) is not None)
+
+
+def md_render(text, seen, shift=1):
+    """The Markdown the repository's docs use: headings, lists, tables, fences, quotes."""
+    lines, out, i = text.split("\n"), [], 0
+    while i < len(lines):
+        line = lines[i]
+        if not line.strip():
+            i += 1
+        elif MD_FENCE.match(line):
+            fence, ind = MD_FENCE.match(line).group(1), len(line) - len(line.lstrip())
+            body, i = [], i + 1
+            while i < len(lines) and not lines[i].strip().startswith(fence):
+                body.append(lines[i][ind:] if lines[i][:ind].strip() == "" else lines[i])
+                i += 1
+            out.append(f'<pre><code>{esc(chr(10).join(body))}</code></pre>')
+            i += 1
+        elif re.match(r"#{1,6} ", line):
+            lvl, title = len(line.split(" ")[0]), line.split(" ", 1)[1].strip()
+            h = min(6, lvl + shift)
+            out.append(f'<h{h} id="{md_slug(title, seen)}">{md_inline(title)}</h{h}>')
+            i += 1
+        elif re.fullmatch(r"-{3,}", line.strip()):
+            out.append("<hr>")
+            i += 1
+        elif line.startswith(">"):
+            body = []
+            while i < len(lines) and lines[i].startswith(">"):
+                body.append(re.sub(r"^> ?", "", lines[i]))
+                i += 1
+            out.append(f"<blockquote>{md_render(chr(10).join(body), seen, shift)}</blockquote>")
+        elif line.startswith("|") and i + 1 < len(lines) and re.match(r"\|[\s:|-]+\|$", lines[i + 1].strip()):
+            cells = lambda ln: [c.strip() for c in re.split(r"(?<!\\)\|", ln.strip()[1:-1])]
+            head, rows, i = cells(line), [], i + 2
+            while i < len(lines) and lines[i].startswith("|"):
+                rows.append(cells(lines[i]))
+                i += 1
+            th = "".join(f"<th>{md_inline(c)}</th>" for c in head)
+            tb = "".join("<tr>" + "".join(f"<td>{md_inline(c.replace(chr(92) + '|', '|'))}</td>" for c in r) + "</tr>" for r in rows)
+            out.append(f'<div class="scroll"><table><thead><tr>{th}</tr></thead><tbody>{tb}</tbody></table></div>')
+        elif MD_MARKER.match(line):
+            m = MD_MARKER.match(line)
+            ordered, base = m.group(2)[0].isdigit(), len(m.group(1))
+            items = []
+            while i < len(lines):
+                m = MD_MARKER.match(lines[i])
+                if not m or len(m.group(1)) != base or m.group(2)[0].isdigit() != ordered:
+                    break
+                ci, body, i = len(m.group(0)), [lines[i][len(m.group(0)):]], i + 1
+                while i < len(lines):
+                    ln = lines[i]
+                    if not ln.strip():
+                        j = i
+                        while j < len(lines) and not lines[j].strip():
+                            j += 1
+                        if j < len(lines) and len(lines[j]) - len(lines[j].lstrip()) >= ci:
+                            body += [""] * (j - i)
+                            i = j
+                            continue
+                        i = j
+                        break
+                    if len(ln) - len(ln.lstrip()) >= ci:
+                        body.append(ln[ci:])
+                    elif md_block_start(ln):
+                        break
+                    else:
+                        body.append(ln.strip())
+                    i += 1
+                items.append(body)
+            lis = []
+            for body in items:
+                box = re.match(r"\[( |x)\] ", body[0])
+                if box:
+                    body[0] = body[0][4:]
+                inner = md_render("\n".join(body), seen, shift)
+                if inner.count("<p>") == 1 and inner.startswith("<p>") and inner.endswith("</p>"):
+                    inner = inner[3:-4]
+                if box:
+                    inner = f'<input type="checkbox" disabled{" checked" if box.group(1) == "x" else ""}> {inner}'
+                lis.append(f"<li>{inner}</li>")
+            out.append(f'<{"ol" if ordered else "ul"}>{"".join(lis)}</{"ol" if ordered else "ul"}>')
+        else:
+            body, i = [lines[i].strip()], i + 1
+            while i < len(lines) and lines[i].strip() and not md_block_start(lines[i]):
+                body.append(lines[i].strip())
+                i += 1
+            out.append(f"<p>{md_inline(' '.join(body))}</p>")
+    return "\n".join(out)
+
+
+def contribute(readme, guide):
+    """How to submit, rendered from the repository's own README and CONTRIBUTING."""
+    seen = {}
+    quick = re.search(r"^## Submit your first test report.*?$(.*?)(?=^## )", readme, re.M | re.S)
+    quick = md_render(quick.group(1), seen) if quick else ""
+    return f"""<section class="row"><h1>Contribute results</h1></section>
+<p class="small muted" style="margin:0;max-width:80ch">Run EVerest on your own hardware or in your own CI? Report each run by pull request and it appears on these pages.
+This page is generated from <a href="{REPO_BLOB}README.md">README.md</a> and <a href="{REPO_BLOB}CONTRIBUTING.md">CONTRIBUTING.md</a>; the repository is the source of truth.</p>
+<section class="card md"><h2 id="quick-start">Submit your first test report in 5 steps</h2>{quick}</section>
+<section class="card md">{md_render(guide, seen)}</section>"""
+
+
+def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS, docs=None):
+    """Every output file of the site, as {relative path: text}. `docs` holds README.md and CONTRIBUTING.md."""
     VOCAB_TAGS.clear()
     for g, vals in vocab.get("testTags", {}).items():
         if g not in ("lifecycle", "escapeHatch") and isinstance(vals, list):
@@ -1147,6 +1296,8 @@ def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS):
         {"integrator": m["integ"], "configuration": m["config"], "test": r["name"], "good": r["range"][0],
          "bad": r["range"][1], "untested": r["untested"], "confirmed": r["confirmed"]}
         for m in M["setups"] for r in m["regs"]] for p, M in models.items()}}
+    if docs:
+        out["contribute.html"] = page("Himalayas · contribute", "contribute", contribute(docs["README.md"], docs["CONTRIBUTING.md"]))
     out["summary.json"] = json.dumps(summary, indent=1) + "\n"
     out["regressions.json"] = json.dumps(regs, indent=1) + "\n"
     return out
@@ -1160,7 +1311,8 @@ def main():
     declared, logs = load_pointers()
     vocab = json.loads((ROOT / "schema" / "vocabulary.json").read_text())
     recs = load_records()
-    files = build_site(recs, declared, logs, load_allowlist(), vocab, args.grace_days)
+    docs = {n: (ROOT / n).read_text() for n in ("README.md", "CONTRIBUTING.md")}
+    files = build_site(recs, declared, logs, load_allowlist(), vocab, args.grace_days, docs)
     out = pathlib.Path(args.out_dir)
     for rel, text in files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)

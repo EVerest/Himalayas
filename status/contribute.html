@@ -1,0 +1,395 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Himalayas · contribute</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0C2351;--fg:#1E2530;--muted:#556070;--soft:#3A4556;--bg:#F4F6FA;--card:#FFFFFF;--line:#DCE2EC;--line2:#EEF2F8;
+--lime:#BAF419;--link:#1F5FA0;--ok:#0B5E41;--okbg:#DDF5EA;--bad:#8A1C12;--badbg:#FDE7E4;--warn:#7A4A00;--warnbg:#FFF1D6;--dash:#8792A4;
+--mono:'DM Mono',ui-monospace,monospace;--sans:'DM Sans',system-ui,sans-serif;--disp:'DM Serif Display',Georgia,serif}
+:root{--infobg:#E4ECF9;--info:#1F3F7A;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--ink:#CFE0FF;--fg:#E4E8EF;--muted:#9AA6B8;--soft:#B8C2D3;--bg:#0E1420;--card:#161E2D;--line:#2A3547;--line2:#1E2838;
+--link:#7FB4F0;--ok:#7FE0B2;--okbg:#123A2A;--bad:#FF9C90;--badbg:#3C1814;--warn:#FFD48A;--warnbg:#3A2C10;--dash:#6B778A;--infobg:#1C2A48;--info:#A9C4F5;color-scheme:dark}}
+:root[data-theme=dark]{--ink:#CFE0FF;--fg:#E4E8EF;--muted:#9AA6B8;--soft:#B8C2D3;--bg:#0E1420;--card:#161E2D;--line:#2A3547;--line2:#1E2838;
+--link:#7FB4F0;--ok:#7FE0B2;--okbg:#123A2A;--bad:#FF9C90;--badbg:#3C1814;--warn:#FFD48A;--warnbg:#3A2C10;--dash:#6B778A;--infobg:#1C2A48;--info:#A9C4F5;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 var(--sans)}
+a{color:var(--link)}code,.mono{font-family:var(--mono);font-size:.92em}
+button,select,summary{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid #2F96D0;outline-offset:2px}
+header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+header.top .brand{font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{font-size:13px;color:#C9D4E8}
+header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 14px;border-radius:8px}
+header.top nav a[aria-current]{background:#21407A}.bar{height:4px;background:var(--lime)}
+main{max-width:1320px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 20px;min-width:0}
+h1{font-family:var(--disp);font-weight:400;color:var(--ink);margin:0;font-size:32px;text-wrap:balance}
+h2{margin:0 0 10px;font-size:18px;color:var(--ink)}h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+.muted{color:var(--muted)}.small{font-size:13px}.row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.pill{display:inline-block;padding:2px 9px;border-radius:12px;font-weight:700;font-size:13px;white-space:nowrap}
+.v-passing{background:var(--okbg);color:var(--ok)}.v-failing,.v-build-failed{background:var(--badbg);color:var(--bad)}
+.v-passing-partial{background:var(--warnbg);color:var(--warn)}.v-not-exercised,.v-build-only,.v-not-reported{border:1px dashed var(--dash);color:var(--soft);font-weight:500}
+.reg{border:1px solid var(--bad);color:var(--bad);padding:1px 7px;border-radius:10px;font-size:12px;white-space:nowrap}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:8px 12px;border-top:1px solid var(--line2)}thead th{background:var(--line2);color:var(--soft);font-size:12px;border-top:0;white-space:nowrap}
+th[scope=row] a,td>a{white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.chips2{display:flex;flex-wrap:wrap;gap:4px;max-width:340px}
+.schip{display:inline-flex;flex-direction:column;border-radius:6px;padding:2px 7px;font-size:12px;line-height:1.35;white-space:nowrap}
+.schip b{font-weight:700}.schip .n{font-size:11px;opacity:.85}
+.schip.ok{background:var(--okbg);color:var(--ok)}.schip.bad{background:var(--badbg);color:var(--bad)}.schip.none{border:1px dashed var(--dash);color:var(--soft)}
+td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
+.pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
+.cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
+.summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
+.summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
+details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
+.strip{display:flex;gap:2px}.strip span{width:12px;height:18px;border-radius:2px;display:inline-block}
+.s-passing{background:#1E8F64}.s-failing,.s-build-failed{background:#C0392B}.s-passing-partial{background:#D9922B}.s-not-exercised,.s-build-only{background:#8792A4}
+.mx td{text-align:center;font-family:var(--mono);font-size:13px}.mx td.untested{color:var(--dash);border:1px dashed var(--dash)}.mx td.z{color:var(--ok)}.mx td.f{color:var(--bad);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.cta{margin:0;padding:10px 14px;border-radius:10px;background:var(--infobg);color:var(--info);font-size:14px;max-width:80ch}.cta a{color:inherit;font-weight:700}
+.md{max-width:100%}.md p,.md li{max-width:80ch}.md h2{margin-top:0}.md h3{margin:22px 0 8px;font-size:17px}.md h4{margin:18px 0 6px;font-size:15px;color:var(--ink)}
+.md pre{background:var(--line2);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:13px}.md li{margin:3px 0}
+.md blockquote{margin:10px 0;padding:2px 14px;border-left:4px solid var(--lime);background:var(--bg);border-radius:0 8px 8px 0}
+.md hr{border:0;border-top:1px solid var(--line);margin:18px 0}.md td{white-space:normal;vertical-align:top}
+.notice{border-left:0;background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 14px;font-size:14px}
+footer{max-width:1320px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left)) 32px;font-size:12px;color:var(--muted)}
+[hidden]{display:none!important}
+.modules{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.modules code{background:var(--line2);padding:2px 8px;border-radius:6px}
+details.grp{padding:0;overflow:hidden}details.grp>summary{padding:12px 20px}details.grp .items{padding:4px 20px 14px;display:flex;flex-direction:column}
+details.tc{border-top:1px solid var(--line2);padding:4px 0}details.tc>summary{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.dom{margin-bottom:14px}.dom h4{margin:0 0 6px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.cap{border-radius:8px;padding:8px 11px;min-width:130px;border:1px solid transparent;text-align:left;font:inherit;display:flex;flex-direction:column}
+.cap b{font-size:14px}.cap span{font-size:12px}button.cap{cursor:pointer}button.cap[aria-expanded=true],button.cap[aria-pressed=true]{outline:2px solid var(--ink);outline-offset:1px}
+.l4{background:var(--okbg);color:var(--ok)}.l3{background:var(--warnbg);color:var(--warn)}.l2{background:var(--infobg);color:var(--info)}
+.l1{background:var(--card);color:var(--soft);border:1px dashed var(--dash)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--soft)}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px}
+.via{display:flex!important;flex-wrap:wrap;gap:4px;margin-top:5px}.via em{font-style:normal;font-size:11px;border-radius:5px;padding:0 6px;border:1px dashed var(--dash);color:var(--soft);background:var(--card)}
+.via em.ok{border:0;background:var(--okbg);color:var(--ok)}.via em.bad{border:0;background:var(--warnbg);color:var(--warn)}
+tr.meas-fail td{color:var(--bad);font-weight:700}
+td.h4c{color:var(--ok)}td.h3c{color:var(--warn);font-weight:700}
+.seg{display:flex;flex-wrap:wrap;gap:6px}.seg button{min-height:40px;padding:4px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card)}.seg button[aria-pressed=true]{background:var(--ink);color:var(--card)}
+details.integ{border:1px solid var(--line);border-radius:8px;margin-bottom:6px}details.integ>summary{padding:6px 12px;background:var(--line2);border-radius:8px}
+details.integ[open]>summary{border-radius:8px 8px 0 0}
+.theme{position:relative;display:grid;grid-template-columns:repeat(2,1fr);border:1px solid #3A5590;border-radius:20px;padding:2px;margin:0;font-size:13px}
+.theme legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.theme input{position:absolute;opacity:0;pointer-events:none}
+.theme label{position:relative;z-index:1;padding:6px 12px;text-align:center;cursor:pointer;color:#C9D4E8;border-radius:18px;min-height:32px;display:flex;align-items:center;justify-content:center}
+.theme input:checked+label{color:#0C2351;font-weight:700}.theme input:focus-visible+label{outline:3px solid #2F96D0}
+.theme .thumb{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px)/2);border-radius:18px;background:var(--lime);transition:transform .2s ease}
+.theme:has(#th-dark:checked) .thumb{transform:translateX(100%)}
+@media (prefers-reduced-motion:reduce){.theme .thumb{transition:none}}
+.tagfilter{display:flex;gap:10px;align-items:center}
+.tcbody{padding:4px 0 8px 18px}.msg{white-space:pre-wrap;font-family:var(--mono);font-size:12px;background:var(--line2);padding:8px 10px;border-radius:6px;margin:4px 0;overflow-x:auto}
+</style>
+<script>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script></head><body>
+<header class="top"><div class="in"><div><a class="brand" href="index.html" style="color:#fff;text-decoration:none">Himalayas</a>
+<div class="sub">EVerest federated test results, self-reported by integrators</div></div>
+<nav aria-label="Views"><a href="index.html">Overview</a><a href="detailed.html">Detailed</a><a href="coverage.html">Coverage</a><a href="contribute.html" aria-current="page">Contribute</a></nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
+<input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
+<input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
+<main><section class="row"><h1>Contribute results</h1></section>
+<p class="small muted" style="margin:0;max-width:80ch">Run EVerest on your own hardware or in your own CI? Report each run by pull request and it appears on these pages.
+This page is generated from <a href="https://github.com/EVerest/Himalayas/blob/main/README.md">README.md</a> and <a href="https://github.com/EVerest/Himalayas/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>; the repository is the source of truth.</p>
+<section class="card md"><h2 id="quick-start">Submit your first test report in 5 steps</h2><ol><li><strong>Register.</strong> Open a PR adding your id and the GitHub accounts that will submit to <a href="https://github.com/EVerest/Himalayas/blob/main/integrators/allowlist.yaml"><code>integrators/allowlist.yaml</code></a>, and wait for a code owner to merge it. (<a href="#1-register-once">details</a>)</li><li><strong>Pick a pointer and record the exact SHA.</strong> Fetch <code>testing/main</code> (or a stable pointer) from <code>EVerest/EVerest</code>, note the full 40-character commit with <code>git rev-parse</code>, and build and test at it. (<a href="#2-pick-a-pointer-and-record-the-commit">details</a>)</li><li><strong>Produce CTRF or OpenHTF with the required fields:</strong> commit, pointer, SIL or HIL, real start and stop times, a passed build with its module list, and your integrator id. Tag each test. (<a href="#31-a-minimal-working-ctrf-record">minimal example</a>, <a href="#32-field-by-field-ctrf">field table</a>)</li><li><p><strong>Validate locally</strong> in a checkout of this repository:</p>
+<pre><code>python3 -m pip install -r scripts/requirements.txt
+python3 scripts/validate_submission.py results/your-id/testing/main/20260909.json</code></pre>
+<p>(<a href="#5-validate-locally">details</a>)</p></li><li><strong>Open a PR</strong> from your fork that adds only that file. The gate comments accept or reject with the reason; an accepted PR auto-merges. (<a href="#6-open-the-pull-request">details</a>)</li></ol>
+<p><a href="#submitting-test-results-to-himalayas">CONTRIBUTING.md</a> is the full walkthrough, including a fully automated submission from any CI. <a href="https://github.com/EVerest/Himalayas/blob/main/SCHEMA.md">SCHEMA.md</a> is the contract.</p></section>
+<section class="card md"><h2 id="submitting-test-results-to-himalayas">Submitting test results to Himalayas</h2>
+<p>A submission is one JSON file, CTRF or OpenHTF, added by pull request under <code>results/&lt;your-id&gt;/&lt;pointer&gt;/</code>. This guide walks through it in order. The contract itself is <a href="https://github.com/EVerest/Himalayas/blob/main/SCHEMA.md">SCHEMA.md</a>, and the authority on what is rejected is the <code>REJECTS</code> block at the top of <a href="https://github.com/EVerest/Himalayas/blob/main/scripts/validate_submission.py"><code>scripts/validate_submission.py</code></a>.</p>
+<p>Two things to know first:</p>
+<ol><li><strong>Your CI does not have to be GitHub Actions.</strong> A pull request can be opened entirely over the REST API from GitLab, Jenkins, Buildkite, a cron job or a shell script. <a href="#7-fully-automated-from-any-ci">Section 7</a> is a working example.</li><li><strong>A pull request from your own fork needs no write access to this repository.</strong> You hold no credential for anything of ours. That is why intake is a PR and not a token-based API.</li></ol>
+<p>Contents:</p>
+<ol><li><a href="#1-register-once">Register once</a></li><li><a href="#2-pick-a-pointer-and-record-the-commit">Pick a pointer and record the commit</a></li><li><a href="#3-write-the-record">Write the record</a></li><li><a href="#4-tag-skip-and-link">Tag, skip and link</a></li><li><a href="#5-validate-locally">Validate locally</a></li><li><a href="#6-open-the-pull-request">Open the pull request</a></li><li><a href="#7-fully-automated-from-any-ci">Fully automated, from any CI</a></li><li><a href="#8-common-rejections-and-how-to-fix-them">Common rejections and how to fix them</a></li><li><a href="#9-pre-push-checklist">Pre-push checklist</a></li><li><a href="#10-reporting-conventions">Reporting conventions</a></li></ol>
+<hr>
+<h3 id="1-register-once">1. Register once</h3>
+<p>Open a PR adding yourself to <a href="https://github.com/EVerest/Himalayas/blob/main/integrators/allowlist.yaml"><code>integrators/allowlist.yaml</code></a>:</p>
+<pre><code>  - id: your-id                 # lowercase letters, digits, dashes; 1-40 chars
+    display_name: Your Org      # omit this line to stay anonymous
+    contact: ci@your-org.example
+    github_users:               # required, and must list at least one account
+      - your-ci-bot             # the account that will open your pull requests</code></pre>
+<p>Your <code>id</code> is also your <code>results/&lt;id&gt;/</code> directory, which is what makes it unique. It may not start or end with a dash. Additions need approval from the repository's code owners, so this is not instant.</p>
+<p><strong><code>github_users</code> is mandatory.</strong> It lists the accounts allowed to publish as your id. A submission opened by any other account is rejected with <code>not-authorised</code>, and an entry with no list authorizes nobody. Without this binding any GitHub account could publish an auto-merged result in your name. List every account your CI might open pull requests from: a change to this file needs a code owner, so it is not something to fix in a hurry later.</p>
+<p>Keep it in its <strong>own PR</strong>. A results PR that also changes anything outside <code>results/</code> is refused. The allowlist PR gets a green <code>Validate submission</code> check, because it is not a submission; it waits on a code owner's review, not on the gate.</p>
+<h4 id="staying-anonymous">Staying anonymous</h4>
+<p>The repository is public, so there is no private submission and no per-submission privacy flag. To stay unnamed, register a pseudonymous <code>id</code>, omit <code>display_name</code> from your allowlist entry, and omit <code>extra.integrator.displayName</code> from your records. The status page takes the name from the record, so a record that carries <code>displayName</code> names you whatever the allowlist says. Without it the page shows <code>your-id (anonymous)</code>.</p>
+<hr>
+<h3 id="2-pick-a-pointer-and-record-the-commit">2. Pick a pointer and record the commit</h3>
+<p>EVerest force-pushes three pointer branches forward daily: <code>testing/main</code>, <code>testing/stable-2026.02</code> and <code>testing/stable-2026.10</code> (see the <a href="https://github.com/EVerest/Himalayas/blob/main/README.md#pointer-branches">README</a>). Pick one, then note the <strong>exact commit</strong> it points at. The pointers are branches of <code>EVerest/EVerest</code>, so this runs in a checkout of that, not of this repository:</p>
+<pre><code>git fetch origin +refs/heads/testing/main:refs/remotes/origin/testing/main
+git rev-parse origin/testing/main     # this full SHA goes in your submission</code></pre>
+<p>The <code>+</code> matters: pointers are force-pushed, so a plain fetch of a checked-out pointer branch refuses to fast-forward.</p>
+<p><strong>Record the commit, not the pointer name.</strong> By the time anyone reads your submission the pointer will have moved on. The full 40-character SHA is the only durable identifier your record carries, and the gate checks it against <a href="https://github.com/EVerest/Himalayas/blob/main/pointers.json"><code>pointers.json</code></a> to confirm it really was a tip of that pointer.</p>
+<p>Then build and test at that commit.</p>
+<hr>
+<h3 id="3-write-the-record">3. Write the record</h3>
+<p>Either format is accepted, and both are normalized to <strong>OpenHTF</strong> internally. Both accept both SIL and HIL runs. Pick the one your tooling already emits:</p>
+<div class="scroll"><table><thead><tr><th></th><th>Strengths</th><th>The catch</th></tr></thead><tbody><tr><td><strong>CTRF</strong></td><td>EVerest's own <code>run-tests.sh</code> emits JUnit XML, which converts in one command</td><td>No device field, so a <strong>HIL</strong> submission must set <code>extra.hardware.board</code>. No measurements</td></tr><tr><td><strong>OpenHTF</strong></td><td>Native <code>dut_id</code>, <code>station_id</code>, and <strong>measurements with limits</strong>, which the status page shows and CTRF cannot express</td><td>Nothing about EVerest: commit, build and integrator live in <code>metadata</code></td></tr></tbody></table></div>
+<h4 id="31-a-minimal-working-ctrf-record">3.1 A minimal working CTRF record</h4>
+<p>Start from this and edit. It is a SIL run with one passed and one skipped test, a link to the CI run and a link to a human-readable report. With <code>your-id</code> replaced by an allowlisted id it passes the gate as is:</p>
+<pre><code>{
+  &quot;reportFormat&quot;: &quot;CTRF&quot;,
+  &quot;specVersion&quot;: &quot;1.0.0&quot;,
+  &quot;results&quot;: {
+    &quot;tool&quot;: { &quot;name&quot;: &quot;your-harness&quot;, &quot;version&quot;: &quot;1.4.0&quot; },
+    &quot;summary&quot;: {
+      &quot;tests&quot;: 2, &quot;passed&quot;: 1, &quot;failed&quot;: 0, &quot;skipped&quot;: 1, &quot;pending&quot;: 0, &quot;other&quot;: 0,
+      &quot;start&quot;: 1788944942564, &quot;stop&quot;: 1788945589177
+    },
+    &quot;environment&quot;: {
+      &quot;appName&quot;: &quot;EVerest&quot;,
+      &quot;appVersion&quot;: &quot;testing/main&quot;,
+      &quot;commit&quot;: &quot;fdf2ac5415425e0a6af7d30caacf46f2bf9316ee&quot;,
+      &quot;branchName&quot;: &quot;main&quot;,
+      &quot;testEnvironment&quot;: &quot;SIL&quot;,
+      &quot;osPlatform&quot;: &quot;linux&quot;,
+      &quot;healthy&quot;: true,
+      &quot;buildUrl&quot;: &quot;https://ci.your-org.example/runs/1234&quot;
+    },
+    &quot;extra&quot;: {
+      &quot;build&quot;: { &quot;status&quot;: &quot;passed&quot;, &quot;modules&quot;: [&quot;EvseManager&quot;, &quot;EvseSlac&quot;] },
+      &quot;integrator&quot;: { &quot;id&quot;: &quot;your-id&quot; },
+      &quot;reportUrl&quot;: &quot;https://ci.your-org.example/runs/1234/report.pdf&quot;
+    },
+    &quot;tests&quot;: [
+      {
+        &quot;name&quot;: &quot;dc_session_start_stop&quot;,
+        &quot;status&quot;: &quot;passed&quot;,
+        &quot;duration&quot;: 10990,
+        &quot;suite&quot;: [&quot;sil&quot;, &quot;DIN70121&quot;],
+        &quot;tags&quot;: [&quot;DC&quot;, &quot;DIN70121&quot;, &quot;smoke&quot;]
+      },
+      {
+        &quot;name&quot;: &quot;dc_bpt_discharge&quot;,
+        &quot;status&quot;: &quot;skipped&quot;,
+        &quot;duration&quot;: 0,
+        &quot;suite&quot;: [&quot;sil&quot;, &quot;ISO15118-20&quot;],
+        &quot;tags&quot;: [&quot;DC&quot;, &quot;ISO15118-20&quot;, &quot;V2X&quot;],
+        &quot;message&quot;: &quot;Skipped: the simulated EV has no bidirectional mode&quot;
+      }
+    ]
+  }
+}</code></pre>
+<p>The smallest legal records, with zero tests, are <a href="https://github.com/EVerest/Himalayas/blob/main/examples/minimal-ctrf.json"><code>examples/minimal-ctrf.json</code></a> and <a href="https://github.com/EVerest/Himalayas/blob/main/examples/minimal-openhtf.json"><code>examples/minimal-openhtf.json</code></a>. Worked HIL records are <a href="https://github.com/EVerest/Himalayas/blob/main/examples/ctrf-hil-dc.json"><code>examples/ctrf-hil-dc.json</code></a> and <a href="https://github.com/EVerest/Himalayas/blob/main/examples/openhtf-hil-dc.json"><code>examples/openhtf-hil-dc.json</code></a>. Copy one of these rather than the example on <a href="https://ctrf.io">ctrf.io</a>, which omits the required <code>reportFormat</code> and <code>specVersion</code> and does not validate.</p>
+<h4 id="32-field-by-field-ctrf">3.2 Field by field (CTRF)</h4>
+<p><strong>Required</strong> means the gate rejects the record without it. <strong>Encouraged</strong> means it is optional, but missing it costs you something on the status page or draws a warning. <strong>Optional</strong> means nothing happens if it is absent.</p>
+<div class="scroll"><table><thead><tr><th>Field</th><th></th><th>Rule</th></tr></thead><tbody><tr><td><code>reportFormat</code></td><td>Required</td><td><code>&quot;CTRF&quot;</code></td></tr><tr><td><code>specVersion</code></td><td>Required</td><td>SemVer, e.g. <code>&quot;1.0.0&quot;</code></td></tr><tr><td><code>results.tool.name</code></td><td>Required</td><td>the harness that produced the run. <code>tool.version</code> is optional</td></tr><tr><td><code>results.summary.tests</code>, <code>passed</code>, <code>failed</code>, <code>skipped</code>, <code>pending</code>, <code>other</code></td><td>Required</td><td>integers, consistent with <code>tests[]</code>. A nonzero <code>failed</code> marks the run failed even if no test in <code>tests[]</code> did</td></tr><tr><td><code>results.summary.start</code>, <code>stop</code></td><td>Required</td><td>real epoch milliseconds, <strong>at least 1</strong>. <code>junit-to-ctrf</code> writes <code>0</code>, which is rejected</td></tr><tr><td><code>environment.commit</code></td><td>Required</td><td>full 40-character lowercase SHA, present in <code>pointers.json</code> for that pointer, and present in <code>EVerest/EVerest</code></td></tr><tr><td><code>environment.appVersion</code></td><td>Required</td><td>the pointer name: <code>testing/main</code>, <code>testing/stable-2026.02</code> or <code>testing/stable-2026.10</code>. Must match the pointer in the file path</td></tr><tr><td><code>environment.testEnvironment</code></td><td>Required</td><td><code>SIL</code> or <code>HIL</code>, exactly</td></tr><tr><td><code>extra.build.status</code></td><td>Required</td><td>must be <code>passed</code>; a failed build is rejected</td></tr><tr><td><code>extra.build.modules</code></td><td>Required</td><td>non-empty list of unique PascalCase EVerest module names. A name not in <a href="https://github.com/EVerest/Himalayas/blob/main/schema/everest-modules.txt"><code>schema/everest-modules.txt</code></a> warns</td></tr><tr><td><code>extra.integrator.id</code></td><td>Required</td><td>equals your <code>results/&lt;id&gt;/</code> directory and is in the allowlist</td></tr><tr><td><code>extra.hardware.board</code></td><td>Required for HIL</td><td>the board model. SIL runs do not need it</td></tr><tr><td><code>tests[].name</code></td><td>Required</td><td>at most 400 characters. Keep it stable across runs (<a href="#10-reporting-conventions">section 10</a>)</td></tr><tr><td><code>tests[].status</code></td><td>Required</td><td><code>passed</code>, <code>failed</code>, <code>skipped</code>, <code>pending</code> or <code>other</code></td></tr><tr><td><code>tests[].duration</code></td><td>Required</td><td>integer milliseconds; <code>0</code> is fine for a skip</td></tr><tr><td><code>environment.buildUrl</code></td><td>Encouraged</td><td><code>https://</code> only. Missing it warns <code>no-build-url</code></td></tr><tr><td><code>extra.reportUrl</code></td><td>Encouraged</td><td><code>https://</code> only. Shown as <strong>report</strong> on the status page</td></tr><tr><td><code>tests[].tags</code></td><td>Encouraged</td><td>see <a href="#41-tag-your-tests">section 4.1</a>. Without tags a test counts toward no protocol</td></tr><tr><td><code>tests[].suite</code></td><td>Encouraged</td><td>non-empty list of non-empty strings, e.g. recovered from the JUnit <code>classname</code></td></tr><tr><td><code>tests[].message</code></td><td>Encouraged</td><td>for failures and skips. Keep it short</td></tr><tr><td><code>extra.configuration</code></td><td>Encouraged</td><td>needed when you submit several setups per pointer. <code>[A-Za-z0-9][A-Za-z0-9._-]{0,63}</code>, e.g. <code>dc-full-ocpp</code>. Each configuration gets its own card; without it your newest submission hides the others</td></tr><tr><td><code>environment.branchName</code></td><td>Optional</td><td><code>main</code> or <code>stable/yyyy.mm</code></td></tr><tr><td><code>environment.appName</code></td><td>Optional</td><td>if present, <code>EVerest</code></td></tr><tr><td><code>environment.osPlatform</code></td><td>Optional</td><td><code>linux</code>, <code>darwin</code> or <code>windows</code> (lowercase)</td></tr><tr><td><code>environment.healthy</code></td><td>Optional</td><td>a boolean mirror of the build status, for generic CTRF readers</td></tr><tr><td><code>extra.build.targets[]</code></td><td>Optional</td><td><code>{target, status, toolchain}</code>: a triple like <code>aarch64-linux-gnu</code>, <code>passed</code>/<code>failed</code>/<code>skipped</code>, and <code>&lt;compiler&gt; &lt;version&gt;</code> like <code>gcc 13.2.0</code>. A target EVerest does not build warns</td></tr><tr><td><code>extra.integrator.displayName</code></td><td>Optional</td><td>omit to stay anonymous</td></tr><tr><td><code>extra.hardware.bsp</code>, <code>chargeController</code></td><td>Optional</td><td>HIL detail</td></tr><tr><td><code>tests[].trace</code></td><td>Optional</td><td>truncate it (<a href="#43-link-the-report-and-keep-the-file-small">section 4.3</a>)</td></tr><tr><td><code>tests[].rawStatus</code>, <code>flaky</code>, <code>device</code>, <code>extra</code></td><td>Optional</td><td>accepted. Of these only <code>flaky</code> is carried into the normalized record today</td></tr></tbody></table></div>
+<p><code>results.environment</code>, <code>results.tool</code> and each test are closed by the CTRF schema, and <code>results.extra</code> is closed by <a href="https://github.com/EVerest/Himalayas/blob/main/schema/everest-extra.schema.json"><code>schema/everest-extra.schema.json</code></a> at every level. <strong>An unknown key in any of them is a rejection</strong>, not ignored data. If you need a field that does not exist, open an issue.</p>
+<h4 id="33-producing-ctrf-from-junit-xml">3.3 Producing CTRF from JUnit XML</h4>
+<p>EVerest already writes JUnit XML from <code>tests/run-tests.sh</code>, so start there:</p>
+<pre><code>npx junit-to-ctrf@latest result.xml -o ctrf.json -u false \
+  -e appName=EVerest \
+     appVersion=testing/main \
+     commit=&quot;$EVEREST_SHA&quot; \
+     branchName=main \
+     testEnvironment=SIL \
+     osPlatform=linux \
+     buildUrl=&quot;$CI_JOB_URL&quot;</code></pre>
+<p><strong>Then post-process. The converter has two gaps and both matter here:</strong></p>
+<div class="scroll"><table><thead><tr><th>Gap</th><th>Why it matters</th><th>Fix</th></tr></thead><tbody><tr><td><code>summary.start</code> / <code>stop</code> come out <strong><code>0</code></strong>, though the JUnit XML carries a <code>timestamp</code></td><td>Rejected: a result with no timestamp can never be aged, so it could never be marked stale</td><td>Inject real epoch-millisecond values</td></tr><tr><td><strong><code>classname</code> is dropped</strong>, so every test lands as <code>suite: [&quot;pytest&quot;]</code></td><td>Nobody can tell an AC result from a DC one</td><td>Recover it into <code>suite</code>, and add <code>tags</code> like <code>[&quot;DC&quot;,&quot;ISO15118-2&quot;]</code></td></tr></tbody></table></div>
+<p>Finally add <code>results.extra</code> with <code>build</code> (including <code>modules</code>) and <code>integrator</code>, and <code>hardware.board</code> for a HIL run.</p>
+<h4 id="34-if-you-are-submitting-openhtf">3.4 If you are submitting OpenHTF</h4>
+<p>Export the <code>TestRecord</code> as JSON via <code>openhtf.output.callbacks.json_factory</code>, then put the EVerest fields in <code>metadata</code> per <a href="https://github.com/EVerest/Himalayas/blob/main/SCHEMA.md">SCHEMA.md</a>: <code>metadata.everest</code> (<code>commit</code>, <code>pointer</code>, <code>testEnvironment</code>, and optionally <code>tracks</code>, <code>buildUrl</code>, <code>reportUrl</code>, <code>configuration</code>), <code>metadata.build</code> and <code>metadata.integrator</code>. <code>dut_id</code>, <code>station_id</code>, <code>start_time_millis</code> and <code>end_time_millis</code> are required. Two defaults to change:</p>
+<ul><li><strong><code>inline_attachments=False</code>.</strong> OpenHTF base64-inlines attachments by default; the gate caps inline bulk at 256 KB and this repository keeps submissions indefinitely.</li><li><strong>Consider stripping <code>codeinfo</code>.</strong> OpenHTF includes each phase's source code by default, and <strong>this repository is public.</strong> The gate warns rather than rejects; if those tests are not meant to be published, strip it. A CTRF <code>snippet</code> triggers the same warning.</li></ul>
+<hr>
+<h3 id="4-tag-skip-and-link">4. Tag, skip and link</h3>
+<h4 id="41-tag-your-tests">4.1 Tag your tests</h4>
+<p>Tags are what put a test into a per-protocol view. They come from a controlled vocabulary, <a href="https://github.com/EVerest/Himalayas/blob/main/schema/vocabulary.json"><code>schema/vocabulary.json</code></a>:</p>
+<div class="scroll"><table><thead><tr><th>Group</th><th>Values</th></tr></thead><tbody><tr><td>Power</td><td><code>AC</code> <code>DC</code></td></tr><tr><td>High-level comms</td><td><code>ISO15118-2</code> <code>ISO15118-3</code> <code>ISO15118-20</code> <code>DIN70121</code></td></tr><tr><td>Basic comms</td><td><code>IEC61851</code></td></tr><tr><td>OCPP</td><td><code>OCPP1.6</code> <code>OCPP2.0.1</code> <code>OCPP2.1</code></td></tr><tr><td>Features</td><td><code>TLS</code> <code>PnC</code> <code>SmartCharging</code> <code>Eichrecht</code> <code>Reservation</code> <code>EEBUS</code> <code>V2X</code></td></tr><tr><td>Lifecycle</td><td><code>mandatory</code> <code>smoke</code> <code>compliance</code> <code>regression</code></td></tr></tbody></table></div>
+<p>Give each test its power type, its protocol, and any feature it exercises, e.g. <code>[&quot;DC&quot;, &quot;ISO15118-20&quot;, &quot;TLS&quot;]</code>.</p>
+<p><strong>Anything of your own must be prefixed <code>x-</code></strong>, then lowercase letters, digits and dashes, e.g. <code>x-derating-ramp</code>. That keeps private tags from colliding with future standard ones and keeps them out of the per-protocol rollups. Expect <code>x-</code> tags to be common: closed-source tests are allowed.</p>
+<p>What the gate does with a tag:</p>
+<div class="scroll"><table><thead><tr><th>Tag</th><th>Example</th><th>Result</th></tr></thead><tbody><tr><td>In the vocabulary</td><td><code>ISO15118-2</code></td><td>accepted</td></tr><tr><td><code>x-</code> prefixed</td><td><code>x-derating-ramp</code></td><td>accepted</td></tr><tr><td>Well-formed but not in the vocabulary</td><td><code>ISO15118-4</code></td><td>accepted, warns <code>tag-vocabulary</code></td></tr><tr><td>Free text, spaces, or <code>x-</code> with capitals</td><td><code>ISO 15118-2 over TLS</code>, <code>x-Ramp</code></td><td><strong>rejected</strong> (<code>ctrf-profile</code>)</td></tr></tbody></table></div>
+<p>"Well-formed" means PascalCase with optional dash-separated parts (<code>OCPP2.0.1</code>), all lowercase (<code>smoke</code>), or <code>x-</code> prefixed.</p>
+<p>The status page counts a tag as covered only if a test carrying it <strong>passed</strong>. If none passed and at least one failed, the tag shows as failed; if every test with it was skipped, it shows as not run.</p>
+<h4 id="42-mark-skips">4.2 Mark skips</h4>
+<p>A test that did not run is <code>&quot;status&quot;: &quot;skipped&quot;</code>, with the reason in <code>message</code>:</p>
+<pre><code>{ &quot;name&quot;: &quot;dc_bpt_discharge&quot;, &quot;status&quot;: &quot;skipped&quot;, &quot;duration&quot;: 0,
+  &quot;tags&quot;: [&quot;DC&quot;, &quot;ISO15118-20&quot;, &quot;V2X&quot;],
+  &quot;message&quot;: &quot;Skipped: the simulated EV has no bidirectional mode&quot; }</code></pre>
+<p>Keep the protocol tags on a skipped test: the page then shows that protocol as not run rather than leaving it out. <code>pending</code> is treated the same as <code>skipped</code>. Do not use <code>skipped</code> for a test that ran and failed, and see <a href="#10-reporting-conventions">section 10</a> for deviations, inconclusive results and rig limitations.</p>
+<h4 id="43-link-the-report-and-keep-the-file-small">4.3 Link the report and keep the file small</h4>
+<p>Two links, both optional, both <code>https://</code> only:</p>
+<div class="scroll"><table><thead><tr><th>Link</th><th>CTRF</th><th>OpenHTF</th><th>Shown as</th></tr></thead><tbody><tr><td>The CI run</td><td><code>environment.buildUrl</code></td><td><code>metadata.everest.buildUrl</code></td><td>the run link</td></tr><tr><td>A human-readable report (PDF or HTML)</td><td><code>extra.reportUrl</code></td><td><code>metadata.everest.reportUrl</code></td><td><strong>report</strong>, next to the run link</td></tr></tbody></table></div>
+<p>Use <code>reportUrl</code> especially when the CI run itself is not public. The status page never fetches either link.</p>
+<p><strong>Truncate <code>trace</code>.</strong> A few hundred characters is plenty. On a real EVerest run a failed test is about 4,000 bytes of CTRF against about 123 for a passed one, so failures dominate the file, and this repository keeps submissions indefinitely. The caps:</p>
+<div class="scroll"><table><thead><tr><th>Cap</th><th>Limit</th><th>Over it</th></tr></thead><tbody><tr><td>Whole file</td><td>1 MB</td><td><code>too-big</code></td></tr><tr><td>Inline bulk: <code>message</code>, <code>trace</code>, <code>stdout</code>, <code>stderr</code>, inline attachments</td><td>256 KB</td><td><code>too-big</code>; over half warns <code>attachments-large</code></td></tr></tbody></table></div>
+<p>Full stack traces belong behind <code>buildUrl</code>. Records older than six months may later be archived with traces and attachments stripped (<code>scripts/archive.py</code>, run by hand).</p>
+<hr>
+<h3 id="5-validate-locally">5. Validate locally</h3>
+<p>The gate CI runs is a script in this repository. Run it in a checkout of Himalayas with your file at its final path:</p>
+<pre><code>python3 -m pip install -r scripts/requirements.txt
+mkdir -p results/your-id/testing/main
+cp ctrf.json results/your-id/testing/main/20260909.json
+python3 scripts/validate_submission.py results/your-id/testing/main/20260909.json</code></pre>
+<p>Things to know:</p>
+<ul><li><strong>Pass the path as <code>results/...</code>.</strong> The gate resolves it against the repository root and checks its shape, so an absolute path or a file elsewhere is rejected with <code>bad-path</code>.</li><li><strong><code>--skip-commit-check</code> works offline.</strong> Without it the gate asks the GitHub API whether the commit exists, and an unauthenticated call can be rate-limited; set <code>GITHUB_TOKEN</code> to avoid that. An unanswered check only warns (<code>commit-uncheckable</code>). The <code>pointers.json</code> check runs either way.</li><li><strong>The author binding is not checked locally</strong> unless you pass <code>--author &lt;github-login&gt;</code>. CI always passes the pull request author.</li><li><strong>Before your allowlist PR merges</strong>, the gate rejects your id with <code>not-allowlisted</code>. Everything else it reports is still accurate.</li><li>Exit code <code>0</code> is accepted, <code>1</code> rejected, <code>2</code> a tool error (the gate could not reach a verdict).</li></ul>
+<p>A local pass with <code>--author</code> and without <code>--skip-commit-check</code> is a pass of the same gate CI runs.</p>
+<p>If you change anything under <code>scripts/</code> or <code>schema/</code>, also run the gate's own suite, which is almost entirely negative cases asserting the specific rejection code:</p>
+<pre><code>python3 scripts/selftest.py        # 142 checks, all of which must pass</code></pre>
+<hr>
+<h3 id="6-open-the-pull-request">6. Open the pull request</h3>
+<p>Add one file per run at <code>results/&lt;your-id&gt;/&lt;pointer&gt;/&lt;YYYYMMDD&gt;.json</code>, e.g. <code>results/your-id/testing/main/20260909.json</code>. For a second run on the same pointer the same day, add a numeric suffix: <code>20260909-2.json</code>, then <code>-3</code> and so on. <strong><code>-1</code> is rejected</strong>: the first submission of a day carries no suffix, so <code>-1</code> would be a second legal name for the same thing. One PR may add several files, for example one per configuration.</p>
+<p>The gate comments the verdict, with every reason at once. On rejection, push a fix to the same branch and it re-runs. On acceptance auto-merge lands it, and the status page redeploys within about 20 minutes. On a tool error the PR is closed; open a new one, or raise an issue if the file looks correct.</p>
+<p><strong><code>results/</code> is append-only.</strong> A PR may only <em>add</em> files there. A PR that deletes, edits or renames an existing record is refused, including one that changes your own: a correction is a new file, never an edit. Removing a record needs write access and a human.</p>
+<hr>
+<h3 id="7-fully-automated-from-any-ci">7. Fully automated, from any CI</h3>
+<p>No GitHub Actions, no <code>git</code>. Fork this repository once by hand, then per run. The script assumes the record is already written to <code>ctrf.json</code> in the working directory; produce it first, or change the filename on the <code>b64</code> line.</p>
+<p><code>UPSTREAM</code> below is <code>EVerest/Himalayas</code>, agreed with the EVerest TSC on 2026-09-09.</p>
+<pre><code>#!/usr/bin/env bash
+set -euo pipefail
+
+FORK=your-org/Himalayas             # your fork
+UPSTREAM=EVerest/Himalayas
+ID=your-id
+POINTER=testing/main
+FILE=&quot;results/$ID/$POINTER/$(date -u +%Y%m%d).json&quot;
+BRANCH=&quot;submit-${POINTER//\//-}-$(date -u +%Y%m%d)&quot;
+API=&quot;https://api.github.com&quot;
+H=(-H &quot;Authorization: Bearer $GH_TOKEN&quot; -H &quot;Accept: application/vnd.github+json&quot;)
+
+# base64 -w0 is GNU coreutils. On macOS and the BSDs base64 does not wrap and
+# rejects -w, so pick whichever this machine has.
+if base64 -w0 &lt;/dev/null &gt;/dev/null 2&gt;&amp;1; then b64() { base64 -w0 &quot;$1&quot;; }
+else b64() { base64 &quot;$1&quot; | tr -d &#x27;\n&#x27;; }
+fi
+
+# 1. branch off your fork&#x27;s default branch
+BASE=$(curl -fsSL &quot;${H[@]}&quot; &quot;$API/repos/$FORK/git/ref/heads/main&quot; | jq -r .object.sha)
+curl -fsSL -X POST &quot;${H[@]}&quot; &quot;$API/repos/$FORK/git/refs&quot; \
+  -d &quot;$(jq -n --arg r &quot;refs/heads/$BRANCH&quot; --arg s &quot;$BASE&quot; &#x27;{ref:$r,sha:$s}&#x27;)&quot; &gt;/dev/null
+
+# 2. commit the submission
+curl -fsSL -X PUT &quot;${H[@]}&quot; &quot;$API/repos/$FORK/contents/$FILE&quot; \
+  -d &quot;$(jq -n --arg m &quot;results: $ID on $POINTER&quot; --arg b &quot;$(b64 ctrf.json)&quot; \
+              --arg br &quot;$BRANCH&quot; &#x27;{message:$m,content:$b,branch:$br}&#x27;)&quot; &gt;/dev/null
+
+# 3. open the PR against upstream
+curl -fsSL -X POST &quot;${H[@]}&quot; &quot;$API/repos/$UPSTREAM/pulls&quot; \
+  -d &quot;$(jq -n --arg t &quot;results: $ID on $POINTER&quot; --arg h &quot;${FORK%%/*}:$BRANCH&quot; \
+              &#x27;{title:$t, head:$h, base:&quot;main&quot;, maintainer_can_modify:true}&#x27;)&quot; \
+  | jq -r &#x27;&quot;PR opened: \(.html_url)&quot;&#x27;</code></pre>
+<p>The script names the file by today's date with no suffix, so a second run on the same day needs <code>-2</code> added to <code>FILE</code> and <code>BRANCH</code>.</p>
+<p><code>$GH_TOKEN</code> needs write access to <strong>your fork only</strong>: <code>public_repo</code> on a classic PAT, or a fine-grained PAT scoped to your fork with <em>Contents: write</em> and <em>Pull requests: write</em>. It needs <strong>nothing</strong> on <code>EVerest/Himalayas</code>.</p>
+<hr>
+<h3 id="8-common-rejections-and-how-to-fix-them">8. Common rejections and how to fix them</h3>
+<p>The gate lists every failed check at once. The codes, roughly in the order people hit them:</p>
+<div class="scroll"><table><thead><tr><th>Code</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>ctrf-profile</code></td><td>A constrained field is malformed: <code>start</code>/<code>stop</code> of <code>0</code>, a short SHA, <code>sil</code> instead of <code>SIL</code>, <code>Linux</code> instead of <code>linux</code>, a free-text tag, an <code>http://</code> <code>buildUrl</code></td><td>Fix the field named in the message; <a href="#32-field-by-field-ctrf">section 3.2</a> has every rule</td></tr><tr><td><code>ctrf-schema</code></td><td>Not valid CTRF: a test without <code>duration</code>, no <code>results.tool</code>, a missing summary count, an unknown key under <code>environment</code> or a test</td><td>Add the missing field or remove the unknown key</td></tr><tr><td><code>extra-contract</code></td><td><code>results.extra</code> has an unknown key or a malformed value, e.g. no <code>modules</code></td><td>Use only the keys in <a href="https://github.com/EVerest/Himalayas/blob/main/SCHEMA.md#resultsextra">SCHEMA.md</a></td></tr><tr><td><code>htf-profile</code> / <code>htf-metadata</code></td><td>The normalized record breaks the OpenHTF profile or the metadata contract. On the CTRF path this usually repeats a CTRF error</td><td>Fix the CTRF error first; on the OpenHTF path, fix <code>metadata</code></td></tr><tr><td><code>pointer-mismatch</code></td><td>The pointer in the path and <code>appVersion</code> (or <code>metadata.everest.pointer</code>) disagree</td><td>Make them the same pointer name</td></tr><tr><td><code>commit-not-pointed</code></td><td>The commit was never a tip of that pointer, per <code>pointers.json</code></td><td>Test a commit the pointer actually pointed at. Often caused by a wrong <code>appVersion</code>, which also fails <code>ctrf-profile</code> and <code>pointer-mismatch</code></td></tr><tr><td><code>commit-malformed</code></td><td>Not a full 40-character lowercase SHA</td><td>Use <code>git rev-parse</code> output, not a short SHA</td></tr><tr><td><code>commit-unknown</code></td><td>The commit is not in <code>EVerest/EVerest</code></td><td>Check you fetched from the right repository</td></tr><tr><td><code>commit-missing</code></td><td>No commit at all</td><td>Set <code>environment.commit</code></td></tr><tr><td><code>build-missing</code> / <code>build-failed</code></td><td>No build reported, or its status is not <code>passed</code></td><td>Only passing builds are accepted</td></tr><tr><td><code>hil-needs-board</code></td><td>A HIL run submitted as CTRF names no board</td><td>Set <code>extra.hardware.board</code></td></tr><tr><td><code>id-missing</code> / <code>id-mismatch</code></td><td>No integrator id, or it differs from the <code>results/&lt;id&gt;/</code> directory</td><td>Make them equal</td></tr><tr><td><code>not-allowlisted</code></td><td>The id is not in <code>integrators/allowlist.yaml</code></td><td>Register first (<a href="#1-register-once">section 1</a>)</td></tr><tr><td><code>not-authorised</code></td><td>The PR author is not in that entry's <code>github_users</code>, or the entry has none</td><td>Open the PR from a listed account, or have an owner add the account</td></tr><tr><td><code>pointer-unknown</code></td><td>The pointer in the path is not declared in <code>pointers.json</code></td><td>Use a declared pointer</td></tr><tr><td><code>bad-path</code></td><td>Not <code>results/&lt;id&gt;/&lt;pointer&gt;/YYYYMMDD.json</code>, or a <code>-1</code> suffix</td><td>Rename the file</td></tr><tr><td><code>too-big</code></td><td>Over 1 MB, or over 256 KB of inline bulk</td><td>Truncate traces, export OpenHTF with <code>inline_attachments=False</code></td></tr><tr><td><code>not-json</code> / <code>unknown-format</code></td><td>Unparseable, or neither CTRF (<code>reportFormat</code>, <code>specVersion</code>) nor OpenHTF (<code>dut_id</code>, <code>phases</code>)</td><td>Start from an example</td></tr></tbody></table></div>
+<p>Before the gate runs, the PR itself is refused if it <strong>removes, edits or renames</strong> anything under <code>results/</code> (append-only), or if it adds results <strong>and</strong> changes anything outside <code>results/</code>.</p>
+<p><strong>Warnings never block:</strong> <code>no-build-url</code>, <code>tag-vocabulary</code> (a tag outside the vocabulary), <code>module-names</code> (a module name not in EVerest), <code>target-vocabulary</code> (a build target EVerest does not build), <code>attachments-large</code>, <code>sourcecode</code> (embedded test source), and <code>commit-uncheckable</code> (the GitHub API did not answer).</p>
+<hr>
+<h3 id="9-pre-push-checklist">9. Pre-push checklist</h3>
+<ul><li><input type="checkbox" disabled> My id is in <code>integrators/allowlist.yaml</code>, and the account opening the PR is in its <code>github_users</code>.</li><li><input type="checkbox" disabled> The file is at <code>results/&lt;my-id&gt;/&lt;pointer&gt;/YYYYMMDD.json</code> (<code>-2</code>, <code>-3</code>... for a second run the same day, never <code>-1</code>), and the PR changes nothing outside <code>results/</code>.</li><li><input type="checkbox" disabled> <code>commit</code> is the full SHA that <code>git rev-parse</code> printed for the pointer I tested.</li><li><input type="checkbox" disabled> <code>appVersion</code> is that pointer name, and matches the path.</li><li><input type="checkbox" disabled> <code>summary.start</code> and <code>stop</code> are real epoch milliseconds, not <code>0</code>.</li><li><input type="checkbox" disabled> <code>extra.build.status</code> is <code>passed</code> and <code>extra.build.modules</code> lists the modules.</li><li><input type="checkbox" disabled> A HIL run sets <code>extra.hardware.board</code>.</li><li><input type="checkbox" disabled> Every test has a power and protocol tag, and private tags start with <code>x-</code>.</li><li><input type="checkbox" disabled> Skipped tests are <code>skipped</code> with a reason in <code>message</code>.</li><li><input type="checkbox" disabled> Traces are truncated, and <code>buildUrl</code> (and <code>reportUrl</code> if I have a report) is set.</li><li><input type="checkbox" disabled> Several setups on one pointer each carry their own <code>extra.configuration</code>.</li><li><input type="checkbox" disabled> For anonymity, no <code>displayName</code> in the record.</li><li><input type="checkbox" disabled> <code>python3 scripts/validate_submission.py results/...</code> exits <code>0</code>.</li></ul>
+<hr>
+<h3 id="10-reporting-conventions">10. Reporting conventions</h3>
+<p>These conventions are agreed for a redesigned status page that is not built yet. Adopting them now keeps your history comparable once it is. Each says what the gate and the page do <strong>today</strong>. The design record is <a href="https://github.com/EVerest/Himalayas/blob/main/docs/design/status-page.md">docs/design/status-page.md</a>.</p>
+<h4 id="stable-test-names">Stable test names</h4>
+<p>The test name is the test's identity: comparisons, history and regression detection will match tests by name across runs. Keep each name the same from run to run, keep run-specific values (timestamps, ports, serial numbers) out of it, keep names unique within a record, and use one naming scheme within a suite, e.g. not a pytest node id like <code>tests/test_x.py::test_y[dut]</code> among <code>TC_...</code> names.</p>
+<p><em>Planned: the gate does not check this yet.</em> It will warn on duplicate names, on a suite mixing naming schemes, and on a test with no tag from the vocabulary.</p>
+<h4 id="conformance-tags">Conformance tags</h4>
+<p>A conformance test will be any test carrying a conformance-spec tag, and each spec maps to the standard it tests:</p>
+<div class="scroll"><table><thead><tr><th>Tag</th><th>Standard</th></tr></thead><tbody><tr><td><code>ISO15118-4</code></td><td>ISO 15118-2</td></tr><tr><td><code>ISO15118-5</code></td><td>ISO 15118-3</td></tr><tr><td><code>ISO15118-21</code></td><td>ISO 15118-20</td></tr><tr><td><code>DIN70122</code></td><td>DIN 70121</td></tr><tr><td><code>OCPP1.6-TestCases</code>, <code>OCPP2.0.1-Part6</code>, <code>OCPP2.1-Part6</code></td><td>that OCPP version</td></tr></tbody></table></div>
+<p>A test derived from a requirement of the standard can carry the requirement id as a tag, e.g. <code>V2G3-M06-08</code>, <code>V2G2-...</code>, <code>V2G20-...</code>, <code>V2G-DC-...</code>, <code>IEC61851-1-...</code>, <code>OCPP2.0.1-...</code>. Keep the protocol tag (<code>ISO15118-2</code> and so on) as well.</p>
+<p>Today these tags are well-formed and accepted, and they warn <code>tag-vocabulary</code> until the vocabulary lists them. <em>Planned:</em> the <code>compliance</code> lifecycle tag will be deprecated with a warning, so prefer a spec tag for new tests.</p>
+<h4 id="accepted-deviations">Accepted deviations</h4>
+<p>A test that fails on purpose, because you accept a deviation from a clause, keeps <code>&quot;status&quot;: &quot;failed&quot;</code> and states the deviation in <code>tests[].extra.acceptedDeviation</code>:</p>
+<pre><code>{ &quot;name&quot;: &quot;...&quot;, &quot;status&quot;: &quot;failed&quot;, &quot;duration&quot;: 16827,
+  &quot;message&quot;: &quot;...&quot;,
+  &quot;extra&quot;: { &quot;acceptedDeviation&quot;: {
+    &quot;reason&quot;: &quot;Kept for compatibility with deployed EVs&quot;,
+    &quot;clause&quot;: &quot;V2G3-M06-08&quot;,
+    &quot;since&quot;: &quot;2026-09-01&quot; } } }</code></pre>
+<p>Today the gate accepts <code>tests[].extra</code> (CTRF leaves it open and no EVerest schema constrains it), but the normalizer drops it, so <strong>the status page shows such a test as failed.</strong> <em>Planned:</em> the page shows it as accepted, never as a pass. Do not report a deviation as <code>skipped</code>. The bare tag <code>x-accepted-deviation</code> on a skipped test is accepted today; <em>planned:</em> it will warn and show as "accepted (clause not declared)" for a transition period.</p>
+<h4 id="inconclusive-results">Inconclusive results</h4>
+<p>A test whose verdict is neither pass nor fail, for example because a precondition could not be established, is <code>&quot;status&quot;: &quot;other&quot;</code> with <code>tests[].extra.inconclusive</code>:</p>
+<pre><code>{ &quot;name&quot;: &quot;...&quot;, &quot;status&quot;: &quot;other&quot;, &quot;duration&quot;: 15847,
+  &quot;message&quot;: &quot;Precondition not established: ...&quot;,
+  &quot;extra&quot;: { &quot;inconclusive&quot;: { &quot;reason&quot;: &quot;Precondition not established&quot; } } }</code></pre>
+<p>Today the gate accepts this, but <code>other</code> is normalized to an OpenHTF <code>ERROR</code>, so <strong>the page counts it as a failure and marks the run failed.</strong> <em>Planned:</em> inconclusive becomes its own outcome, never a pass or a failure. Do not report it as <code>failed</code> with an <code>x-inconclusive</code> tag or as <code>skipped</code>.</p>
+<h4 id="rig-limitations">Rig limitations</h4>
+<p>A test your rig cannot exercise is <code>&quot;status&quot;: &quot;skipped&quot;</code> with the tag <code>x-rig-limitation</code> and the reason in <code>message</code>. This works today as an ordinary skip. <em>Planned:</em> the page labels it "not exercised on this rig", and a passed test carrying the tag stays a pass with a footnote.</p>
+<h4 id="failure-keys">Failure keys</h4>
+<p>Put the stable cause of a failure on the <strong>first line</strong> of <code>message</code>, and volatile detail after it. <em>Planned:</em> failures will be grouped by that first line with hex addresses, decimals, ISO timestamps and UUIDs blanked (integers are kept). To choose the group yourself, set <code>tests[].extra.failureKey</code> to a short string. It is accepted today and ignored.</p>
+<h4 id="evidence-hashes-and-test-systems">Evidence hashes and test systems</h4>
+<p><em>Planned, and rejected today:</em> <code>extra.reportSha256</code> (a SHA-256 of the file at <code>reportUrl</code>) and a <code>testSystem</code> (<code>{name, version}</code>) for runs made with a reference test system. <code>results.extra</code> is closed, so the gate rejects each of them with <code>extra-contract</code>. A Vendor Declaration of Conformance (VDoC) is not a separate field: link it as the report. <strong>Do not emit them</strong> until the schema adds them. Use <code>extra.reportUrl</code> for the report link today.</p></section></main>
+<footer>Built 2026-10-23 13:47 UTC from <code>results/</code>, <code>pointers.json</code> and
+<code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
+<a href="contribute.html">How to contribute</a> ·
+Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
+<script>
+const th=document.getElementById('theme');
+if(th){
+  const root=document.documentElement;
+  const sys=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  document.getElementById('th-'+(root.dataset.theme||sys)).checked=true;
+  th.addEventListener('change',e=>{
+    const v=e.target.value;root.dataset.theme=v;
+    try{localStorage.setItem('theme',v)}catch(e){}});
+}
+document.querySelectorAll('select[data-nav]').forEach(s=>s.addEventListener('change',()=>{location.href=s.value}));
+const bar=document.querySelector('.summarybar');
+if(bar){
+  const apply=f=>{
+    bar.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.f===f)));
+    document.querySelectorAll('tr[data-v]').forEach(tr=>{
+      const show=!f||tr.dataset.v===f||(f==='regressed'&&tr.dataset.reg==='1');tr.hidden=!show});
+    document.querySelectorAll('details.group').forEach(d=>{
+      const vis=[...d.querySelectorAll('tr[data-v]')].some(t=>!t.hidden);d.hidden=!vis;if(f&&vis)d.open=true});
+    try{history.replaceState(null,'',f?'#'+f:location.pathname)}catch(e){}
+  };
+  bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    const cur=location.hash.slice(1);apply(cur===b.dataset.f?'':b.dataset.f)}));
+  if(location.hash)apply(location.hash.slice(1));
+}
+const gb=document.getElementById('grpby'),od=document.getElementById('order'),box=document.getElementById('groups');
+if(gb&&box){
+  const all=[...box.querySelectorAll('details.tc')];
+  const ST=['Failed','Inconclusive','Accepted and waived','Skipped','Passed'];
+  const keyOf=(el,k)=>k==='status'?el.dataset.statusLabel:k==='std'?el.dataset.std:el.dataset.cluster;
+  const regroup=()=>{
+    const k=gb.value,o=od.value,open=new Set([...box.querySelectorAll('details.grp[open]')].map(d=>d.dataset.key));
+    const g=new Map();
+    all.forEach(el=>{const key=keyOf(el,k);if(!g.has(key))g.set(key,[]);g.get(key).push(el)});
+    let keys=[...g.keys()];
+    if(k==='status')keys.sort((a,b)=>ST.indexOf(a)-ST.indexOf(b));
+    else keys.sort((a,b)=>Math.max(...g.get(b).map(e=>+e.dataset.since))-Math.max(...g.get(a).map(e=>+e.dataset.since))||g.get(b).length-g.get(a).length);
+    box.replaceChildren(...keys.map(key=>{
+      const items=g.get(key).sort((a,b)=>o==='name'?a.dataset.name.localeCompare(b.dataset.name):(+b.dataset.since-+a.dataset.since)||a.dataset.name.localeCompare(b.dataset.name));
+      const d=document.createElement('details');d.className='card grp';d.dataset.key=key;if(open.has(key))d.open=true;
+      const s=document.createElement('summary');const b=document.createElement('b');b.textContent=key;
+      const c=document.createElement('span');c.className='muted';c.textContent=' · '+items.length;s.append(b,c);
+      const w=document.createElement('div');w.className='items';w.append(...items);d.append(s,w);return d}));
+  };
+  gb.addEventListener('change',regroup);od.addEventListener('change',regroup);
+  document.getElementById('expand').addEventListener('click',e=>{
+    const open=e.target.textContent==='Expand all';box.querySelectorAll('details.grp').forEach(d=>d.open=open);
+    e.target.textContent=open?'Collapse all':'Expand all'});
+}
+document.querySelectorAll('.seg button[data-env]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.seg button[data-env]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  document.querySelectorAll('[data-envmap]').forEach(s=>s.hidden=s.dataset.envmap!==b.dataset.env)}));
+document.querySelectorAll('button.cap[data-panel]').forEach(b=>b.addEventListener('click',()=>{
+  const sec=b.closest('[data-envmap]'),p=document.getElementById(b.dataset.panel),was=!p.hidden;
+  sec.querySelectorAll('.panel').forEach(x=>x.hidden=true);sec.querySelectorAll('button.cap[data-panel]').forEach(x=>x.setAttribute('aria-expanded','false'));
+  if(!was){p.hidden=false;b.setAttribute('aria-expanded','true');p.scrollIntoView({block:'nearest'})}}));
+const tf=document.getElementById('tagfilter');
+if(tf&&box){
+  const setTag=tag=>{
+    document.querySelectorAll('button.cap[data-tag]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tag===tag)));
+    box.querySelectorAll('details.tc').forEach(el=>el.hidden=!!tag&&!el.dataset.tags.split(' ').includes(tag));
+    box.querySelectorAll('details.grp').forEach(d=>{const n=[...d.querySelectorAll('details.tc')].filter(e=>!e.hidden).length;
+      d.hidden=n===0;d.querySelector('summary .muted').textContent=' · '+n});
+    tf.hidden=!tag;tf.querySelector('b').textContent=tag||'';
+    try{history.replaceState(null,'',tag?'#tag='+tag:location.pathname)}catch(e){}};
+  document.querySelectorAll('button.cap[data-tag]').forEach(b=>b.addEventListener('click',()=>{
+    setTag(b.getAttribute('aria-pressed')==='true'?'':b.dataset.tag);document.getElementById('results').scrollIntoView()}));
+  tf.querySelector('button').addEventListener('click',()=>setTag(''));
+  gb.addEventListener('change',()=>setTag(tf.hidden?'':tf.querySelector('b').textContent));
+  od.addEventListener('change',()=>setTag(tf.hidden?'':tf.querySelector('b').textContent));
+  const h=location.hash.match(/^#tag=(.+)$/);if(h)setTag(decodeURIComponent(h[1]));
+}
+const cmp=document.getElementById('cmp');
+if(cmp){const sync=()=>document.querySelectorAll('[data-cmp]').forEach(s=>s.hidden=s.dataset.cmp!==cmp.value);cmp.addEventListener('change',sync);sync()}
+</script></body></html>

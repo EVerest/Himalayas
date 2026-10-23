@@ -1023,6 +1023,17 @@ def suite_build(work, verbose):
     check("a failing measurement reaches the page",
           mfail >= 1 and 'class="meas-fail"' in every, f"{mfail} failing")
 
+    # The contribute page is generated from CONTRIBUTING.md, so a section the
+    # renderer drops would vanish from the site with nothing else going red.
+    guide = open(os.path.join(work, "CONTRIBUTING.md")).read()
+    guide = re.sub(r"^```.*?^```", "", guide, flags=re.M | re.S)
+    seen = {}
+    want = [load_build_status(work).md_slug(h, seen) for h in re.findall(r"^#{1,6} (.+)$", guide, re.M)]
+    cpage = site.get("contribute.html", "")
+    missing = [w for w in want if f'id="{w}"' not in cpage]
+    check("the contribute page carries every CONTRIBUTING section, and the overview links it",
+          bool(want) and not missing and 'href="contribute.html"' in page, f"missing {missing[:3]}")
+
     bs = load_build_status(work)
     root = bs.pathlib.Path(work)
     declared, logs = bs.load_pointers(root)
@@ -1093,7 +1104,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 17, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 18, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

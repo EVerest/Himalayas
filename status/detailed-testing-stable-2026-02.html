@@ -46,6 +46,11 @@ details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.
 .s-passing{background:#1E8F64}.s-failing,.s-build-failed{background:#C0392B}.s-passing-partial{background:#D9922B}.s-not-exercised,.s-build-only{background:#8792A4}
 .mx td{text-align:center;font-family:var(--mono);font-size:13px}.mx td.untested{color:var(--dash);border:1px dashed var(--dash)}.mx td.z{color:var(--ok)}.mx td.f{color:var(--bad);font-weight:700}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.cta{margin:0;padding:10px 14px;border-radius:10px;background:var(--infobg);color:var(--info);font-size:14px;max-width:80ch}.cta a{color:inherit;font-weight:700}
+.md{max-width:100%}.md p,.md li{max-width:80ch}.md h2{margin-top:0}.md h3{margin:22px 0 8px;font-size:17px}.md h4{margin:18px 0 6px;font-size:15px;color:var(--ink)}
+.md pre{background:var(--line2);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:13px}.md li{margin:3px 0}
+.md blockquote{margin:10px 0;padding:2px 14px;border-left:4px solid var(--lime);background:var(--bg);border-radius:0 8px 8px 0}
+.md hr{border:0;border-top:1px solid var(--line);margin:18px 0}.md td{white-space:normal;vertical-align:top}
 .notice{border-left:0;background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 14px;font-size:14px}
 footer{max-width:1320px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left)) 32px;font-size:12px;color:var(--muted)}
 [hidden]{display:none!important}
@@ -80,7 +85,7 @@ details.integ[open]>summary{border-radius:8px 8px 0 0}
 <script>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script></head><body>
 <header class="top"><div class="in"><div><a class="brand" href="index.html" style="color:#fff;text-decoration:none">Himalayas</a>
 <div class="sub">EVerest federated test results, self-reported by integrators</div></div>
-<label class="small" style="display:flex;flex-direction:column;color:#C9D4E8">Pointer<select data-nav style="min-height:40px;padding:6px 8px;border-radius:8px;background:#fff;color:#1E2530;border:0"><option value="detailed.html">testing/main</option><option value="detailed-testing-stable-2026-02.html" selected>testing/stable-2026.02</option><option value="detailed-testing-stable-2026-10.html">testing/stable-2026.10</option></select></label><nav aria-label="Views"><a href="index.html">Overview</a><a href="detailed.html" aria-current="page">Detailed</a><a href="coverage.html">Coverage</a></nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
+<label class="small" style="display:flex;flex-direction:column;color:#C9D4E8">Pointer<select data-nav style="min-height:40px;padding:6px 8px;border-radius:8px;background:#fff;color:#1E2530;border:0"><option value="detailed.html">testing/main</option><option value="detailed-testing-stable-2026-02.html" selected>testing/stable-2026.02</option><option value="detailed-testing-stable-2026-10.html">testing/stable-2026.10</option></select></label><nav aria-label="Views"><a href="index.html">Overview</a><a href="detailed.html" aria-current="page">Detailed</a><a href="coverage.html">Coverage</a><a href="contribute.html">Contribute</a></nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
 <main><section class="row"><h1>Detailed · testing/stable-2026.02</h1></section><section class="card"><h2>Open regressions · none</h2></section><section class="card" style="padding:0"><h2 style="padding:16px 20px 0">Setups on testing/stable-2026.02</h2><div class="scroll"><table>
@@ -89,8 +94,9 @@ details.integ[open]>summary{border-radius:8px 8px 0 0}
 <tbody><tr><td colspan="11" class="muted">No setups.</td></tr></tbody></table></div>
 <p class="small muted" style="padding:0 20px 14px;margin:8px 0 0">Last 14 runs, oldest first: <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-passing"></span></span> no failed tests · <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-failing"></span></span> one or more failed tests</p></section><section class="card"><div class="row" style="margin-bottom:8px"><h2 style="margin:0">Compare with</h2>
 <select id="cmp" style="min-height:40px;padding:6px 8px;border-radius:8px"><option value="testing-main">testing/main</option><option value="testing-stable-2026-10">testing/stable-2026.10</option></select></div><div data-cmp="testing-main" class="scroll"><table><thead><tr><th>Setup</th><th>testing/stable-2026.02</th><th>testing/main</th><th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead><tbody></tbody></table></div><div data-cmp="testing-stable-2026-10" class="scroll"><table><thead><tr><th>Setup</th><th>testing/stable-2026.02</th><th>testing/stable-2026.10</th><th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead><tbody></tbody></table></div></section></main>
-<footer>Built 2026-10-23 13:40 UTC from <code>results/</code>, <code>pointers.json</code> and
+<footer>Built 2026-10-23 13:47 UTC from <code>results/</code>, <code>pointers.json</code> and
 <code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
+<a href="contribute.html">How to contribute</a> ·
 Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
 <script>
 const th=document.getElementById('theme');
