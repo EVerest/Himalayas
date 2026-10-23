@@ -2,8 +2,8 @@
   "dut_id": "ACME-CC200-SN-00473",
   "station_id": "acme-hil-bench-2",
   "outcome": "FAIL",
-  "start_time_millis": 1788959100000,
-  "end_time_millis": 1788960120000,
+  "start_time_millis": 1788952800000,
+  "end_time_millis": 1788953640000,
   "marginal": false,
   "metadata": {
     "everest": {
@@ -11,7 +11,7 @@
       "pointer": "testing/main",
       "tracks": "main",
       "testEnvironment": "HIL",
-      "buildUrl": "https://ci.deadbeef-charge.example/pipelines/48219"
+      "buildUrl": "https://ci.example.com/pipelines/48219"
     },
     "build": {
       "status": "passed",
@@ -30,8 +30,8 @@
       ]
     },
     "integrator": {
-      "id": "deadbeef-charge",
-      "displayName": "DEADBEEF Charge GmbH"
+      "id": "example-integrator",
+      "displayName": "Example Integrator GmbH"
     },
     "hardware": {
       "bsp": "yeti-fw-1.4.2",
@@ -47,8 +47,8 @@
     {
       "name": "dc_precharge_voltage_window",
       "outcome": "PASS",
-      "start_time_millis": 1788959642564,
-      "end_time_millis": 1788959660564,
+      "start_time_millis": 1788953342564,
+      "end_time_millis": 1788953360564,
       "suite": [
         "acme_hil",
         "dc"
@@ -82,8 +82,8 @@
     {
       "name": "dc_derating_ramp_rate",
       "outcome": "FAIL",
-      "start_time_millis": 1788959660564,
-      "end_time_millis": 1788959678564,
+      "start_time_millis": 1788953360564,
+      "end_time_millis": 1788953378564,
       "suite": [
         "acme_hil",
         "dc"
@@ -114,8 +114,8 @@
     {
       "name": "iso15118_20_tls_handshake",
       "outcome": "SKIP",
-      "start_time_millis": 1788959678564,
-      "end_time_millis": 1788959696564,
+      "start_time_millis": 1788953378564,
+      "end_time_millis": 1788953396564,
       "suite": [
         "acme_hil",
         "hlc"

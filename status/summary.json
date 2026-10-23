@@ -1,18 +1,174 @@
 {
-  "generated": "2026-09-09 21:22 UTC",
-  "selfReported": true,
-  "graceDays": 14,
-  "internalFormat": "openhtf",
-  "pointers": {
-    "testing/main": {
-      "tracks": "main",
-      "tip": "fdf2ac5415425e0a6af7d30caacf46f2bf9316ee",
-      "integrators": {}
+ "version": 2,
+ "generated": "2026-10-23 15:41 UTC",
+ "selfReported": true,
+ "graceDays": 14,
+ "pointers": {
+  "testing/main": {
+   "tracks": "main",
+   "tip": "f45ba0d0827f29d53d516fec98960f2528460802",
+   "unattributed": [],
+   "setups": [
+    {
+     "integrator": "pionix",
+     "displayName": "Pionix GmbH",
+     "configuration": "dc-full-ocpp",
+     "verdict": "failing",
+     "passRate": 0.9728601252609603,
+     "commit": "b328178d220475bb7b0289519c159292997208dc",
+     "behind": 1,
+     "freshness": "current",
+     "environment": "SIL",
+     "testedAt": 1792652781687,
+     "record": "results/pionix/testing/main/20261022.json",
+     "submissions": 14,
+     "counts": {
+      "ISO15118-3": {
+       "passed": 62,
+       "total": 62
+      },
+      "DIN70121": {
+       "passed": 103,
+       "total": 115,
+       "failed": 12
+      },
+      "other": {
+       "skipped": 1,
+       "total": 13,
+       "passed": 12
+      },
+      "ISO15118-20": {
+       "passed": 131,
+       "total": 132,
+       "failed": 1
+      },
+      "ISO15118-2": {
+       "passed": 158,
+       "total": 158
+      }
+     },
+     "coverage": {
+      "DC": "fail",
+      "ISO15118-3": "pass",
+      "ISO15118-2": "pass",
+      "ISO15118-20": "fail",
+      "DIN70121": "fail"
+     },
+     "measurementsFailed": 0
     },
-    "testing/stable-2026.02": {
-      "tracks": "stable/2026.02",
-      "tip": "7d22131340e6e27cb1490aca135da5b469fe5250",
-      "integrators": {}
+    {
+     "integrator": "pionix",
+     "displayName": "Pionix GmbH",
+     "configuration": "ac-basic",
+     "verdict": "passing",
+     "passRate": 1.0,
+     "commit": "b328178d220475bb7b0289519c159292997208dc",
+     "behind": 1,
+     "freshness": "current",
+     "environment": "SIL",
+     "testedAt": 1792653174265,
+     "record": "results/pionix/testing/main/20261022-2.json",
+     "submissions": 16,
+     "counts": {
+      "IEC61851": {
+       "passed": 15,
+       "total": 15
+      }
+     },
+     "coverage": {
+      "AC": "pass",
+      "IEC61851": "pass"
+     },
+     "measurementsFailed": 0
+    },
+    {
+     "integrator": "pionix",
+     "displayName": "Pionix GmbH",
+     "configuration": "ac-full-ocpp",
+     "verdict": "failing",
+     "passRate": 0.9842105263157894,
+     "commit": "b328178d220475bb7b0289519c159292997208dc",
+     "behind": 1,
+     "freshness": "current",
+     "environment": "SIL",
+     "testedAt": 1792656758327,
+     "record": "results/pionix/testing/main/20261022-3.json",
+     "submissions": 14,
+     "counts": {
+      "ISO15118-3": {
+       "failed": 1,
+       "total": 10,
+       "passed": 8,
+       "inconclusive": 1
+      },
+      "ISO15118-20": {
+       "passed": 131,
+       "total": 132,
+       "failed": 1
+      },
+      "ISO15118-2": {
+       "passed": 37,
+       "total": 37
+      },
+      "other": {
+       "passed": 11,
+       "total": 12,
+       "failed": 1
+      }
+     },
+     "coverage": {
+      "AC": "fail",
+      "ISO15118-3": "fail",
+      "ISO15118-2": "pass",
+      "ISO15118-20": "fail"
+     },
+     "measurementsFailed": 0
+    },
+    {
+     "integrator": "pionix",
+     "displayName": "Pionix GmbH",
+     "configuration": "ac-dc100",
+     "verdict": "failing",
+     "passRate": 0.75,
+     "commit": "b328178d220475bb7b0289519c159292997208dc",
+     "behind": 1,
+     "freshness": "current",
+     "environment": "SIL",
+     "testedAt": 1792656812888,
+     "record": "results/pionix/testing/main/20261022-4.json",
+     "submissions": 16,
+     "counts": {
+      "ISO15118-3": {
+       "accepted": 1,
+       "total": 3,
+       "passed": 1,
+       "failed": 1
+      },
+      "ISO15118-2": {
+       "passed": 2,
+       "total": 2
+      }
+     },
+     "coverage": {
+      "AC": "fail",
+      "ISO15118-3": "fail",
+      "ISO15118-2": "pass"
+     },
+     "measurementsFailed": 0
     }
+   ]
+  },
+  "testing/stable-2026.10": {
+   "tracks": "stable/2026.10",
+   "tip": "f45ba0d0827f29d53d516fec98960f2528460802",
+   "unattributed": [],
+   "setups": []
+  },
+  "testing/stable-2026.02": {
+   "tracks": "stable/2026.02",
+   "tip": "a30b832d34fe73acf26f3e22b82ee7a43c7be8ad",
+   "unattributed": [],
+   "setups": []
   }
+ }
 }

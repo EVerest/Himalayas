@@ -12,6 +12,15 @@
       "note": "Anything an integrator needs that is not listed. The x- prefix keeps private tags from colliding with future standard ones, and keeps them out of the public per-protocol rollups."
     }
   },
+  "featureCarriers": {
+    "V2X": ["AC", "DC"],
+    "PnC": ["ISO15118-2", "ISO15118-20", "OCPP"],
+    "TLS": ["ISO15118-2", "ISO15118-20", "OCPP"],
+    "SmartCharging": ["ISO15118-2", "ISO15118-20", "OCPP"],
+    "Reservation": ["OCPP"],
+    "Eichrecht": ["OCPP"]
+  },
+  "$carriersNote": "The tags each feature can be carried by. The status page shows a carrier as covered once one test carries both the feature tag and the carrier tag. OCPP stands for any OCPP version tag.",
   "buildTargets": [
     "x86_64-linux-gnu",
     "aarch64-linux-gnu",

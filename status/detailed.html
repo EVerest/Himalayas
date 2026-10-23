@@ -1,0 +1,186 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Himalayas detailed · main</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0C2351;--fg:#1E2530;--muted:#556070;--soft:#3A4556;--bg:#F4F6FA;--card:#FFFFFF;--line:#DCE2EC;--line2:#EEF2F8;
+--lime:#BAF419;--link:#1F5FA0;--ok:#0B5E41;--okbg:#DDF5EA;--bad:#8A1C12;--badbg:#FDE7E4;--warn:#7A4A00;--warnbg:#FFF1D6;--dash:#8792A4;
+--mono:'DM Mono',ui-monospace,monospace;--sans:'DM Sans',system-ui,sans-serif;--disp:'DM Serif Display',Georgia,serif}
+:root{--infobg:#E4ECF9;--info:#1F3F7A;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--ink:#CFE0FF;--fg:#E4E8EF;--muted:#9AA6B8;--soft:#B8C2D3;--bg:#0E1420;--card:#161E2D;--line:#2A3547;--line2:#1E2838;
+--link:#7FB4F0;--ok:#7FE0B2;--okbg:#123A2A;--bad:#FF9C90;--badbg:#3C1814;--warn:#FFD48A;--warnbg:#3A2C10;--dash:#6B778A;--infobg:#1C2A48;--info:#A9C4F5;color-scheme:dark}}
+:root[data-theme=dark]{--ink:#CFE0FF;--fg:#E4E8EF;--muted:#9AA6B8;--soft:#B8C2D3;--bg:#0E1420;--card:#161E2D;--line:#2A3547;--line2:#1E2838;
+--link:#7FB4F0;--ok:#7FE0B2;--okbg:#123A2A;--bad:#FF9C90;--badbg:#3C1814;--warn:#FFD48A;--warnbg:#3A2C10;--dash:#6B778A;--infobg:#1C2A48;--info:#A9C4F5;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 var(--sans)}
+a{color:var(--link)}code,.mono{font-family:var(--mono);font-size:.92em}
+button,select,summary{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid #2F96D0;outline-offset:2px}
+header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+header.top .lockup{display:flex;align-items:center;gap:14px}header.top .lockup a{color:#fff;text-decoration:none;border-radius:8px}header.top .home{display:block}header.top .lockup a.logo{border-radius:0}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
+svg a:hover text{fill:var(--link);text-decoration:underline}
+header.top .brand{display:block;font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{display:block;font-size:13px;color:#C9D4E8;max-width:34ch}
+header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 12px;border-radius:8px}
+header.top nav a[aria-current]{background:#21407A}.bar{height:4px;background:var(--lime)}
+main{max-width:1320px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 20px;min-width:0}
+h1{font-family:var(--disp);font-weight:400;color:var(--ink);margin:0;font-size:32px;text-wrap:balance}
+h2{margin:0 0 10px;font-size:18px;color:var(--ink)}h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+.muted{color:var(--muted)}.small{font-size:13px}.row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.pill{display:inline-block;padding:2px 9px;border-radius:12px;font-weight:700;font-size:13px;white-space:nowrap}
+.v-passing{background:var(--okbg);color:var(--ok)}.v-failing,.v-build-failed{background:var(--badbg);color:var(--bad)}
+.v-passing-partial{background:var(--warnbg);color:var(--warn)}.v-not-exercised,.v-build-only,.v-not-reported{border:1px dashed var(--dash);color:var(--soft);font-weight:500}
+.reg{border:1px solid var(--bad);color:var(--bad);padding:1px 7px;border-radius:10px;font-size:12px;white-space:nowrap}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:8px 12px;border-top:1px solid var(--line2)}thead th{background:var(--line2);color:var(--soft);font-size:12px;border-top:0;white-space:nowrap}
+th[scope=row] a,td>a{white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.chips2{display:flex;flex-wrap:wrap;gap:4px;max-width:340px}
+.schip{display:inline-flex;flex-direction:column;border-radius:6px;padding:2px 7px;font-size:12px;line-height:1.35;white-space:nowrap}
+.schip b{font-weight:700}.schip .n{font-size:11px;opacity:.85}
+.schip.ok{background:var(--okbg);color:var(--ok)}.schip.bad{background:var(--badbg);color:var(--bad)}.schip.none{border:1px dashed var(--dash);color:var(--soft)}
+td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
+.pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
+.cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
+.ilogo{height:20px;width:auto;max-width:96px;vertical-align:middle;margin-right:8px;padding:2px 4px;background:#fff;border-radius:4px}
+.allint td.lcell{width:1%;padding-right:0}.lcell .ilogo{margin-right:0}
+h1 .ptitle{color:inherit;text-decoration-thickness:2px;text-underline-offset:6px}.rate{display:block;margin-top:4px;white-space:nowrap}.allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
+.summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
+.summarybar button b,.rtile b{font-size:20px;display:block;line-height:1.1}
+.rtile{min-height:52px;padding:6px 14px;border-radius:10px;border:1px dashed var(--line);display:flex;flex-direction:column;justify-content:center}
+.pr{font-weight:600;color:color-mix(in oklch,var(--ok) var(--p),var(--bad))}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
+details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
+.strip{display:flex;gap:2px;align-items:flex-end;height:18px}.strip span{width:12px;border-radius:2px;display:inline-block}
+.s-passing{background:#1E8F64}.s-failing,.s-build-failed{background:#C0392B}.s-passing-partial{background:#D9922B}.s-not-exercised,.s-build-only{background:#8792A4}
+.mx td{text-align:center;font-family:var(--mono);font-size:13px}.mx td.untested{color:var(--dash);border:1px dashed var(--dash)}.mx td.z{color:var(--ok)}.mx td.f{color:var(--bad);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.cta{margin:0;padding:10px 14px;border-radius:10px;background:var(--infobg);color:var(--info);font-size:14px;max-width:80ch}.cta a{color:inherit;font-weight:700}
+.md{max-width:100%}.md p,.md li{max-width:80ch}.md h2{margin-top:0}.md h3{margin:22px 0 8px;font-size:17px}.md h4{margin:18px 0 6px;font-size:15px;color:var(--ink)}
+.md pre{background:var(--line2);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:13px}.md li{margin:3px 0}
+.md blockquote{margin:10px 0;padding:2px 14px;border-left:4px solid var(--lime);background:var(--bg);border-radius:0 8px 8px 0}
+.md hr{border:0;border-top:1px solid var(--line);margin:18px 0}.md td{white-space:normal;vertical-align:top}
+.notice{border-left:0;background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 14px;font-size:14px}
+footer{max-width:1320px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left)) 32px;font-size:12px;color:var(--muted)}
+[hidden]{display:none!important}
+.modules{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.modules code{background:var(--line2);padding:2px 8px;border-radius:6px}
+details.grp{padding:0;overflow:hidden}details.grp>summary{padding:12px 20px}details.grp .items{padding:4px 20px 14px;display:flex;flex-direction:column}
+details.tc{border-top:1px solid var(--line2);padding:4px 0}details.tc>summary{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.dom{margin-bottom:14px}.dom h4{margin:0 0 6px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.cap{border-radius:8px;padding:8px 11px;min-width:130px;border:1px solid transparent;text-align:left;font:inherit;display:flex;flex-direction:column}
+.cap b{font-size:14px}.cap span{font-size:12px}button.cap{cursor:pointer}button.cap[aria-expanded=true],button.cap[aria-pressed=true]{outline:2px solid var(--ink);outline-offset:1px}
+.l4{background:var(--okbg);color:var(--ok)}.l3{background:var(--warnbg);color:var(--warn)}.l2{background:var(--infobg);color:var(--info)}
+.l1{background:var(--card);color:var(--soft);border:1px dashed var(--dash)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--soft)}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px}
+.via{display:flex!important;flex-wrap:wrap;gap:4px;margin-top:5px}.via em{font-style:normal;font-size:11px;border-radius:5px;padding:0 6px;border:1px dashed var(--dash);color:var(--soft);background:var(--card)}
+.via em.ok{border:0;background:var(--okbg);color:var(--ok)}.via em.bad{border:0;background:var(--warnbg);color:var(--warn)}
+tr.meas-fail td{color:var(--bad);font-weight:700}
+td.h4c{color:var(--ok)}td.h3c{color:var(--warn);font-weight:700}
+.seg{display:flex;flex-wrap:wrap;gap:6px}.seg button{min-height:40px;padding:4px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card)}.seg button[aria-pressed=true]{background:var(--ink);color:var(--card)}
+details.integ{border:1px solid var(--line);border-radius:8px;margin-bottom:6px}details.integ>summary{padding:6px 12px;background:var(--line2);border-radius:8px}
+details.integ[open]>summary{border-radius:8px 8px 0 0}
+.theme{position:relative;display:grid;grid-template-columns:repeat(2,1fr);border:1px solid #3A5590;border-radius:20px;padding:2px;margin:0;font-size:13px}
+.theme legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.theme input{position:absolute;opacity:0;pointer-events:none}
+.theme label{position:relative;z-index:1;padding:6px 12px;text-align:center;cursor:pointer;color:#C9D4E8;border-radius:18px;min-height:32px;display:flex;align-items:center;justify-content:center}
+.theme input:checked+label{color:#0C2351;font-weight:700}.theme input:focus-visible+label{outline:3px solid #2F96D0}
+.theme .thumb{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px)/2);border-radius:18px;background:var(--lime);transition:transform .2s ease}
+.theme:has(#th-dark:checked) .thumb{transform:translateX(100%)}
+@media (prefers-reduced-motion:reduce){.theme .thumb{transition:none}}
+.tagfilter{display:flex;gap:10px;align-items:center}
+.tcbody{padding:4px 0 8px 18px}.msg{white-space:pre-wrap;font-family:var(--mono);font-size:12px;background:var(--line2);padding:8px 10px;border-radius:6px;margin:4px 0;overflow-x:auto}
+</style>
+<script>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script></head><body>
+<header class="top"><div class="in"><div class="lockup"><a class="logo" href="https://github.com/EVerest"><img src="everest-logo.svg" alt="LF Energy EVerest on GitHub" width="116" height="34"></a>
+<a class="home" href="index.html"><span class="brand">Himalayas</span>
+<span class="sub">EVerest test results, self-reported by the companies that build on it</span></a></div>
+<label class="small" style="display:flex;flex-direction:column;color:#C9D4E8">Pointer<select data-nav style="min-height:40px;padding:6px 8px;border-radius:8px;background:#fff;color:#1E2530;border:0"><option value="detailed.html" selected>main</option><option value="detailed-testing-stable-2026-10.html">2026.10</option><option value="detailed-testing-stable-2026-02.html">2026.02 (stops moving soon)</option></select></label><nav aria-label="Views"><a href="index.html">Overview</a><a href="detailed.html" aria-current="page">Detailed</a><a href="coverage.html">Coverage</a><a href="contribute.html">Contribute</a></nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
+<input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
+<input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
+<main><section class="row"><h1>Detailed · main</h1></section><details class="card"><summary><h2 style="display:inline">Open regressions · 14 tests</h2></summary><p class="small muted">Passed at the previous tested commit and fail at the next. Listed until the test passes again.</p><h3 style="margin-top:12px">▲ Confirmed · 13</h3><p class="small muted" style="margin:0 0 6px">Failed again after the first failing run.</p><details class="integ"><summary><b>Pionix GmbH</b> <span class="muted small">· 13 tests</span></summary><div class="scroll"><table><thead><tr><th>Setup</th><th>Standard · tests</th><th>Tests</th><th>Message</th><th>Began in</th></tr></thead><tbody><tr><td><a href="setup/pionix-dc-full-ocpp.html">dc-full-ocpp</a></td><td>DIN 70121 · 12</td><td class="small"><code>TC_SECC_DC_VTB_DinCableCheck_005</code><br><code>TC_SECC_DC_VTB_DinChargeParameterDiscovery_006</code><br><code>TC_SECC_DC_VTB_DinContractAuthentication_004</code><br><code>TC_SECC_DC_VTB_DinCurrentDemand_004</code><br>+8 more</td><td class="small">AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False</td><td class="small"><a href="https://github.com/EVerest/EVerest/commit/0da38568d27eae6819e3ea9bb34cba47de56e44f"><code>0da3856</code></a>..<a href="https://github.com/EVerest/EVerest/commit/cb7d386973c20dc398e5dd2cdd7aa97e639d6732"><code>cb7d386</code></a> (<a href="https://github.com/EVerest/EVerest/commit/fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"><code>fa5bdc6</code></a> untested)</td></tr><tr><td><a href="setup/pionix-ac-dc100.html">ac-dc100</a></td><td>ISO 15118-3 · 1</td><td class="small"><code>TC_SECC_AC_VTB_PLCLinkStatus_011</code></td><td class="small">TimeoutError: no matching CP duty period within &lt;n&gt;s (periods: [])</td><td class="small"><a href="https://github.com/EVerest/EVerest/commit/fe984a940f3cab859d5a5e1e89e6f947f5b7a21f"><code>fe984a9</code></a>..<a href="https://github.com/EVerest/EVerest/commit/2f2dd0256824dac88814cb8c8df47ea9fe499650"><code>2f2dd02</code></a></td></tr></tbody></table></div></details><h3 style="margin-top:12px">▵ Suspected · 1</h3><p class="small muted" style="margin:0 0 6px">One failing run so far. No badge until it fails again.</p><details class="integ"><summary><b>Pionix GmbH</b> <span class="muted small">· 1 test</span></summary><div class="scroll"><table><thead><tr><th>Setup</th><th>Standard · tests</th><th>Tests</th><th>Message</th><th>Began in</th></tr></thead><tbody><tr><td><a href="setup/pionix-ac-full-ocpp.html">ac-full-ocpp</a></td><td>Other tests · 1</td><td class="small"><code>TC_SECC_AC_VTB_PionixInterop_006</code></td><td class="small">AssertionError: ChargingStatus response time max &lt;= 120 ms (PIONIX interop requirement) — max &lt;n&gt; ms (1695 exchanges, min &lt;n&gt; ms, avg &lt;n&gt; ms)</td><td class="small"><a href="https://github.com/EVerest/EVerest/commit/cb7d386973c20dc398e5dd2cdd7aa97e639d6732"><code>cb7d386</code></a>..<a href="https://github.com/EVerest/EVerest/commit/b328178d220475bb7b0289519c159292997208dc"><code>b328178</code></a></td></tr></tbody></table></div></details></details><section class="card" style="padding:0"><h2 style="padding:16px 20px 0">Setups on main</h2><div class="scroll"><table>
+<thead><tr><th>Integrator</th><th>Setup</th><th>Verdict</th><th>Results</th><th>Tested commit</th><th>Tested on</th><th>Env</th><th>Build</th><th>Harness</th>
+<th>Last 14 runs</th><th>Evidence</th></tr></thead>
+<tbody id="detail-pionix"><tr><td>Pionix GmbH</td><th scope="row"><a href="setup/pionix-dc-full-ocpp.html">dc-full-ocpp</a></th><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:97.3%">97.3%</span> passed</span></td><td><div class="small" style="white-space:nowrap"><span class="cell ok">466 passed</span> · <span class="cell bad">13 failed</span></div><div class="small muted" style="white-space:nowrap">480 tests · 1 skipped</div></td><td class="small"><a href="https://github.com/EVerest/EVerest/commit/b328178d220475bb7b0289519c159292997208dc"><code>b328178</code></a> · 1 move behind</td><td class="small"><span data-fresh="current">2026-10-22</span></td><td>SIL</td><td><span class="cell ok" title="build passed" aria-label="build passed">✓</span></td><td class="small">Pionix ISO 15118 Conformance Tester</td><td><div class="strip" role="img" aria-label="last 14 runs, oldest first"><span class="s-passing" style="height:4px" title="100% passed · none failed of 2 judged · 047d5ca 08-10 22:07"></span><span class="s-failing" style="height:18px" title="95.8% passed · 19 failed of 451 judged · ed063b5 09-10 07:07"></span><span class="s-failing" style="height:16px" title="96.5% passed · 16 failed of 451 judged · 2e710bc 10-10 07:02"></span><span class="s-failing" style="height:16px" title="96.5% passed · 16 failed of 451 judged · 2e710bc 11-10 07:04"></span><span class="s-failing" style="height:16px" title="96.5% passed · 16 failed of 451 judged · 2e710bc 12-10 07:10"></span><span class="s-failing" style="height:16px" title="96.5% passed · 16 failed of 451 judged · ddbc619 13-10 07:07"></span><span class="s-failing" style="height:15px" title="97% passed · 14 failed of 460 judged · 3448c6b 14-10 07:01"></span><span class="s-failing" style="height:12px" title="98% passed · 9 failed of 460 judged · fe984a9 15-10 06:59"></span><span class="s-failing" style="height:9px" title="99.2% passed · 4 failed of 479 judged · 2f2dd02 16-10 14:55"></span><span class="s-failing" style="height:9px" title="99.2% passed · 4 failed of 479 judged · 0da3856 17-10 07:05"></span><span class="s-failing" style="height:9px" title="99.2% passed · 4 failed of 479 judged · 0da3856 18-10 07:06"></span><span class="s-failing" style="height:9px" title="99.2% passed · 4 failed of 479 judged · 0da3856 19-10 07:10"></span><span class="s-failing" style="height:15px" title="96.9% passed · 15 failed of 479 judged · cb7d386 21-10 07:07"></span><span class="s-failing" style="height:14px" title="97.3% passed · 13 failed of 479 judged · b328178 22-10 07:06"></span></div></td><td class="small"><a href="https://pionix-conformance-bot.github.io/Himalayas/reports/20261022T081742Z/dc-full-ocpp/conformance-report.pdf">report</a></td></tr><tr><td>Pionix GmbH</td><th scope="row"><a href="setup/pionix-ac-basic.html">ac-basic</a></th><td><span class="pill v-passing">✓ passing</span><span class="rate small"><span class="pr" style="--p:100%">100%</span> passed</span></td><td><div class="small" style="white-space:nowrap"><span class="cell ok">15 passed</span></div><div class="small muted" style="white-space:nowrap">15 tests</div></td><td class="small"><a href="https://github.com/EVerest/EVerest/commit/b328178d220475bb7b0289519c159292997208dc"><code>b328178</code></a> · 1 move behind</td><td class="small"><span data-fresh="current">2026-10-22</span></td><td>SIL</td><td><span class="cell ok" title="build passed" aria-label="build passed">✓</span></td><td class="small">Pionix ISO 15118 Conformance Tester</td><td><div class="strip" role="img" aria-label="last 14 runs, oldest first"><span class="s-failing" style="height:18px" title="93.3% passed · 1 failed of 15 judged · ed063b5 09-10 16:37"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · ed063b5 09-10 19:56"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · 2e710bc 10-10 07:08"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · 2e710bc 11-10 07:10"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · 2e710bc 12-10 07:17"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · ddbc619 13-10 07:13"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · 3448c6b 14-10 07:07"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · fe984a9 15-10 07:05"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · 2f2dd02 16-10 15:02"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · 0da3856 17-10 07:12"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · 0da3856 18-10 07:13"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · 0da3856 19-10 07:17"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · cb7d386 21-10 07:13"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 15 judged · b328178 22-10 07:12"></span></div></td><td class="small"><a href="https://pionix-conformance-bot.github.io/Himalayas/reports/20261022T081742Z/ac-basic/conformance-report.pdf">report</a></td></tr><tr><td>Pionix GmbH</td><th scope="row"><a href="setup/pionix-ac-full-ocpp.html">ac-full-ocpp</a></th><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:98.4%">98.4%</span> passed</span></td><td><div class="small" style="white-space:nowrap"><span class="cell ok">187 passed</span> · <span class="cell bad">3 failed</span></div><div class="small muted" style="white-space:nowrap">191 tests · 1 inconclusive</div></td><td class="small"><a href="https://github.com/EVerest/EVerest/commit/b328178d220475bb7b0289519c159292997208dc"><code>b328178</code></a> · 1 move behind</td><td class="small"><span data-fresh="current">2026-10-22</span></td><td>SIL</td><td><span class="cell ok" title="build passed" aria-label="build passed">✓</span></td><td class="small">Pionix ISO 15118 Conformance Tester</td><td><div class="strip" role="img" aria-label="last 14 runs, oldest first"><span class="s-passing" style="height:4px" title="100% passed · none failed of 1 judged · 047d5ca 08-10 22:08"></span><span class="s-failing" style="height:18px" title="87.6% passed · 21 failed of 169 judged · ed063b5 09-10 07:58"></span><span class="s-failing" style="height:17px" title="88.2% passed · 20 failed of 169 judged · 2e710bc 10-10 07:55"></span><span class="s-failing" style="height:17px" title="88.2% passed · 20 failed of 169 judged · 2e710bc 11-10 07:58"></span><span class="s-failing" style="height:17px" title="88.2% passed · 20 failed of 169 judged · 2e710bc 12-10 08:05"></span><span class="s-failing" style="height:17px" title="88.2% passed · 20 failed of 169 judged · ddbc619 13-10 08:01"></span><span class="s-failing" style="height:17px" title="88.2% passed · 20 failed of 169 judged · 3448c6b 14-10 07:55"></span><span class="s-failing" style="height:16px" title="89.3% passed · 18 failed of 169 judged · fe984a9 15-10 07:53"></span><span class="s-failing" style="height:15px" title="92.1% passed · 15 failed of 190 judged · 2f2dd02 16-10 15:57"></span><span class="s-failing" style="height:15px" title="92.1% passed · 15 failed of 190 judged · 0da3856 17-10 08:07"></span><span class="s-failing" style="height:15px" title="92.1% passed · 15 failed of 190 judged · 0da3856 18-10 08:08"></span><span class="s-failing" style="height:15px" title="92.1% passed · 15 failed of 190 judged · 0da3856 19-10 08:13"></span><span class="s-failing" style="height:12px" title="94.7% passed · 10 failed of 190 judged · cb7d386 21-10 08:08"></span><span class="s-failing" style="height:8px" title="98.4% passed · 3 failed of 190 judged · b328178 22-10 08:12"></span></div></td><td class="small"><a href="https://pionix-conformance-bot.github.io/Himalayas/reports/20261022T081742Z/ac-full-ocpp/conformance-report.pdf">report</a></td></tr><tr><td>Pionix GmbH</td><th scope="row"><a href="setup/pionix-ac-dc100.html">ac-dc100</a></th><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:75%">75%</span> passed</span></td><td><div class="small" style="white-space:nowrap"><span class="cell ok">3 passed</span> · <span class="cell bad">1 failed</span></div><div class="small muted" style="white-space:nowrap">5 tests · 1 accepted</div></td><td class="small"><a href="https://github.com/EVerest/EVerest/commit/b328178d220475bb7b0289519c159292997208dc"><code>b328178</code></a> · 1 move behind</td><td class="small"><span data-fresh="current">2026-10-22</span></td><td>SIL</td><td><span class="cell ok" title="build passed" aria-label="build passed">✓</span></td><td class="small">Pionix ISO 15118 Conformance Tester</td><td><div class="strip" role="img" aria-label="last 14 runs, oldest first"><span class="s-failing" style="height:18px" title="60% passed · 2 failed of 5 judged · ed063b5 09-10 09:24"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 4 judged · ed063b5 09-10 15:19"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 4 judged · 2e710bc 10-10 07:55"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 4 judged · 2e710bc 11-10 07:59"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 4 judged · 2e710bc 12-10 08:06"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 4 judged · ddbc619 13-10 08:02"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 4 judged · 3448c6b 14-10 07:56"></span><span class="s-passing" style="height:4px" title="100% passed · none failed of 4 judged · fe984a9 15-10 07:54"></span><span class="s-failing" style="height:12px" title="75% passed · 1 failed of 4 judged · 2f2dd02 16-10 15:58"></span><span class="s-failing" style="height:12px" title="75% passed · 1 failed of 4 judged · 0da3856 17-10 08:08"></span><span class="s-failing" style="height:12px" title="75% passed · 1 failed of 4 judged · 0da3856 18-10 08:09"></span><span class="s-failing" style="height:12px" title="75% passed · 1 failed of 4 judged · 0da3856 19-10 08:13"></span><span class="s-failing" style="height:12px" title="75% passed · 1 failed of 4 judged · cb7d386 21-10 08:09"></span><span class="s-failing" style="height:12px" title="75% passed · 1 failed of 4 judged · b328178 22-10 08:13"></span></div></td><td class="small"><a href="https://pionix-conformance-bot.github.io/Himalayas/reports/20261022T081742Z/ac-dc100/conformance-report.pdf">report</a></td></tr></tbody></table></div>
+<p class="small muted" style="padding:0 20px 14px;margin:8px 0 0">Last 14 runs, oldest first: <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-passing" style="height:4px"></span></span> no failed tests · <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-failing" style="height:9px"></span><span class="s-failing" style="height:18px"></span></span> failed tests, taller for more, scaled to the worst run shown · hover a run for its counts</p></section><section class="card"><div class="row" style="margin-bottom:8px"><h2 style="margin:0">Compare with</h2>
+<select id="cmp" style="min-height:40px;padding:6px 8px;border-radius:8px"><option value="testing-stable-2026-10">2026.10</option><option value="testing-stable-2026-02">2026.02</option></select></div><div data-cmp="testing-stable-2026-10" class="scroll"><table><thead><tr><th>Setup</th><th>main</th><th>2026.10</th><th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead><tbody><tr><td>pionix / dc-full-ocpp</td><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:97.3%">97.3%</span> passed</span></td><td><span class="pill v-not-reported">– not reported</span></td><td colspan="3" class="muted small">no result under 2026.10</td></tr><tr><td>pionix / ac-basic</td><td><span class="pill v-passing">✓ passing</span><span class="rate small"><span class="pr" style="--p:100%">100%</span> passed</span></td><td><span class="pill v-not-reported">– not reported</span></td><td colspan="3" class="muted small">no result under 2026.10</td></tr><tr><td>pionix / ac-full-ocpp</td><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:98.4%">98.4%</span> passed</span></td><td><span class="pill v-not-reported">– not reported</span></td><td colspan="3" class="muted small">no result under 2026.10</td></tr><tr><td>pionix / ac-dc100</td><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:75%">75%</span> passed</span></td><td><span class="pill v-not-reported">– not reported</span></td><td colspan="3" class="muted small">no result under 2026.10</td></tr></tbody></table></div><div data-cmp="testing-stable-2026-02" class="scroll"><table><thead><tr><th>Setup</th><th>main</th><th>2026.02</th><th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead><tbody><tr><td>pionix / dc-full-ocpp</td><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:97.3%">97.3%</span> passed</span></td><td><span class="pill v-not-reported">– not reported</span></td><td colspan="3" class="muted small">no result under 2026.02</td></tr><tr><td>pionix / ac-basic</td><td><span class="pill v-passing">✓ passing</span><span class="rate small"><span class="pr" style="--p:100%">100%</span> passed</span></td><td><span class="pill v-not-reported">– not reported</span></td><td colspan="3" class="muted small">no result under 2026.02</td></tr><tr><td>pionix / ac-full-ocpp</td><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:98.4%">98.4%</span> passed</span></td><td><span class="pill v-not-reported">– not reported</span></td><td colspan="3" class="muted small">no result under 2026.02</td></tr><tr><td>pionix / ac-dc100</td><td><span class="pill v-failing">✕ failing</span><span class="rate small"><span class="pr" style="--p:75%">75%</span> passed</span></td><td><span class="pill v-not-reported">– not reported</span></td><td colspan="3" class="muted small">no result under 2026.02</td></tr></tbody></table></div></section></main>
+<footer>Built 2026-10-23 15:41 UTC from <code>results/</code>, <code>pointers.json</code> and
+<code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
+<a href="contribute.html">How to contribute</a> ·
+Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
+<script>
+const th=document.getElementById('theme');
+if(th){
+  const root=document.documentElement;
+  const sys=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  document.getElementById('th-'+(root.dataset.theme||sys)).checked=true;
+  th.addEventListener('change',e=>{
+    const v=e.target.value;root.dataset.theme=v;
+    try{localStorage.setItem('theme',v)}catch(e){}});
+}
+document.querySelectorAll('.allint a[href^="#integ-"]').forEach(a=>a.addEventListener('click',()=>{
+  const d=document.getElementById(a.hash.slice(1));if(d){d.hidden=false;d.open=true}}));
+document.querySelectorAll('select[data-nav]').forEach(s=>s.addEventListener('change',()=>{location.href=s.value}));
+const bar=document.querySelector('.summarybar');
+if(bar){
+  const apply=f=>{
+    bar.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.f===f)));
+    document.querySelectorAll('tr[data-v]').forEach(tr=>{
+      const st=tr.dataset.stale==='1';
+      const show=!f||(f==='stale'?st:!st&&(tr.dataset.v===f||(f==='regressed'&&tr.dataset.reg==='1')));tr.hidden=!show});
+    document.querySelectorAll('details.group').forEach(d=>{
+      const vis=[...d.querySelectorAll('tr[data-v]')].some(t=>!t.hidden);d.hidden=!vis;if(f&&vis)d.open=true});
+    try{history.replaceState(null,'',f?'#'+f:location.pathname)}catch(e){}
+  };
+  bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    const cur=location.hash.slice(1);apply(cur===b.dataset.f?'':b.dataset.f)}));
+  if(location.hash)apply(location.hash.slice(1));
+}
+const gb=document.getElementById('grpby'),od=document.getElementById('order'),box=document.getElementById('groups');
+if(gb&&box){
+  const all=[...box.querySelectorAll('details.tc')];
+  const ST=['Failed','Inconclusive','Accepted and waived','Skipped','Passed'];
+  const keyOf=(el,k)=>k==='status'?el.dataset.statusLabel:k==='std'?el.dataset.std:el.dataset.cluster;
+  const regroup=()=>{
+    const k=gb.value,o=od.value,open=new Set([...box.querySelectorAll('details.grp[open]')].map(d=>d.dataset.key));
+    const g=new Map();
+    all.forEach(el=>{const key=keyOf(el,k);if(!g.has(key))g.set(key,[]);g.get(key).push(el)});
+    let keys=[...g.keys()];
+    if(k==='status')keys.sort((a,b)=>ST.indexOf(a)-ST.indexOf(b));
+    else keys.sort((a,b)=>Math.max(...g.get(b).map(e=>+e.dataset.since))-Math.max(...g.get(a).map(e=>+e.dataset.since))||g.get(b).length-g.get(a).length);
+    box.replaceChildren(...keys.map(key=>{
+      const items=g.get(key).sort((a,b)=>o==='name'?a.dataset.name.localeCompare(b.dataset.name):(+b.dataset.since-+a.dataset.since)||a.dataset.name.localeCompare(b.dataset.name));
+      const d=document.createElement('details');d.className='card grp';d.dataset.key=key;if(open.has(key))d.open=true;
+      const s=document.createElement('summary');const b=document.createElement('b');b.textContent=key;
+      const c=document.createElement('span');c.className='muted';c.textContent=' · '+items.length;s.append(b,c);
+      const w=document.createElement('div');w.className='items';w.append(...items);d.append(s,w);return d}));
+  };
+  gb.addEventListener('change',regroup);od.addEventListener('change',regroup);
+  document.getElementById('expand').addEventListener('click',e=>{
+    const open=e.target.textContent==='Expand all';box.querySelectorAll('details.grp').forEach(d=>d.open=open);
+    e.target.textContent=open?'Collapse all':'Expand all'});
+}
+document.querySelectorAll('.seg button[data-env]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.seg button[data-env]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  document.querySelectorAll('[data-envmap]').forEach(s=>s.hidden=s.dataset.envmap!==b.dataset.env)}));
+document.querySelectorAll('button.cap[data-panel]').forEach(b=>b.addEventListener('click',()=>{
+  const sec=b.closest('[data-envmap]'),p=document.getElementById(b.dataset.panel),was=!p.hidden;
+  sec.querySelectorAll('.panel').forEach(x=>x.hidden=true);sec.querySelectorAll('button.cap[data-panel]').forEach(x=>x.setAttribute('aria-expanded','false'));
+  if(!was){p.hidden=false;b.setAttribute('aria-expanded','true');p.scrollIntoView({block:'nearest'})}}));
+const tf=document.getElementById('tagfilter');
+if(tf&&box){
+  const setTag=tag=>{
+    document.querySelectorAll('button.cap[data-tag]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tag===tag)));
+    box.querySelectorAll('details.tc').forEach(el=>el.hidden=!!tag&&!el.dataset.tags.split(' ').includes(tag));
+    box.querySelectorAll('details.grp').forEach(d=>{const n=[...d.querySelectorAll('details.tc')].filter(e=>!e.hidden).length;
+      d.hidden=n===0;d.querySelector('summary .muted').textContent=' · '+n});
+    tf.hidden=!tag;tf.querySelector('b').textContent=tag||'';
+    try{history.replaceState(null,'',tag?'#tag='+tag:location.pathname)}catch(e){}};
+  document.querySelectorAll('button.cap[data-tag]').forEach(b=>b.addEventListener('click',()=>{
+    setTag(b.getAttribute('aria-pressed')==='true'?'':b.dataset.tag);document.getElementById('results').scrollIntoView()}));
+  tf.querySelector('button').addEventListener('click',()=>setTag(''));
+  gb.addEventListener('change',()=>setTag(tf.hidden?'':tf.querySelector('b').textContent));
+  od.addEventListener('change',()=>setTag(tf.hidden?'':tf.querySelector('b').textContent));
+  const h=location.hash.match(/^#tag=(.+)$/);if(h)setTag(decodeURIComponent(h[1]));
+}
+const cmp=document.getElementById('cmp');
+if(cmp){const sync=()=>document.querySelectorAll('[data-cmp]').forEach(s=>s.hidden=s.dataset.cmp!==cmp.value);cmp.addEventListener('change',sync);sync()}
+</script></body></html>

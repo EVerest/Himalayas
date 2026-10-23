@@ -11,16 +11,6 @@
 # nothing is sent to the contact below, so the gate cannot be used to enumerate an
 # integrator's accounts or to generate mail to them.
 integrators:
-  - id: deadbeef-charge
-    display_name: DEADBEEF Charge GmbH
-    contact: ci@deadbeef-charge.example
-    github_users:
-      - deadbeef-charge-ci
-      - deadbeef-charge-release
-  - id: anon-7f3a
-    # deliberately anonymous: no display_name, no contact
-    github_users:
-      - anon-7f3a-bot
   - id: pionix
     display_name: Pionix GmbH
     github_users:

@@ -2,16 +2,24 @@
   "$comment": "Append-only log of where each floating pointer branch has pointed. THIS FILE IS THE WHOLE POINT: a force-pushed branch has no history, so without an append-only record there is no way to prove a submission tested an agreed base. A tag pins a commit forever; a floating branch does not. Written by the EVerest CI job that moves the pointers; never edited by hand, never reordered, entries never removed.",
   "pointers": {
     "testing/main": {
+      "label": "main",
+      "kind": "development",
       "tracks": "main",
       "description": "Latest commit on main that EVerest CI considers the agreed base to test against. Force-pushed forward; never rewound."
     },
+    "testing/stable-2026.10": {
+      "label": "2026.10",
+      "kind": "stable",
+      "tracks": "stable/2026.10",
+      "tracks_pending": true,
+      "description": "Same, for the 2026.10 line. Starts at the 2026.10.0 release candidate and is moved by hand until stable/2026.10 exists, then by the pointer-moving CI job. Supersedes testing/stable-2026.02, which stops moving."
+    },
     "testing/stable-2026.02": {
+      "label": "2026.02",
+      "kind": "stable",
+      "note": "stops moving soon",
       "tracks": "stable/2026.02",
       "description": "Same, for the 2026.02 maintenance line. NOTE the name: it deliberately does NOT live under stable/, because stable/2026.02 already exists as a real protected branch that receives backports."
-    },
-    "testing/stable-2026.10": {
-      "tracks": "stable/2026.10",
-      "description": "Same, for the 2026.10 line. Starts at the 2026.10.0 release candidate and is moved by hand until stable/2026.10 exists, then by the pointer-moving CI job. Supersedes testing/stable-2026.02, which stops moving."
     }
   },
   "log": [

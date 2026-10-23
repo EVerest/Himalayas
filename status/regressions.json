@@ -1,0 +1,159 @@
+{
+ "version": 2,
+ "pointers": {
+  "testing/main": [
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinCableCheck_005",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_006",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinContractAuthentication_004",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinCurrentDemand_004",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinPowerDelivery_009",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinPowerDelivery_010",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinPreCharge_004",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinServiceDiscovery_004",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinServicePaymentSelection_005",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinSessionStop_005",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinSessionStop_008",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "dc-full-ocpp",
+    "test": "TC_SECC_DC_VTB_DinWeldingDetection_004",
+    "good": "0da38568d27eae6819e3ea9bb34cba47de56e44f",
+    "bad": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "untested": [
+     "fa5bdc65e613d0fe0e0dde3f9ed45b14559b0859"
+    ],
+    "confirmed": true
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "ac-full-ocpp",
+    "test": "TC_SECC_AC_VTB_PionixInterop_006",
+    "good": "cb7d386973c20dc398e5dd2cdd7aa97e639d6732",
+    "bad": "b328178d220475bb7b0289519c159292997208dc",
+    "untested": [],
+    "confirmed": false
+   },
+   {
+    "integrator": "pionix",
+    "configuration": "ac-dc100",
+    "test": "TC_SECC_AC_VTB_PLCLinkStatus_011",
+    "good": "fe984a940f3cab859d5a5e1e89e6f947f5b7a21f",
+    "bad": "2f2dd0256824dac88814cb8c8df47ea9fe499650",
+    "untested": [],
+    "confirmed": true
+   }
+  ],
+  "testing/stable-2026.10": [],
+  "testing/stable-2026.02": []
+ }
+}

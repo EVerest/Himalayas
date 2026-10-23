@@ -70,16 +70,16 @@ def suite_gate(work, verbose):
     ctrf = json.load(open(os.path.join(work, "examples", "ctrf-hil-dc.json")))
     htf = json.load(open(os.path.join(work, "examples", "openhtf-hil-dc.json")))
     mini = json.load(open(os.path.join(work, "examples", "minimal-ctrf.json")))
-    P = "results/deadbeef-charge/testing/main/20260901.json"
+    P = "results/example-integrator/testing/main/20260901.json"
 
     # (label, base, mutation, expected code(s), path). A tuple means EVERY code
     # listed must appear - which is how the hand-written branches get pinned: each
     # of them fires alongside a schema rule that says the same thing less well, so
     # asserting only one code lets the other be deleted with the suite still green.
     cases = [
-        ("path: wrong filename", ctrf, None, "bad-path", "results/deadbeef-charge/testing/main/nope.json"),
-        ("path: missing pointer dir", ctrf, None, "bad-path", "results/deadbeef-charge/20260901.json"),
-        ("path: -1 suffix", ctrf, None, "bad-path", "results/deadbeef-charge/testing/main/20260901-1.json"),
+        ("path: wrong filename", ctrf, None, "bad-path", "results/example-integrator/testing/main/nope.json"),
+        ("path: missing pointer dir", ctrf, None, "bad-path", "results/example-integrator/20260901.json"),
+        ("path: -1 suffix", ctrf, None, "bad-path", "results/example-integrator/testing/main/20260901-1.json"),
         ("format: not CTRF or OpenHTF", {"hello": "world"}, None, "unknown-format", P),
         ("ctrf: invalid CTRF", ctrf, lambda d: d["results"]["summary"].pop("passed"), "ctrf-schema", P),
         ("ctrf: missing specVersion", ctrf, lambda d: d.pop("specVersion"), "ctrf-schema", P),
@@ -192,7 +192,7 @@ def suite_gate(work, verbose):
     # And a path naming a pointer nobody declared is rejected.
     d = copy.deepcopy(ctrf)
     d["results"]["environment"]["appVersion"] = "testing/main"
-    rc, cs, _ = gate(work, d, "results/deadbeef-charge/testing/stable-1999.01/20260901.json")
+    rc, cs, _ = gate(work, d, "results/example-integrator/testing/stable-1999.01/20260901.json")
     ok = rc == 1 and "pointer-unknown" in cs
     report("reject a path naming an undeclared pointer", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
@@ -223,14 +223,14 @@ def suite_gate(work, verbose):
     # An integrator id lists the GitHub accounts allowed to publish as it.
     # Without this the page's premise - attributed self-reporting - is unenforced:
     # any GitHub account could publish an auto-merged result as any integrator.
-    authorised = "deadbeef-charge-ci"
+    authorised = "example-integrator-ci"
     rc, cs, _ = gate(work, copy.deepcopy(ctrf), P, extra=("--author", authorised))
     ok = rc == 0
     report("accept a submission from an authorised account", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept authorised author              rc={rc}")
 
-    rc, cs, _ = gate(work, copy.deepcopy(ctrf), P, extra=("--author", "DEADBEEF-Charge-CI"))
+    rc, cs, _ = gate(work, copy.deepcopy(ctrf), P, extra=("--author", "Example-Integrator-CI"))
     ok = rc == 0
     report("account match is case-insensitive", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
@@ -476,8 +476,8 @@ def suite_intake(work, verbose):
         return r.returncode, got, accepted, (open(verdict).read()
                                              if os.path.exists(verdict) else "")
 
-    SUB = "results/deadbeef-charge/testing/main/20260909.json"
-    OTHER = "results/anon-7f3a/testing/main/20260909.json"
+    SUB = "results/example-integrator/testing/main/20260909.json"
+    OTHER = "results/example-anonymous/testing/main/20260909.json"
     cases = [
         # (label, files, expected kind, expected reason, must accept nothing)
         ("deletion-only pull request",
@@ -488,23 +488,23 @@ def suite_intake(work, verbose):
         ("edit of an existing record",
          [{"status": "modified", "filename": SUB}], "refuse", "append-only"),
         ("rename that re-dates a record",
-         [{"status": "renamed", "filename": "results/deadbeef-charge/testing/main/20260910.json",
+         [{"status": "renamed", "filename": "results/example-integrator/testing/main/20260910.json",
            "previous_filename": OTHER}], "refuse", "append-only"),
         ("rename out of results/",
          [{"status": "renamed", "filename": "docs/x.json",
            "previous_filename": SUB}], "refuse", "append-only"),
         ("an add alongside a deletion",
-         [{"status": "added", "filename": "results/deadbeef-charge/testing/main/20260910.json"},
+         [{"status": "added", "filename": "results/example-integrator/testing/main/20260910.json"},
           {"status": "removed", "filename": OTHER}], "refuse", "append-only"),
         ("a submission that also changes code",
-         [{"status": "added", "filename": "results/deadbeef-charge/testing/main/20260910.json"},
+         [{"status": "added", "filename": "results/example-integrator/testing/main/20260910.json"},
           {"status": "modified", "filename": "scripts/validate_submission.py"}],
          "refuse", "mixed"),
         ("a path that escapes results/",
          [{"status": "added", "filename": "results/../../etc/cron.d/x.json"}],
          "refuse", "bad-path"),
         ("a filename the gate would not accept",
-         [{"status": "added", "filename": "results/deadbeef-charge/testing/main/nope.json"}],
+         [{"status": "added", "filename": "results/example-integrator/testing/main/nope.json"}],
          "refuse", "bad-path"),
         # An allowlist pull request must not be refused and must not deadlock: the
         # required check has to report on a pull request that is not a submission.
@@ -513,7 +513,7 @@ def suite_intake(work, verbose):
          "not-a-submission", ""),
         ("a pull request that changes nothing", [], "not-a-submission", ""),
         ("a genuine submission",
-         [{"status": "added", "filename": "results/deadbeef-charge/testing/main/20260910.json"}],
+         [{"status": "added", "filename": "results/example-integrator/testing/main/20260910.json"}],
          "submission", ""),
     ]
     for label, files, want_kind, want_reason in cases:
@@ -735,14 +735,14 @@ def suite_archive(work, verbose):
                                                  "size": 1000, "data": base64.b64encode(b"y" * 1000).decode()}}
     src["phases"][0]["codeinfo"] = {"name": "p", "docstring": "d", "sourcecode": "secret"}
     src["phases"][1].setdefault("outcome_details", []).append({"code": "trace", "description": "T" * 500})
-    rel = "results/deadbeef-charge/testing/main/20200913.json"
+    rel = "results/example-integrator/testing/main/20200913.json"
     full = os.path.join(work, rel)
     os.makedirs(os.path.dirname(full), exist_ok=True)
     with open(full, "w") as f:
         json.dump(src, f, indent=2)
 
     r = sh(work, "archive.py", "--months", "6", "--apply")
-    dst = os.path.join(work, "archive", "deadbeef-charge", "testing", "main", "20200913.json")
+    dst = os.path.join(work, "archive", "example-integrator", "testing", "main", "20200913.json")
     ok = r.returncode == 0 and os.path.exists(dst) and not os.path.exists(full)
     report("archive moves an old record", ok, r.stdout[-200:])
     if verbose or not ok:
@@ -819,16 +819,6 @@ def load_build_status(work):
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
-
-
-def cards_of(page):
-    """Each rendered submission card, as its own chunk of HTML.
-
-    The page also renders freshness pills in its legend, so counting pills
-    across the whole document would pass even with every card unmarked.
-    """
-    return [c.split("</article>")[0] for c in page.split("<article ")[1:]
-            if c.startswith('class="card v-')]
 
 
 def suite_docs(work, verbose):
@@ -945,14 +935,14 @@ def suite_docs(work, verbose):
 
 
 def suite_build(work, verbose):
-    """Cover the status page, not just the exit code of the generator.
+    """Cover the status site, not just the exit code of the generator.
 
     `render()` made to return an empty string once shipped a zero-byte page with
     the whole suite green, and the generator's honesty rules - freshness always
-    rendered, a tag only claimed as covered when a phase carrying it passed -
+    rendered, a tag only claimed as covered when a test carrying it passed -
     could each be defeated with a one-line edit and nothing went red. So these
-    assert what is ON the page, and the last case drives render() directly
-    because the state that matters (stale AND failing at once) is not reachable
+    assert what is ON the pages, and the later cases drive build_site() directly
+    because the states that matter (stale AND failing at once) are not reachable
     from the committed data.
     """
     def check(label, cond, detail=""):
@@ -961,124 +951,318 @@ def suite_build(work, verbose):
             print(f"  {'ok  ' if cond else 'FAIL'} {label}"
                   + (f"   {detail}" if detail and not cond else ""))
 
-    r = sh(work, "build_status.py", "--offline")
+    def rows_of(page):
+        """Each overview row, as its own chunk of HTML."""
+        return [r.split("</tr>")[0] for r in page.split("<tr data-v=")[1:]]
+
+    r = sh(work, "build_status.py")
     check("status page generates", r.returncode == 0, r.stdout[-200:])
 
-    summary_path = os.path.join(work, "status", "summary.json")
-    page_path = os.path.join(work, "status", "index.html")
-    s = json.load(open(summary_path)) if os.path.exists(summary_path) else {}
-    page = open(page_path).read() if os.path.exists(page_path) else ""
+    out = os.path.join(work, "status")
+    s = {}
+    if os.path.exists(os.path.join(out, "summary.json")):
+        s = json.load(open(os.path.join(out, "summary.json")))
+    site = {}
+    for dp, _, fns in os.walk(out):
+        for fn in fns:
+            if fn.endswith(".html"):
+                site[os.path.relpath(os.path.join(dp, fn), out)] = open(os.path.join(dp, fn)).read()
+    page = site.get("index.html", "")
+    pointers = s.get("pointers") or {}
+    setups = [m for p in pointers.values() for m in p.get("setups") or []]
 
     check("summary.json has the expected shape",
-          "pointers" in s and s.get("internalFormat") == "openhtf")
+          s.get("version") == 2 and bool(pointers) and s.get("selfReported") is True)
 
     # A zero-byte page is the failure this suite exists for. Size alone is a weak
     # assertion, so the page must also carry its own headline and the caveat
     # that this page is the only home for.
     check("index.html is not empty", len(page) > 4_000, f"{len(page)} bytes")
-    check("page carries its headline", "<h1>Himalayas</h1>" in page
-          and "EVerest federated testing" in page)
+    check("page carries its headline", 'class="brand">Himalayas<' in page
+          and "EVerest test results, self-reported" in page)
     check("page carries the self-reported caveat", "self-reported" in page)
+    check("the EVerest logo links to EVerest on GitHub and the name to the overview",
+          '<a class="logo" href="https://github.com/EVerest">' in page and '<a class="home" href="index.html">' in page)
 
-    # Every committed submission has to reach the page. load_results() made to
-    # return nothing was green, with all four submissions replaced by "nobody has
-    # reported" placeholders.
+    # Every committed submission has to reach the site. load_records() made to
+    # return nothing was green, with every setup replaced by an empty notice.
     files = [os.path.relpath(os.path.join(dp, fn), work).replace(os.sep, "/")
              for dp, _, fns in os.walk(os.path.join(work, "results"))
              for fn in fns if fn.endswith(".json")]
-    counted = sum(i["submissions"] for p in (s.get("pointers") or {}).values()
-                  for i in (p.get("integrators") or {}).values())
+    counted = (sum(m["submissions"] for m in setups)
+               + sum(len(p.get("unattributed") or []) for p in pointers.values()))
     check("summary.json counts every committed submission",
           bool(files) and counted == len(files), f"{counted} counted, {len(files)} on disk")
     # One check over all of them, not one per file: a per-file count grows with
     # the stored data, and EXPECT cannot guard a number that moves on its own.
-    unlinked = [rel for rel in sorted(files) if rel not in page]
-    check("the page links every committed submission",
+    every = "".join(site.values())
+    unlinked = [rel for rel in sorted(files) if f"../{rel}" not in every]
+    check("the pages link every committed submission",
           bool(files) and not unlinked, f"{len(unlinked)} unlinked: {unlinked[:3]}")
 
     # Freshness is never absent by construction: a missing marker reads as fresh.
-    cards = cards_of(page)
-    unmarked = [c for c in cards
-                if len(re.findall(r'class="pill (?:fresh|stale|unknown)"', c)) != 1]
-    check("every card carries exactly one freshness marker",
-          bool(cards) and not unmarked, f"{len(cards)} card(s), {len(unmarked)} unmarked")
+    rows = rows_of(page)
+    unmarked = [r for r in rows if len(re.findall(r'data-fresh="(?:current|stale|unknown)"', r)) != 1]
+    check("every overview row carries exactly one freshness marker",
+          bool(rows) and not unmarked, f"{len(rows)} row(s), {len(unmarked)} unmarked")
 
-    # A tag whose only phase was skipped must NOT be claimed as covered.
-    seen_states = {v for p in (s.get("pointers") or {}).values()
-                   for i in (p.get("integrators") or {}).values()
-                   for v in (i.get("coverage") or {}).values()}
-    check("a notrun tag survives the rollup",
-          "notrun" in seen_states and 'class="ptag notrun"' in page, f"states={sorted(seen_states)}")
+    # A tag whose only tests were skipped must NOT be claimed as covered.
+    judged = [(m, tag) for m in setups for tag, st in (m.get("coverage") or {}).items() if st == "none"]
+    tiles = []
+    for m, tag in judged:
+        sp = next((v for k, v in site.items() if k.startswith("setup") and m["record"] in v), "")
+        tiles += re.findall(rf'<button class="cap (\w+)"[^>]*data-tag="{re.escape(tag)}"[^>]*>.*?</span>', sp)
+    check("a skipped-only tag reads as not judged",
+          bool(judged) and bool(tiles) and all(t == "l1" for t in tiles)
+          and "none judged" in every, f"{len(judged)} tag(s), tiles={tiles}")
+    states = {st for m in setups for st in (m.get("coverage") or {}).values()}
     check("a failed tag survives the rollup",
-          "failed" in seen_states and 'class="ptag failed"' in page, f"states={sorted(seen_states)}")
+          "fail" in states and 'class="cap l3"' in every, f"states={sorted(states)}")
 
     # Measurements are the reason OpenHTF is the internal format, and a
     # measurement outside its limits is the one a reader must not miss.
-    mfail = sum(i.get("measurementsFailed") or 0
-                for p in (s.get("pointers") or {}).values()
-                for i in (p.get("integrators") or {}).values())
+    mfail = sum(m.get("measurementsFailed") or 0 for m in setups)
     check("a failing measurement reaches the page",
-          mfail >= 1 and 'class="mo no"' in page, f"{mfail} failing")
+          mfail >= 1 and 'class="meas-fail"' in every, f"{mfail} failing")
+
+    # The contribute page is generated from CONTRIBUTING.md, so a section the
+    # renderer drops would vanish from the site with nothing else going red.
+    guide = open(os.path.join(work, "CONTRIBUTING.md")).read()
+    guide = re.sub(r"^```.*?^```", "", guide, flags=re.M | re.S)
+    seen = {}
+    want = [load_build_status(work).md_slug(h, seen) for h in re.findall(r"^#{1,6} (.+)$", guide, re.M)]
+    cpage = site.get("contribute.html", "")
+    missing = [w for w in want if f'id="{w}"' not in cpage]
+    check("the contribute page carries every CONTRIBUTING section, and the overview links it",
+          bool(want) and not missing and 'href="contribute.html"' in page, f"missing {missing[:3]}")
+
+    # The All integrators list is the index of who may report, so an allowlisted
+    # integrator with nothing on the pointer still gets a row.
+    card = page[page.find('class="card allint"'):].split("</details>")[0]
+    names = [a["name"] if a["name"] != a["id"] else f'{a["id"]} (anonymous)'
+             for a in load_build_status(work).load_allowlist(load_build_status(work).pathlib.Path(work))]
+    absent = [n for n in names if f">{n}<" not in card]
+    check("the All integrators list names every allowlisted integrator",
+          bool(names) and not absent and "not reported yet" in card, f"missing {absent[:3]}")
+
+    # An integrator's logo is shown beside its name wherever the name heads a
+    # card, a list row or a setup page, and is published with the site.
+    bs = load_build_status(work)
+    root = bs.pathlib.Path(work)
+    logos = root / bs.INTEG_LOGO_DIR
+    logos.mkdir(parents=True, exist_ok=True)
+    good = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path fill="#123" d="M0 0h10v10z"/></svg>'
+    (logos / "example-integrator.svg").write_text(good)
+    (logos / "example-anonymous.svg").write_text(good)
+    allow_l = bs.load_allowlist(root)
+    declared_l, logs_l = bs.load_pointers(root)
+    site_l = bs.build_site(bs.load_records(root), declared_l, logs_l, allow_l,
+                           json.load(open(os.path.join(work, "schema", "vocabulary.json"))))
+    idx = site_l.get("index.html", "")
+    img = 'src="logos/example-integrator.svg"'
+    card_l = idx[idx.find('id="integ-example-integrator"'):].split("</summary>")[0]
+    list_l = idx[idx.find('class="card allint"'):].split("</details>")[0]
+    setup_l = next((v for k, v in site_l.items() if k.startswith("setup/example-integrator-")), "")
+    check("an integrator's logo shows on its card, its list row and its setup pages",
+          img in card_l and img in list_l and f'src="../logos/example-integrator.svg"' in setup_l
+          and site_l.get("logos/example-integrator.svg") == bs.clean_logo(good.encode())[0])
+
+    # An anonymous id has no name to put a logo beside, and a logo would name it.
+    audit = dict(bs.logo_audit(root, allow_l))
+    check("an anonymous integrator's logo is refused",
+          "example-anonymous.svg" not in str(list(site_l))
+          and "anonymous" in audit.get(f"{bs.INTEG_LOGO_DIR}/example-anonymous.svg", ""))
+    bad_run = sh(work, "build_status.py", "--check-logos")
+    for who in ("example-integrator", "example-anonymous"):
+        (logos / f"{who}.svg").unlink()
+    good_run = sh(work, "build_status.py", "--check-logos")
+    check("--check-logos names a refused logo and passes the committed ones",
+          bad_run.returncode == 1 and "example-anonymous.svg: belongs to an anonymous id" in bad_run.stdout
+          and good_run.returncode == 0 and good_run.stdout.startswith("ok:"),
+          f"rc={bad_run.returncode}/{good_run.returncode} {bad_run.stdout[:120]!r}")
+
+    # Each kind of active or external content is refused on its own, in an
+    # otherwise valid SVG, and what is published is the re-serialized tree.
+    X = 'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"'
+    unsafe = {
+        "script": f'<svg {X}><script>alert(1)</script></svg>',
+        "handler": f'<svg {X} onload="alert(1)"/>',
+        "animate": f'<svg {X}><a><animate attributeName="href" to="javascript:alert(1)"/></a></svg>',
+        "link": f'<svg {X}><a href="https://example.com"><path d="M0 0"/></a></svg>',
+        "image": f'<svg {X}><image xlink:href="https://example.com/x.png"/></svg>',
+        "use": f'<svg {X}><use href="data:image/svg+xml,&lt;svg/&gt;"/></svg>',
+        "foreign": f'<svg {X}><foreignObject><p>x</p></foreignObject></svg>',
+        "otherns": f'<svg {X}><h:style xmlns:h="http://www.w3.org/1999/xhtml">p{{}}</h:style></svg>',
+        "dtd": f'<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY x "y">]><svg {X}>&x;</svg>',
+        "import": f'<svg {X}><style>@import "https://example.com/x.css";</style></svg>',
+        "escape": f'<svg {X}><style>.a{{background:u\\72l(https://example.com)}}</style></svg>',
+        "url": f'<svg {X}><rect style="fill:url(https://example.com/x)"/></svg>',
+        "html": '<html><svg></svg></html>',
+        "malformed": f'<svg {X}><path></svg>',
+        "size": f'<svg {X}>' + " " * bs.INTEG_LOGO_MAX + '</svg>',
+    }
+    let_through = [k for k, v in unsafe.items() if bs.clean_logo(v.encode())[0] is not None]
+    fine = f'<!-- art --><svg {X} viewBox="0 0 9 9"><defs><linearGradient id="g"><stop offset="0"/></linearGradient></defs>' \
+           f'<style>.a{{fill:url(#g)}}</style><use xlink:href="#p"/><path id="p" class="a" d="M0 0h9v9z"/></svg>'
+    cleaned, why = bs.clean_logo(fine.encode())
+    check("a logo with active or external content is refused",
+          not let_through and cleaned is not None and "art" not in cleaned,
+          f"accepted {let_through}" if let_through else f"static logo refused: {why}")
+
+    # The logos in the repository itself, which the cases above leave alone.
+    committed = bs.logo_audit(bs.pathlib.Path(ROOT), bs.load_allowlist(bs.pathlib.Path(ROOT)))
+    check("every committed logo is a safe SVG for a public integrator", not committed, f"{committed[:3]}")
+
+    # A pass rate is passed over judged (passed plus failed) tests, and a
+    # setup with any failure never reads 100%.
+    cases = [((3, 1), "75%"), ((187, 3), "98.4%"), ((1999, 1), "99.9%"), ((15, 0), "100%")]
+    wrong = [(c, bs.pct(bs.pass_rate(*c), c[1])) for c, want in cases if bs.pct(bs.pass_rate(*c), c[1]) != want]
+    check("a pass rate is passed over judged tests, never 100% with a failure",
+          not wrong and bs.pass_rate(0, 0) is None, f"{wrong}")
+
+    # The pooled rate sums judged tests over the setups that have one, and
+    # names the lowest so a large suite cannot hide a small broken one.
+    def fake(cfg, p, f):
+        return {"config": cfg, "integ_name": "Example", "passed_n": p, "failed_n": f, "rate": bs.pass_rate(p, f)}
+    def plain(h):
+        return re.sub(r"<[^>]+>", "", h)
+    html_txt = bs.pooled_txt([fake("big", 466, 13), fake("small", 3, 1), fake("none", 0, 0)])
+    txt = plain(html_txt)
+    check("a pooled pass rate sums judged tests and names the lowest setup",
+          txt.startswith("97.1% passed") and "lowest 75%" in txt and "Example / small" in html_txt
+          and bs.pooled_txt([fake("none", 0, 0)]) == "" and plain(bs.pooled_txt([fake("one", 3, 1)])) == "75% passed", txt)
+
+    # Each rate is colored by its own value, along the failing-to-passing pill
+    # colors, so the shade and the number cannot disagree.
+    shades = re.findall(r'--p:([0-9.]+)%">([0-9.]+)%<', html_txt + bs.pct_html(1.0, 0))
+    check("a pass rate is shaded by its own value",
+          shades == [("97.1", "97.1"), ("75", "75"), ("100", "100")]
+          and "color-mix(in oklch,var(--ok) var(--p),var(--bad))" in page, f"{shades}")
+
+    # The compare table shows each side's rate under its verdict.
+    det = site.get("detailed.html", "")
+    cmp_ = det[det.find('id="cmp"'):]
+    check("the compare table shows pass rates under verdicts",
+          'data-cmp=' in cmp_ and 'class="rate small"' in cmp_)
+
+    # The run strip sizes a failing run by its failed count, scaled to the
+    # worst run shown, so 12 failures and 3 do not look the same.
+    def run(failed, passed=100, build="passed"):
+        return {"commit": "0" * 40, "start": 0, "build": build,
+                "tests": [{"outcome": "failed"}] * failed + [{"outcome": "passed"}] * passed}
+    strip = bs.run_strip({"runs": [run(0), run(3), run(12), run(0, 0), run(1, build="failed")]})
+    bars = re.findall(r'class="(s-[a-z-]+)" style="height:(\d+)px"', strip)
+    hs = {c: int(h) for c, h in bars}
+    check("the run strip sizes failing runs by their failed count",
+          [c for c, _ in bars] == ["s-passing", "s-failing", "s-failing", "s-not-exercised", "s-build-failed"]
+          and int(bars[1][1]) < int(bars[2][1]) == bs.STRIP_H and int(bars[0][1]) < int(bars[1][1])
+          and 'title="97.1% passed · 3 failed of 103 judged · ' in strip, f"{bars}")
+
+    # summary.json carries the unrounded rate for other consumers.
+    rates = [(st.get("passRate", "missing"), st["counts"]) for st in setups]
+    off = [r for r, c in rates
+           if r != bs.pass_rate(sum(v.get("passed", 0) for v in c.values()), sum(v.get("failed", 0) for v in c.values()))]
+    check("summary.json carries each setup's pass rate", bool(rates) and not off, f"{off[:3]}")
+
+    # A pointer is named by the EVerest line it follows, and says which
+    # EVerest branch it tracks.
+    specs = json.load(open(os.path.join(work, "pointers.json")))["pointers"]
+    bad_spec = [n for n, sp in specs.items()
+                if not sp.get("label") or sp.get("kind") not in bs.POINTER_KINDS]
+    labels = [sp.get("label") for sp in specs.values()]
+    check("every declared pointer has a label and a known kind",
+          not bad_spec and len(set(labels)) == len(labels), f"{bad_spec}")
+    main_spec = specs.get(bs.DEFAULT_POINTER, {})
+    opts = re.findall(r"<option [^>]*>([^<]*)</option>", page)
+    check("pages name a pointer by its label and the branch it tracks",
+          f'<h1><a class="ptitle" href="https://github.com/EVerest/EVerest/tree/{main_spec.get("tracks")}">{main_spec.get("label")}</a></h1>' in page
+          and f"tracking <code>{main_spec.get('tracks')}</code>" in page
+          and all(any(o.startswith(l) for o in opts) for l in labels)
+          and f"<title>Himalayas · {main_spec.get('label')}" in page, f"options {opts}")
+
+    # A pointer whose tracked branch does not exist yet is not linked to it.
+    declared_p, logs_p = bs.load_pointers(root)
+    pend = dict(declared_p, **{"testing/selftest-pending": {"label": "9999.99", "kind": "stable",
+                                                          "tracks": "stable/9999.99", "tracks_pending": True}})
+    pend_page = bs.build_site([], pend, logs_p, bs.load_allowlist(root),
+                              json.load(open(os.path.join(work, "schema", "vocabulary.json")))).get(bs.pointer_file("index", "testing/selftest-pending"), "")
+    check("a pointer whose tracked branch is not created yet is not linked",
+          "<h1>9999.99</h1>" in pend_page and "tracking <code>stable/9999.99</code>, not created yet" in pend_page
+          and "tree/stable/9999.99" not in pend_page)
+
+    # Dates read YYYY-MM-DD or DD-MM, never month first.
+    src = open(os.path.join(work, "scripts", "build_status.py")).read()
+    bad_fmt = re.findall(r"(?<!%Y-)%m-%d|%m/%d", src)
+    check("dates are written YYYY-MM-DD or DD-MM", not bad_fmt, f"{len(bad_fmt)} month-first format(s)")
+
+    # A sha a reader sees opens that commit in EVerest. A call site that skips
+    # commit_link renders a bare <code> sha and nothing else would notice.
+    bare = sorted({sha for sha in re.findall(r"(?<!/commit/[0-9a-f]{40}\">)<code>([0-9a-f]{7})</code>", every)})
+    check("every commit on the pages links to EVerest",
+          'href="https://github.com/EVerest/EVerest/commit/' in every and not bare,
+          f"{len(bare)} unlinked: {bare[:3]}")
+
+    bs = load_build_status(work)
+    root = bs.pathlib.Path(work)
+    declared, logs = bs.load_pointers(root)
+    allow = bs.load_allowlist(root)
+    vocab = json.load(open(os.path.join(work, "schema", "vocabulary.json")))
+    recs = bs.load_records(root)
 
     # A declared pointer nobody has tested is an answer, so it is rendered.
+    empty = dict(declared, **{"testing/selftest-empty": {"tracks": "main"}})
+    files_e = bs.build_site([], empty, logs, allow, vocab)
     check("a declared pointer with no results is rendered",
-          'class="card empty"' in page)
+          'class="notice"' in files_e.get(bs.pointer_file("index", "testing/selftest-empty"), ""))
 
     # Stale and failing are orthogonal, and one must never suppress the other.
-    # Not reachable from the committed data - offline runs know no pointer tips -
-    # so drive render() with a moved tip and an aged row.
-    bs = load_build_status(work)
-    rows = bs.load_results()
-    row = None
-    for cand in rows:
-        if cand["phaseFailed"] and cand["commit"]:
-            row = cand
-            break
-    if row is None:
+    # Not reachable from the committed data, so age a failing record at a commit
+    # the pointer has since moved off.
+    main = bs.DEFAULT_POINTER
+    shas = [e["sha"] for e in logs.get(main, [])]
+    rec = next((x for x in recs if bs.verdict(x) == "failing"), None)
+    if rec is None or len(shas) < 2:
         check("sample data carries a failing submission to age", False,
-              "no committed submission has a failed phase")
-        check("a stale card still shows its failing verdict", False, "skipped")
-        check("a stale card still shows the stale marker", False, "skipped")
+              "no committed submission fails, or the pointer never moved")
+        check("a stale row still shows its failing verdict", False, "skipped")
+        check("a stale row still shows the stale marker", False, "skipped")
+        check("a stale setup is left out of the verdict buttons and offered under stale", False, "skipped")
     else:
-        row = copy.deepcopy(row)
-        row["ranAt"] = int(bs.datetime.datetime.now(bs.datetime.timezone.utc)
-                           .timestamp() * 1000) - 60 * 86_400_000
-        tips = {row["pointer"]: "f" * 40}          # pointer has moved off it
-        page2 = bs.render({row["pointer"]: [row]}, tips, 14, "now",
-                          {row["pointer"]: {"tracks": "main"}})
-        card = (cards_of(page2) or [""])[0]
+        rec = dict(copy.deepcopy(rec), pointer=main, commit=shas[0])
+        rec["start"] = int(bs.NOW.timestamp() * 1000) - 60 * 86_400_000
+        row = (rows_of(bs.build_site([rec], declared, logs, allow, vocab, 14)["index.html"]) or [""])[0]
         check("sample data carries a failing submission to age", True)
-        check("a stale card still shows its failing verdict",
-              "phases failed" in card, card[:120])
-        check("a stale card still shows the stale marker",
-              'class="pill stale"' in card, card[:120])
+        check("a stale row still shows its failing verdict", row.startswith('"failing"'), row[:120])
+        check("a stale row still shows the stale marker", 'data-fresh="stale"' in row, row[:200])
+        # The verdict buttons count current setups only, so the aged failure must
+        # leave them and be offered under its own button.
+        aged = bs.build_site([rec], declared, logs, allow, vocab, 14)["index.html"]
+        bar = aged[aged.find('class="summarybar"'):][:600]
+        check("a stale setup is left out of the verdict buttons and offered under stale",
+              'data-f="stale"' in bar and 'data-f="failing"' not in bar, bar[:300])
 
-    # A submitted report link is rendered on the card, next to the run log.
-    if not rows:
-        check("a card links the submitted report", False, "no committed submission")
-    else:
-        row = copy.deepcopy(rows[0])
-        row["reportUrl"] = "https://reports.example/run-1/report.pdf"
-        page3 = bs.render({row["pointer"]: [row]}, {}, 14, "now",
-                          {row["pointer"]: {"tracks": "main"}})
-        card = (cards_of(page3) or [""])[0]
-        check("a card links the submitted report",
-              'href="https://reports.example/run-1/report.pdf">report</a>' in card, card[:160])
+    base = next((x for x in recs if x["pointer"] == main and x["commit"] in shas), None)
 
-    # Two SUT configurations of one integrator are two cards, not one card
+    # A submitted report link is rendered on the setup page.
+    if base is None:
+        check("a setup page links the submitted report", False, "no submission on the default pointer")
+        check("each configuration gets its own row", False, "no submission on the default pointer")
+        return
+    url = "https://reports.example/run-1/report.pdf"
+    one = dict(copy.deepcopy(base), report=url)
+    got = bs.build_site([one], declared, logs, allow, vocab)
+    sp = next((v for k, v in got.items() if k.startswith("setup/")), "")
+    check("a setup page links the submitted report", f'href="{url}">report</a>' in sp, sp[:160])
+
+    # Two SUT configurations of one integrator are two rows, not one row
     # showing whichever was submitted last.
-    if not rows:
-        check("each configuration gets its own card", False, "no committed submission")
-    else:
-        a, b = copy.deepcopy(rows[0]), copy.deepcopy(rows[0])
-        a["configuration"], b["configuration"] = "ac-basic", "dc-full"
-        b["ranAt"] = (a["ranAt"] or 0) + 1
-        page4 = bs.render({a["pointer"]: [a, b]}, {}, 14, "now",
-                          {a["pointer"]: {"tracks": "main"}})
-        cards = cards_of(page4)
-        check("each configuration gets its own card",
-              len(cards) == 2 and any("ac-basic" in c for c in cards)
-              and any("dc-full" in c for c in cards), f"{len(cards)} card(s)")
+    a, b = copy.deepcopy(base), copy.deepcopy(base)
+    a["config"], b["config"] = "ac-basic", "dc-full"
+    b["start"] = (a["start"] or 0) + 1
+    rows2 = rows_of(bs.build_site([a, b], declared, logs, allow, vocab)["index.html"])
+    check("each configuration gets its own row",
+          len(rows2) == 2 and any(">ac-basic<" in r for r in rows2)
+          and any(">dc-full<" in r for r in rows2), f"{len(rows2)} row(s)")
 
 
 SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normalise,
@@ -1095,7 +1279,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 17, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 37, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
@@ -1124,6 +1308,11 @@ def main():
         if os.path.isdir(fixtures):
             shutil.copytree(fixtures, os.path.join(work, "results"),
                             dirs_exist_ok=True)
+        # The ids they publish under exist only here, so the shipped allowlist
+        # cannot be used to publish as an example.
+        with open(os.path.join(ROOT, "testdata", "allowlist.yaml")) as src, \
+                open(os.path.join(work, "integrators", "allowlist.yaml"), "a") as dst:
+            dst.write(src.read())
         for name in ran:
             print(f"\n== {name} ==")
             before = RUN
