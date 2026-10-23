@@ -1173,9 +1173,20 @@ def suite_build(work, verbose):
     main_spec = specs.get(bs.DEFAULT_POINTER, {})
     opts = re.findall(r"<option [^>]*>([^<]*)</option>", page)
     check("pages name a pointer by its label and the branch it tracks",
-          f"<h1>{main_spec.get('label')}</h1>" in page and f"tracking <code>{main_spec.get('tracks')}</code>" in page
+          f'<h1><a class="ptitle" href="https://github.com/EVerest/EVerest/tree/{main_spec.get("tracks")}">{main_spec.get("label")}</a></h1>' in page
+          and f"tracking <code>{main_spec.get('tracks')}</code>" in page
           and all(any(o.startswith(l) for o in opts) for l in labels)
           and f"<title>Himalayas · {main_spec.get('label')}" in page, f"options {opts}")
+
+    # A pointer whose tracked branch does not exist yet is not linked to it.
+    declared_p, logs_p = bs.load_pointers(root)
+    pend = dict(declared_p, **{"testing/selftest-pending": {"label": "9999.99", "kind": "stable",
+                                                          "tracks": "stable/9999.99", "tracks_pending": True}})
+    pend_page = bs.build_site([], pend, logs_p, bs.load_allowlist(root),
+                              json.load(open(os.path.join(work, "schema", "vocabulary.json")))).get(bs.pointer_file("index", "testing/selftest-pending"), "")
+    check("a pointer whose tracked branch is not created yet is not linked",
+          "<h1>9999.99</h1>" in pend_page and "tracking <code>stable/9999.99</code>, not created yet" in pend_page
+          and "tree/stable/9999.99" not in pend_page)
 
     # Dates read YYYY-MM-DD or DD-MM, never month first.
     src = open(os.path.join(work, "scripts", "build_status.py")).read()
@@ -1266,7 +1277,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 35, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 36, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

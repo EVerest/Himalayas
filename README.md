@@ -84,7 +84,10 @@ EVerest maintains **floating pointer branches** that a CI job force-pushes forwa
 | `testing/stable-2026.10` | `stable/2026.10` | 2026.10 (stable) |
 
 The site's names come from each pointer's `label`, `kind` (`development` or `stable`) and
-optional `note` in [`pointers.json`](pointers.json).
+optional `note` in [`pointers.json`](pointers.json). Each name links to the EVerest branch the
+pointer tracks. `"tracks_pending": true` marks a tracked branch that does not exist yet, such
+as `stable/2026.10` before it is cut; the name is then not linked. Remove it once the branch
+exists.
 
 Fetch one to get the agreed base to test against. They are **not releases**: no support
 promise, no backports, and they are **ungated**, so a pointer can point at a broken `main`.
@@ -134,7 +137,7 @@ never be aged.
 | `scripts/record_pointer_move.py` | Appends one pointer move to the log. Called by a workflow, never by hand |
 | `scripts/refresh_module_names.py` | Regenerates `schema/everest-modules.txt` from EVerest's module manifests. Run by hand when the list goes stale |
 | `scripts/archive.py` | Strips traces and attachments off records older than 6 months. Run by hand |
-| `scripts/selftest.py` | 159 checks, almost all negative. Run after touching `scripts/` or `schema/` |
+| `scripts/selftest.py` | 160 checks, almost all negative. Run after touching `scripts/` or `schema/` |
 | `scripts/build_status.py` | Generates the status site: an overview, detailed and coverage page per pointer, a page per setup, a contribute page generated from this README and CONTRIBUTING.md, and `summary.json` and `regressions.json` |
 | `status/` | Generated, and deployed to Pages |
 | `docs/design/` | Design records |
@@ -156,7 +159,7 @@ open status/index.html
 # check the pointer branches and the log agree
 python3 scripts/verify_pointers.py
 
-# assert the gate still rejects what it should; all 159 checks must pass
+# assert the gate still rejects what it should; all 160 checks must pass
 python3 scripts/selftest.py
 ```
 

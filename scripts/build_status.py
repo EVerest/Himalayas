@@ -76,6 +76,7 @@ def short(sha):
 
 
 EVEREST_COMMIT = "https://github.com/EVerest/EVerest/commit/"
+EVEREST_TREE = "https://github.com/EVerest/EVerest/tree/"
 # EVerest's own logo, copied from EVerest/EVerest docs/images.
 LOGO_SRC = "docs/images/everest_horizontal-color.svg"
 LOGO = "everest-logo.svg"
@@ -579,7 +580,7 @@ td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;wi
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
 .ilogo{height:20px;width:auto;max-width:96px;vertical-align:middle;margin-right:8px;padding:2px 4px;background:#fff;border-radius:4px}
 .allint td.lcell{width:1%;padding-right:0}.lcell .ilogo{margin-right:0}
-.rate{display:block;margin-top:4px;white-space:nowrap}.allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
+h1 .ptitle{color:inherit;text-decoration-thickness:2px;text-underline-offset:6px}.rate{display:block;margin-top:4px;white-space:nowrap}.allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b,.rtile b{font-size:20px;display:block;line-height:1.1}
 .rtile{min-height:52px;padding:6px 14px;border-radius:10px;border:1px dashed var(--line);display:flex;flex-direction:column;justify-content:center}
@@ -744,13 +745,21 @@ def pointer_meta(name, spec):
     """How a pointer is named on the site: the EVerest line it follows, its kind, any note."""
     spec = spec or {}
     return {"label": spec.get("label") or name, "kind": spec.get("kind"), "note": spec.get("note"),
-            "tracks": spec.get("tracks")}
+            "tracks": spec.get("tracks"), "tracks_pending": bool(spec.get("tracks_pending"))}
 
 
 def pointer_sub(P):
     """"stable · stops moving soon · tracking stable/2026.02"."""
     return " · ".join([esc(x) for x in (P["kind"], P["note"]) if x]
-                      + ([f'tracking <code>{esc(P["tracks"])}</code>'] if P["tracks"] else []))
+                      + ([f'tracking <code>{esc(P["tracks"])}</code>' + (", not created yet" if P["tracks_pending"] else "")]
+                         if P["tracks"] else []))
+
+
+def pointer_title(P):
+    """The label, linked to the EVerest branch it tracks once that branch exists."""
+    if not P["tracks"] or P["tracks_pending"]:
+        return esc(P["label"])
+    return f'<a class="ptitle" href="{EVEREST_TREE}{esc(P["tracks"])}">{esc(P["label"])}</a>'
 
 
 def pointer_select(base, current, pointers, meta):
@@ -880,7 +889,7 @@ def overview(P, pointers):
                if tip else "no moves logged yet")
     empty = "" if setups else (f'<p class="notice">No submission tested a commit in {esc(P["label"])}\'s log yet. '
                                 f'Results at other commits are not attributed here. <a href="contribute.html">Report a run</a>.</p>')
-    return f"""<section class="row"><h1>{esc(P['label'])}</h1><span class="muted">{pointer_sub(P)} · {tipline}</span></section>
+    return f"""<section class="row"><h1>{pointer_title(P)}</h1><span class="muted">{pointer_sub(P)} · {tipline}</span></section>
 <p class="cta">Run EVerest on your own hardware or CI? <a href="contribute.html">Report your results</a>: register once, then open one pull request per run.</p>
 {all_integrators(P) if setups else ""}{empty}<section class="summarybar" aria-label="Filter by verdict">{btns if setups else ""}</section>
 {''.join(body)}"""

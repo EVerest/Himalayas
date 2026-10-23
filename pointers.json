@@ -18,6 +18,7 @@
       "label": "2026.10",
       "kind": "stable",
       "tracks": "stable/2026.10",
+      "tracks_pending": true,
       "description": "Same, for the 2026.10 line. Starts at the 2026.10.0 release candidate and is moved by hand until stable/2026.10 exists, then by the pointer-moving CI job. Supersedes testing/stable-2026.02, which stops moving."
     }
   },
