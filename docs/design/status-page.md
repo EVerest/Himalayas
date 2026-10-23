@@ -50,8 +50,8 @@ Sections, in order:
 
 1. Header: verdict, test date, commit and moves behind the pointer tip, environment,
    provenance, evidence, build, and the full module list (always shown, not folded).
-2. Capability map for this setup (see Coverage). Selecting a tile filters the test
-   results to that tag.
+2. Capability map for this setup (see Coverage), collapsed by default. Selecting a
+   tile filters the test results to that tag.
 3. History chart: failed tests per pointer move, with test-count changes annotated.
 4. Test results: one collapsible group per status (failed, inconclusive, accepted and
    waived, skipped, passed), all collapsed by default. Each test is itself collapsible
