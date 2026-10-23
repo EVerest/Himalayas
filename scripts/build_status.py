@@ -737,12 +737,14 @@ POINTER_KINDS = ("development", "stable")
 def pointer_meta(name, spec):
     """How a pointer is named on the site: the EVerest line it follows, its kind, any note."""
     spec = spec or {}
-    return {"label": spec.get("label") or name, "kind": spec.get("kind"), "note": spec.get("note")}
+    return {"label": spec.get("label") or name, "kind": spec.get("kind"), "note": spec.get("note"),
+            "tracks": spec.get("tracks")}
 
 
 def pointer_sub(P):
-    """"stable · stops moving soon · branch testing/stable-2026.02", the branch kept for git fetch."""
-    return " · ".join([esc(x) for x in (P["kind"], P["note"]) if x] + [f'branch <code>{esc(P["name"])}</code>'])
+    """"stable · stops moving soon · tracking stable/2026.02"."""
+    return " · ".join([esc(x) for x in (P["kind"], P["note"]) if x]
+                      + ([f'tracking <code>{esc(P["tracks"])}</code>'] if P["tracks"] else []))
 
 
 def pointer_select(base, current, pointers, meta):
