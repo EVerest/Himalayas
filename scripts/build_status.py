@@ -345,7 +345,7 @@ def build_pointer(name, log, recs, allow, grace_days=GRACE_DAYS):
         })
     reported = {m["integ"] for m in model}
     silent = [a for a in allow if a["id"] not in reported]
-    return {"name": name, "log": log, "shas": shas, "tip": tip, "setups": model, "silent": silent, "grace": grace_days,
+    return {"name": name, "log": log, "shas": shas, "tip": tip, "setups": model, "silent": silent,
             "unattributed": [r for r in recs if r["pointer"] == name and r["commit"] not in index]}
 
 
@@ -444,7 +444,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
 .pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
-.allint{display:flex;flex-direction:column;gap:8px}.legend{display:flex;flex-wrap:wrap;gap:4px 14px}.lg{display:inline-flex;align-items:center;gap:6px}.lg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.allint table{margin-top:10px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
 details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
@@ -499,7 +499,8 @@ if(th){
     const v=e.target.value;root.dataset.theme=v;
     try{localStorage.setItem('theme',v)}catch(e){}});
 }
-document.querySelectorAll('.allint>.scroll').forEach(e=>{e.scrollLeft=e.scrollWidth});
+document.querySelectorAll('.allint a[href^="#integ-"]').forEach(a=>a.addEventListener('click',()=>{
+  const d=document.getElementById(a.hash.slice(1));if(d){d.hidden=false;d.open=true}}));
 document.querySelectorAll('select[data-nav]').forEach(s=>s.addEventListener('change',()=>{location.href=s.value}));
 const bar=document.querySelector('.summarybar');
 if(bar){
@@ -704,7 +705,7 @@ def overview(P, pointers):
                 f'<td>{std_cell(m["counts"].get("other"), "other")}</td></tr>')
         summ = f'{len(ms)} setup{"s" * (len(ms) != 1)}' + (" · all passing" if allpass else f" · {failing} failing")
         body.append(
-            f'<details class="card group"{"" if allpass else " open"}><summary><b>{esc(ms[0]["integ_name"])}</b> <span class="muted small">{summ}</span></summary>'
+            f'<details class="card group" id="integ-{slug(integ)}"{"" if allpass else " open"}><summary><b>{esc(ms[0]["integ_name"])}</b> <span class="muted small">{summ}</span></summary>'
             f'<div class="scroll"><table><thead><tr><th scope="col">Setup</th><th scope="col">Verdict</th><th scope="col">Tested</th>'
             f'<th scope="col">Env</th><th scope="col">Vehicle communication</th><th scope="col">Backend</th><th scope="col">Other tests</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div></details>')
@@ -724,138 +725,28 @@ def current(setups):
     return [m for m in setups if m["fresh"] != "stale"]
 
 
-def plural(n, word):
-    return f'{n} {word}{"s" * (n != 1)}'
-
-
-def headline(P):
-    """One sentence on the pointer: setups by verdict, how close to the tip, what was left out."""
-    cur = current(P["setups"])
-    nstale = len(P["setups"]) - len(cur)
-    left = (f' {plural(nstale, "more setup")} last reported over {P["grace"]} days ago on an older commit '
-            f'and {"is" if nstale == 1 else "are"} left out.') if nstale else ""
-    if not cur:
-        return f"No setup has reported recently.{left}"
-    cnt = collections.Counter(m["verdict"] for m in cur)
-    parts = [f'{cnt["passing"]} of {plural(len(cur), "setup")} passing']
-    parts += [f'{cnt[v]} {VERDICT_LABEL[v][2:]}' for v in DISPLAY_ORDER if v != "passing" and cnt[v]]
-    nreg = sum(1 for m in cur if m["confirmed"])
-    if nreg:
-        parts.append(f"{nreg} with confirmed regressions")
-    behind = sorted(m["behind"] for m in cur)
-    if behind[-1] == 0:
-        tip = "All tested the tip."
-    elif behind[0] > 0:
-        span = plural(behind[0], "move") if behind[0] == behind[-1] else f"{behind[0]} to {behind[-1]} moves"
-        tip = f'None has tested the tip yet; {"it is" if len(cur) == 1 else "all are"} {span} behind.'
-    else:
-        tip = f'{sum(1 for b in behind if b == 0)} tested the tip; the rest are up to {plural(behind[-1], "move")} behind.'
-    return f'<b>{" · ".join(parts)}.</b> {tip}{left}'
-
-
-def std_rollup(P):
-    """Each standard some current setup judged, by how many of those setups fail it. Failing first."""
-    rows = []
-    for k, label, _ in STANDARDS:
-        cs = [m["counts"][k] for m in current(P["setups"]) if k in m["counts"]]
-        judged = [c for c in cs if c["passed"] + c["failed"]]
-        if not judged:
-            continue
-        f = sum(1 for c in judged if c["failed"])
-        rows.append((-f, len(rows), label, f, len(judged)))
-    chips = "".join(
-        f'<span class="schip bad"><span><b>{label}</b> ✕ failing on {f} of {n}</span></span>' if f else
-        f'<span class="schip ok"><span><b>{label}</b> ✓ passing on {n} of {n}</span></span>'
-        for _, _, label, f, n in sorted(rows))
-    return f'<div class="chips2" style="max-width:none">{chips}</div>' if chips else ""
-
-
-# The daily chart's series: label, the verdicts it stacks, its fill.
-DAY_SERIES = [
-    ("passing", ("passing",), "var(--ok)"),
-    ("passing, partial", ("passing-partial",), "var(--warn)"),
-    ("failing or build failed", ("failing", "build-failed"), "var(--bad)"),
-    ("not judged", ("not-exercised", "build-only", "not-reported"), "var(--dash)"),
-    ("stale, left out", ("stale",), "none"),
-]
-
-
-def at_ms(e):
-    try:
-        return dt.datetime.fromisoformat(e["at"].replace("Z", "+00:00")).timestamp() * 1000
-    except (KeyError, ValueError):
-        return 0
-
-
-def as_of(P, end):
-    """Setups by verdict, or "stale", as the overview would have counted them at `end` (ms)."""
-    log = [e["sha"] for e in P["log"] if at_ms(e) <= end]
-    known = set(log)
-    out = collections.Counter()
-    for m in P["setups"]:
-        runs = [r for r in m["runs"] if r["start"] <= end and r["commit"] in known]
-        if not runs:
-            continue
-        L = runs[-1]
-        stale = is_stale({"pointer": P["name"], "commit": L["commit"], "ranAt": L["start"]},
-                         {P["name"]: log[-1]}, P["grace"], end)
-        out["stale" if stale else verdict(L)] += 1
-    return out
-
-
-def day_chart(P, days=90):
-    """The headline replayed once per day, newest last. Today's bar is the headline."""
-    starts = [r["start"] for m in P["setups"] for r in m["runs"] if r["start"]]
-    if not starts:
-        return ""
-    today = NOW.date()
-    first = max(ms_to_dt(min(starts)).date(), today - dt.timedelta(days=days - 1))
-    span = [first + dt.timedelta(days=i) for i in range((today - first).days + 1)]
-    now = NOW.timestamp() * 1000
-    rows = []
-    for d in span:
-        end = min(now, dt.datetime(d.year, d.month, d.day, tzinfo=dt.timezone.utc).timestamp() * 1000 + 86_400_000 - 1)
-        c = as_of(P, end)
-        rows.append((d, [sum(c[v] for v in vs) for _, vs, _ in DAY_SERIES]))
-    used = [i for i in range(len(DAY_SERIES)) if any(v[i] for _, v in rows)]
-    W, H, x0, y0, top = 900, 150, 34, 122, 10
-    ymax = max(1, max(sum(v) for _, v in rows))
-    step = (W - x0 - 8) / len(rows)
-    bw = max(3, min(16, step * 0.6))
-    Y = lambda n: (y0 - top) * n / ymax
-    parts = [f'<line x1="{x0}" y1="{y0}" x2="{W - 8}" y2="{y0}" stroke="var(--line)"/>',
-             f'<text x="{x0 - 6}" y="{y0 + 4}" text-anchor="end" font-size="11" fill="var(--muted)">0</text>',
-             f'<line x1="{x0}" y1="{top}" x2="{W - 8}" y2="{top}" stroke="var(--line2)"/>',
-             f'<text x="{x0 - 6}" y="{top + 4}" text-anchor="end" font-size="11" fill="var(--muted)">{ymax}</text>']
-    every = max(1, -(-len(rows) // 8))
-    for k, (d, v) in enumerate(rows):
-        cx = x0 + step * (k + .5)
-        y = y0
-        for i in used:
-            if not v[i]:
-                continue
-            h = Y(v[i])
-            fill = DAY_SERIES[i][2]
-            style = (f'fill="none" stroke="var(--dash)" stroke-dasharray="3 2"' if fill == "none" else f'fill="{fill}"')
-            parts.append(f'<rect x="{cx - bw / 2:.1f}" y="{y - h + 1:.1f}" width="{bw:.1f}" height="{max(h - 2, 1):.1f}" rx="2" {style}/>')
-            y -= h
-        tip = f'{d:%Y-%m-%d}: ' + (" · ".join(f"{v[i]} {DAY_SERIES[i][0]}" for i in used if v[i]) or "no setup reported yet")
-        parts.append(f'<rect x="{cx - step / 2:.1f}" y="{top}" width="{step:.1f}" height="{y0 - top}" fill="transparent"><title>{tip}</title></rect>')
-        if (len(rows) - 1 - k) % every == 0:
-            parts.append(f'<text x="{cx:.1f}" y="{y0 + 18}" text-anchor="middle" font-size="11" font-family="DM Mono,monospace" fill="var(--soft)">{d:%d-%m}</text>')
-    legend = "".join(
-        f'<span class="lg"><i style="{"border:1px dashed var(--dash)" if DAY_SERIES[i][2] == "none" else "background:" + DAY_SERIES[i][2]}"></i>{DAY_SERIES[i][0]}</span>'
-        for i in used)
-    return (f'<h3 class="small" style="margin:6px 0 0">Setups by verdict, per day</h3><div class="legend small">{legend}</div>'
-            f'<div class="scroll"><svg viewBox="0 0 {W} {H}" role="img" aria-label="Setups by verdict per day, {span[0]:%Y-%m-%d} to {span[-1]:%Y-%m-%d}" '
-            f'style="width:100%;min-width:620px;height:auto;display:block">{"".join(parts)}</svg></div>'
-            f'<p class="small muted" style="margin:0">Each day counts every setup\'s latest result up to that day, so a bar can mix commits. '
-            f'Per-commit history is on each setup\'s page.</p>')
-
-
 def all_integrators(P):
-    return (f'<section class="card allint" aria-labelledby="allint"><h2 id="allint" style="margin:0 0 6px">All integrators</h2>'
-            f'<p style="margin:0 0 10px">{headline(P)}</p>{std_rollup(P)}{day_chart(P)}</section>')
+    """Every integrator reporting on this pointer, one row each, linking to its card."""
+    groups = collections.OrderedDict()
+    for m in P["setups"]:
+        groups.setdefault(m["integ"], []).append(m)
+    rows = []
+    for integ, ms in groups.items():
+        cur = current(ms)
+        cnt = collections.Counter(m["verdict"] for m in cur)
+        verdicts = " · ".join(f'{cnt[v]} {VERDICT_LABEL[v][2:]}' for v in DISPLAY_ORDER if cnt[v])
+        nstale = len(ms) - len(cur)
+        if nstale:
+            verdicts += f'{" · " if verdicts else ""}{nstale} stale'
+        last = max(m["latest"]["start"] or 0 for m in ms)
+        rows.append(f'<tr><th scope="row"><a href="#integ-{slug(integ)}">{esc(ms[0]["integ_name"])}</a></th>'
+                    f'<td class="num">{len(ms)}</td><td>{verdicts}</td>'
+                    f'<td>{f"{ms_to_dt(last):%Y-%m-%d}" if last else "unknown"}</td></tr>')
+    n = len(groups)
+    return (f'<details class="card allint"><summary><h2 style="display:inline">All integrators</h2> '
+            f'<span class="muted small">{n} integrator{"s" * (n != 1)} · {len(P["setups"])} setup{"s" * (len(P["setups"]) != 1)}</span></summary>'
+            f'<div class="scroll"><table><thead><tr><th scope="col">Integrator</th><th scope="col" class="num">Setups</th>'
+            f'<th scope="col">Verdicts</th><th scope="col">Last reported</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></details>')
 
 
 def run_strip(m, n=14):

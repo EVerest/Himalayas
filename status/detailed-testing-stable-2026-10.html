@@ -41,7 +41,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
 .pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
-.allint{display:flex;flex-direction:column;gap:8px}.legend{display:flex;flex-wrap:wrap;gap:4px 14px}.lg{display:inline-flex;align-items:center;gap:6px}.lg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.allint table{margin-top:10px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
 details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
@@ -98,7 +98,7 @@ details.integ[open]>summary{border-radius:8px 8px 0 0}
 <tbody><tr><td colspan="11" class="muted">No setups.</td></tr></tbody></table></div>
 <p class="small muted" style="padding:0 20px 14px;margin:8px 0 0">Last 14 runs, oldest first: <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-passing"></span></span> no failed tests · <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-failing"></span></span> one or more failed tests</p></section><section class="card"><div class="row" style="margin-bottom:8px"><h2 style="margin:0">Compare with</h2>
 <select id="cmp" style="min-height:40px;padding:6px 8px;border-radius:8px"><option value="testing-main">testing/main</option><option value="testing-stable-2026-02">testing/stable-2026.02</option></select></div><div data-cmp="testing-main" class="scroll"><table><thead><tr><th>Setup</th><th>testing/stable-2026.10</th><th>testing/main</th><th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead><tbody></tbody></table></div><div data-cmp="testing-stable-2026-02" class="scroll"><table><thead><tr><th>Setup</th><th>testing/stable-2026.10</th><th>testing/stable-2026.02</th><th class="num">Fail only here</th><th class="num">Fail only there</th><th class="num">Both</th><th class="num">Not run on one side</th></tr></thead><tbody></tbody></table></div></section></main>
-<footer>Built 2026-10-23 14:39 UTC from <code>results/</code>, <code>pointers.json</code> and
+<footer>Built 2026-10-23 14:46 UTC from <code>results/</code>, <code>pointers.json</code> and
 <code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
 <a href="contribute.html">How to contribute</a> ·
 Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
@@ -112,7 +112,8 @@ if(th){
     const v=e.target.value;root.dataset.theme=v;
     try{localStorage.setItem('theme',v)}catch(e){}});
 }
-document.querySelectorAll('.allint>.scroll').forEach(e=>{e.scrollLeft=e.scrollWidth});
+document.querySelectorAll('.allint a[href^="#integ-"]').forEach(a=>a.addEventListener('click',()=>{
+  const d=document.getElementById(a.hash.slice(1));if(d){d.hidden=false;d.open=true}}));
 document.querySelectorAll('select[data-nav]').forEach(s=>s.addEventListener('change',()=>{location.href=s.value}));
 const bar=document.querySelector('.summarybar');
 if(bar){
