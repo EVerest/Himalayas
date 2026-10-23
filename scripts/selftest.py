@@ -981,6 +981,8 @@ def suite_build(work, verbose):
     check("page carries its headline", 'class="brand">Himalayas<' in page
           and "EVerest test results, self-reported" in page)
     check("page carries the self-reported caveat", "self-reported" in page)
+    check("the EVerest logo links to EVerest on GitHub and the name to the overview",
+          '<a class="logo" href="https://github.com/EVerest">' in page and '<a class="home" href="index.html">' in page)
 
     # Every committed submission has to reach the site. load_records() made to
     # return nothing was green, with every setup replaced by an empty notice.
@@ -1277,7 +1279,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 36, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 37, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

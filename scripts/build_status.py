@@ -77,6 +77,7 @@ def short(sha):
 
 EVEREST_COMMIT = "https://github.com/EVerest/EVerest/commit/"
 EVEREST_TREE = "https://github.com/EVerest/EVerest/tree/"
+EVEREST_ORG = "https://github.com/EVerest"
 # EVerest's own logo, copied from EVerest/EVerest docs/images.
 LOGO_SRC = "docs/images/everest_horizontal-color.svg"
 LOGO = "everest-logo.svg"
@@ -553,7 +554,7 @@ a{color:var(--link)}code,.mono{font-family:var(--mono);font-size:.92em}
 button,select,summary{font:inherit;cursor:pointer;color:inherit}
 :focus-visible{outline:3px solid #2F96D0;outline-offset:2px}
 header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
-header.top .lockup{display:flex;align-items:center;gap:14px;color:#fff;text-decoration:none;border-radius:8px}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
+header.top .lockup{display:flex;align-items:center;gap:14px}header.top .lockup a{color:#fff;text-decoration:none;border-radius:8px}header.top .home{display:block}header.top .lockup a.logo{border-radius:0}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
 svg a:hover text{fill:var(--link);text-decoration:underline}
 header.top .brand{display:block;font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{display:block;font-size:13px;color:#C9D4E8;max-width:34ch}
 header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 12px;border-radius:8px}
@@ -720,9 +721,9 @@ def page(title, active, body, depth=0, pointer_sel=""):
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>{CSS}</style>
 <script>try{{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script></head><body>
-<header class="top"><div class="in"><a class="lockup" href="{up}index.html"><span class="logo"><img src="{up}{LOGO}" alt="LF Energy EVerest" width="116" height="34"></span>
-<span><span class="brand">Himalayas</span>
-<span class="sub">EVerest test results, self-reported by the companies that build on it</span></span></a>
+<header class="top"><div class="in"><div class="lockup"><a class="logo" href="{EVEREST_ORG}"><img src="{up}{LOGO}" alt="LF Energy EVerest on GitHub" width="116" height="34"></a>
+<a class="home" href="{up}index.html"><span class="brand">Himalayas</span>
+<span class="sub">EVerest test results, self-reported by the companies that build on it</span></a></div>
 {pointer_sel}<nav aria-label="Views">{nav}</nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
