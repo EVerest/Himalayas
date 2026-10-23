@@ -3,7 +3,7 @@
 ## Submission
 
 - Integrator id:
-- Pointer tested: `testing/main` or `testing/stable-2026.02`
+- Pointer tested: `testing/main`, `testing/stable-2026.02` or `testing/stable-2026.10`
 - EVerest commit (full 40-char SHA):
 - Environment: SIL / HIL
 

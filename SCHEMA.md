@@ -102,7 +102,7 @@ keys, so this is enforced, not advisory.
 | What | Native field | Notes |
 |---|---|---|
 | EVerest commit | `results.environment.commit` | **Required.** Checked against the real repository |
-| pointer tracked | `results.environment.appVersion` | `testing/main` or `testing/stable-2026.02` |
+| pointer tracked | `results.environment.appVersion` | `testing/main`, `testing/stable-2026.02` or `testing/stable-2026.10` |
 | branch / release line | `results.environment.branchName` | usually `main` |
 | SIL vs hardware | `results.environment.testEnvironment` | `SIL` or `HIL` |
 | build health as a boolean | `results.environment.healthy` | mirror of `extra.build.status`, so generic CTRF readers see it |
@@ -165,7 +165,7 @@ It constrains only the fields it names; everything else stays governed by CTRF.
 | Field | Rule | Why |
 |---|---|---|
 | `environment.appName` | must be `EVerest` | this repository tracks nothing else |
-| `environment.appVersion` | one of `testing/main`, `testing/stable-2026.02` | it names the floating pointer that was tracked, and the normaliser derives `metadata.everest.pointer` from it. A tag or a CalVer value here is a different claim, and it fails four checks rather than one |
+| `environment.appVersion` | one of `testing/main`, `testing/stable-2026.02`, `testing/stable-2026.10` | it names the floating pointer that was tracked, and the normaliser derives `metadata.everest.pointer` from it. A tag or a CalVer value here is a different claim, and it fails four checks rather than one |
 | `environment.commit` | **full 40-char** lowercase SHA | short SHAs are ambiguous; a result whose base cannot be pinned exactly is not reproducible even in principle |
 | `environment.branchName` | `main` or `stable/yyyy.mm` | |
 | `environment.testEnvironment` | **`SIL`** or **`HIL`** exactly | these are displayed separately, so case and spelling matter |

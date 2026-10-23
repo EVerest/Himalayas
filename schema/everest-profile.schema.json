@@ -31,7 +31,8 @@
               "description": "The floating pointer branch that was tracked. Tags were replaced by force-pushed pointer branches, so there is no version string here any more.",
               "enum": [
                 "testing/main",
-                "testing/stable-2026.02"
+                "testing/stable-2026.02",
+                "testing/stable-2026.10"
               ]
             },
             "commit": {

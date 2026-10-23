@@ -30,7 +30,8 @@
           "description": "The floating pointer branch that was tracked.",
           "enum": [
             "testing/main",
-            "testing/stable-2026.02"
+            "testing/stable-2026.02",
+            "testing/stable-2026.10"
           ]
         },
         "tracks": {

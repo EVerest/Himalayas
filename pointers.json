@@ -8,6 +8,10 @@
     "testing/stable-2026.02": {
       "tracks": "stable/2026.02",
       "description": "Same, for the 2026.02 maintenance line. NOTE the name: it deliberately does NOT live under stable/, because stable/2026.02 already exists as a real protected branch that receives backports."
+    },
+    "testing/stable-2026.10": {
+      "tracks": "stable/2026.10",
+      "description": "Same, for the 2026.10 line. Starts at the 2026.10.0 release candidate and is moved by hand until stable/2026.10 exists, then by the pointer-moving CI job. Supersedes testing/stable-2026.02, which stops moving."
     }
   },
   "log": [

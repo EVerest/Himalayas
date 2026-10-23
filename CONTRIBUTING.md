@@ -195,7 +195,7 @@ freeform strings, which is enough to make the aggregate meaningless. They are co
 | Field | Must be | Common mistake |
 |---|---|---|
 | `commit` | **full 40-char** SHA | a short SHA |
-| `appVersion` | the **pointer branch name**: `testing/main` or `testing/stable-2026.02` | a tag like `test/2026.09.2`, or a CalVer release like `2026.02.1`. This one field poisons four checks at once: the normaliser derives `metadata.everest.pointer` from it, so a wrong value fails `ctrf-profile`, `htf-metadata`, `pointer-mismatch` **and** `commit-not-pointed` - the last reporting a real commit as never having been an agreed base |
+| `appVersion` | the **pointer branch name**: `testing/main`, `testing/stable-2026.02` or `testing/stable-2026.10` | a tag like `test/2026.09.2`, or a CalVer release like `2026.02.1`. This one field poisons four checks at once: the normaliser derives `metadata.everest.pointer` from it, so a wrong value fails `ctrf-profile`, `htf-metadata`, `pointer-mismatch` **and** `commit-not-pointed` - the last reporting a real commit as never having been an agreed base |
 | `testEnvironment` | `SIL` or `HIL` | `sil`, `hardware`, `simulation` |
 | `osPlatform` | `linux` | `Linux` |
 | `summary.start`/`stop` | real epoch millis | `0`, straight from `junit-to-ctrf` |
