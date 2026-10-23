@@ -30,7 +30,7 @@ contributor-facing summary is
 | Each row shows the verdict, the tested commit with moves behind the tip, the test date in its own column, one conformance cell per standard (verdict plus counts), and other tests in their own column. | Conformance results and an integrator's own tests are different claims. | Decided, not implemented |
 | Within a group, passing setups are listed before failing ones; the summary bar follows the same order. | The page reads as what works first, then what does not. | Decided, not implemented |
 | A conformance cell names its counts: "✕ 1 failed, 1 passed · 1 accepted". Accepted, inconclusive and skipped tests are listed beside the count, never inside it. | "1 of 2" was read as including the accepted test. | Decided, not implemented |
-| A standard without a test-spec mapping shows no subtitle in the column header; the † stays on the counts. | The header is not the place for the caveat. | Decided, not implemented |
+| A standard without a test-spec mapping (DIN 70121, IEC 61851 today) is shown like any other: no subtitle in the column header and no marker on the counts. The missing mapping is noted on the coverage and detail pages only. | A marker on every cell was noise without telling the reader what to do. | Decided, not implemented |
 | A ▲ badge marks a confirmed regression. | Regressions are the main signal the pointers exist to produce. | Decided, not implemented |
 
 ### Detailed view
@@ -218,7 +218,7 @@ These need someone outside the design work to answer.
 
 | Question | Until answered |
 |---|---|
-| Do Pionix's `TC_SECC_DC_VTB_Din*` cases come from DIN 70122, or are they Pionix's own? | DIN results show under "Other tests" with a dagger. |
+| Do Pionix's `TC_SECC_DC_VTB_Din*` cases come from DIN 70122, or are they Pionix's own? | Until answered, DIN results show in their own DIN 70121 column without a test-spec mapping. |
 | Does IEC 61851-1 or IEC 61851-23 have a separate test specification? | Not decided. |
 | What does a passed test tagged `x-rig-limitation` mean in Pionix's harness? | It stays a pass with a footnote. |
 
