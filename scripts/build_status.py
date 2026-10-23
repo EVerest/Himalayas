@@ -91,6 +91,55 @@ def reversed_logo(svg):
     return svg
 
 
+# Integrators' own logos, one SVG per public id, shown beside their name.
+INTEG_LOGO_DIR = "integrators/logos"
+INTEG_LOGO_MAX = 32 * 1024
+# The site shows logos through <img>, where SVG scripts do not run. Refusing
+# active or external content anyway keeps a logo inert wherever it is opened.
+INTEG_LOGO_UNSAFE = [
+    (r"<script", "a script"), (r"<foreignObject", "embedded HTML"),
+    (r"\son[a-z]+\s*=", "an event handler"), (r"""href\s*=\s*["'](?!#)""", "an external link"),
+    (r"url\(\s*['\"]?(?!#)", "an external url()"), (r"@import", "an @import"),
+]
+
+
+def logo_problems(data):
+    """Why an integrator logo cannot be shown; empty when it can."""
+    if len(data) > INTEG_LOGO_MAX:
+        return [f"larger than {INTEG_LOGO_MAX // 1024} KiB"]
+    try:
+        svg = data.decode("utf-8")
+    except UnicodeDecodeError:
+        return ["not UTF-8 SVG"]
+    if not re.match(r"\s*(?:<\?xml[^>]*>\s*)?(?:<!--.*?-->\s*)*<svg[\s>]", svg, re.S):
+        return ["not an SVG document"]
+    return [f"contains {what}" for pat, what in INTEG_LOGO_UNSAFE if re.search(pat, svg, re.I)]
+
+
+def logo_audit(root, allow):
+    """(file, problem) for every file under integrators/logos/ that will not be shown."""
+    d = root / INTEG_LOGO_DIR
+    public = {a["id"] for a in allow if a["name"] != a["id"]}
+    ids = {a["id"] for a in allow}
+    out = []
+    for f in sorted(d.iterdir()) if d.is_dir() else []:
+        rel = f"{INTEG_LOGO_DIR}/{f.name}"
+        if f.suffix != ".svg":
+            out.append((rel, "is not an .svg file"))
+        elif f.stem not in ids:
+            out.append((rel, "names no allowlisted id"))
+        elif f.stem not in public:
+            out.append((rel, "belongs to an anonymous id, and a logo would name it"))
+        else:
+            out += [(rel, p) for p in logo_problems(f.read_bytes())]
+    return out
+
+
+def integ_logo(P, integ, up=""):
+    return (f'<img class="ilogo" src="{up}logos/{esc(integ)}.svg" alt="" loading="lazy">'
+            if integ in P["logos"] else "")
+
+
 def commit_link(sha):
     """A short sha, linked to that commit in EVerest."""
     return f'<a href="{EVEREST_COMMIT}{esc(sha)}"><code>{short(sha)}</code></a>' if sha else "<code>?</code>"
@@ -135,6 +184,11 @@ def load_allowlist(root=ROOT):
         m = re.match(r"\s*display_name:\s*(.+)", line)
         if m and cur:
             cur["name"] = m.group(1).strip()
+    bad = {rel for rel, _ in logo_audit(root, out)}
+    for a in out:
+        f = root / INTEG_LOGO_DIR / f"{a['id']}.svg"
+        if f.is_file() and f"{INTEG_LOGO_DIR}/{f.name}" not in bad:
+            a["logo"] = f.read_text()
     return out
 
 
@@ -346,6 +400,7 @@ def build_pointer(name, log, recs, allow, grace_days=GRACE_DAYS):
     reported = {m["integ"] for m in model}
     silent = [a for a in allow if a["id"] not in reported]
     return {"name": name, "log": log, "shas": shas, "tip": tip, "setups": model, "silent": silent,
+            "logos": {a["id"] for a in allow if a.get("logo")},
             "unattributed": [r for r in recs if r["pointer"] == name and r["commit"] not in index]}
 
 
@@ -444,6 +499,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;width:fit-content;margin-top:4px}
 .pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
+.ilogo{height:20px;width:auto;max-width:96px;vertical-align:middle;margin-right:8px;padding:2px 4px;background:#fff;border-radius:4px}
 .allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
@@ -705,7 +761,7 @@ def overview(P, pointers):
                 f'<td>{std_cell(m["counts"].get("other"), "other")}</td></tr>')
         summ = f'{len(ms)} setup{"s" * (len(ms) != 1)}' + (" · all passing" if allpass else f" · {failing} failing")
         body.append(
-            f'<details class="card group" id="integ-{slug(integ)}"{"" if allpass else " open"}><summary><b>{esc(ms[0]["integ_name"])}</b> <span class="muted small">{summ}</span></summary>'
+            f'<details class="card group" id="integ-{slug(integ)}"{"" if allpass else " open"}><summary>{integ_logo(P, integ)}<b>{esc(ms[0]["integ_name"])}</b> <span class="muted small">{summ}</span></summary>'
             f'<div class="scroll"><table><thead><tr><th scope="col">Setup</th><th scope="col">Verdict</th><th scope="col">Tested</th>'
             f'<th scope="col">Env</th><th scope="col">Vehicle communication</th><th scope="col">Backend</th><th scope="col">Other tests</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div></details>')
@@ -741,12 +797,12 @@ def all_integrators(P):
         if len(ms) > len(cur):
             pills.append(f'<span class="pill v-not-exercised">{len(ms) - len(cur)} stale</span>')
         last = max(m["latest"]["start"] or 0 for m in ms)
-        rows.append(f'<tr><th scope="row"><a href="#integ-{slug(integ)}">{esc(ms[0]["integ_name"])}</a></th>'
+        rows.append(f'<tr><th scope="row">{integ_logo(P, integ)}<a href="#integ-{slug(integ)}">{esc(ms[0]["integ_name"])}</a></th>'
                     f'<td class="num"><a href="{detailed}#detail-{slug(integ)}">{len(ms)}</a></td><td><div class="pills">{"".join(pills)}</div></td>'
                     f'<td>{f"{ms_to_dt(last):%Y-%m-%d}" if last else "unknown"}</td></tr>')
     for a in P["silent"]:
         name = a["name"] if a["name"] != a["id"] else f'{a["id"]} (anonymous)'
-        rows.append(f'<tr><th scope="row">{esc(name)}</th><td class="num">0</td>'
+        rows.append(f'<tr><th scope="row">{integ_logo(P, a["id"])}{esc(name)}</th><td class="num">0</td>'
                     f'<td><span class="pill v-not-reported">{VERDICT_LABEL["not-reported"][0]} not reported yet</span></td><td>–</td></tr>')
     n, k = len(groups) + len(P["silent"]), len(groups)
     return (f'<details class="card allint"><summary><h2 style="display:inline">All integrators</h2> '
@@ -1166,7 +1222,7 @@ def setup_page(m, P):
 <section class="card" style="display:flex;flex-direction:column;gap:14px"><div class="row"><h1>{esc(m['config'])}</h1>{vpill(m['verdict'])}{reg}
 <span class="muted">{oc['passed']} passed · {oc['failed']} failed · {oc['inconclusive']} inconclusive · {oc['accepted']} accepted · {oc['skipped']} skipped of {len(L['tests'])}</span></div>
 <dl class="grid" style="margin:0">
-<div><dt class="small muted">Integrator</dt><dd style="margin:0">{esc(m['integ_name'])}</dd></div>
+<div><dt class="small muted">Integrator</dt><dd style="margin:0">{integ_logo(P, m['integ'], "../")}{esc(m['integ_name'])}</dd></div>
 <div><dt class="small muted">Tested commit</dt><dd style="margin:0">{commit_link(L['commit'])} · {behind}</dd></div>
 <div><dt class="small muted">Tested on</dt><dd style="margin:0">{ms_to_dt(L['start']):%Y-%m-%d %H:%M} UTC</dd></div>
 <div><dt class="small muted">Environment</dt><dd style="margin:0">{" · ".join(esc(x) for x in (L['env'], L['os']) if x)} · build {build_mark(L['build'])}</dd></div>
@@ -1375,6 +1431,9 @@ def build_site(recs, declared, logs, allow, vocab, grace_days=GRACE_DAYS, docs=N
     if docs:
         out[LOGO] = reversed_logo(docs[LOGO_SRC])
         out["contribute.html"] = page("Himalayas · contribute", "contribute", contribute(docs["README.md"], docs["CONTRIBUTING.md"]))
+    for a in allow:
+        if a.get("logo"):
+            out[f"logos/{a['id']}.svg"] = a["logo"]
     out["summary.json"] = json.dumps(summary, indent=1) + "\n"
     out["regressions.json"] = json.dumps(regs, indent=1) + "\n"
     return out
@@ -1389,7 +1448,10 @@ def main():
     vocab = json.loads((ROOT / "schema" / "vocabulary.json").read_text())
     recs = load_records()
     docs = {n: (ROOT / n).read_text() for n in ("README.md", "CONTRIBUTING.md", LOGO_SRC)}
-    files = build_site(recs, declared, logs, load_allowlist(), vocab, args.grace_days, docs)
+    allow = load_allowlist()
+    for rel, problem in logo_audit(ROOT, allow):
+        print(f"warning: {rel} {problem}; not shown", file=sys.stderr)
+    files = build_site(recs, declared, logs, allow, vocab, args.grace_days, docs)
     out = pathlib.Path(args.out_dir)
     for rel, text in files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)

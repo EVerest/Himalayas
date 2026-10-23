@@ -1043,6 +1043,56 @@ def suite_build(work, verbose):
     check("the All integrators list names every allowlisted integrator",
           bool(names) and not absent and "not reported yet" in card, f"missing {absent[:3]}")
 
+    # An integrator's logo is shown beside its name wherever the name heads a
+    # card, a list row or a setup page, and is published with the site.
+    bs = load_build_status(work)
+    root = bs.pathlib.Path(work)
+    logos = root / bs.INTEG_LOGO_DIR
+    logos.mkdir(parents=True, exist_ok=True)
+    good = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path fill="#123" d="M0 0h10v10z"/></svg>'
+    (logos / "example-integrator.svg").write_text(good)
+    (logos / "example-anonymous.svg").write_text(good)
+    allow_l = bs.load_allowlist(root)
+    declared_l, logs_l = bs.load_pointers(root)
+    site_l = bs.build_site(bs.load_records(root), declared_l, logs_l, allow_l,
+                           json.load(open(os.path.join(work, "schema", "vocabulary.json"))))
+    idx = site_l.get("index.html", "")
+    img = 'src="logos/example-integrator.svg"'
+    card_l = idx[idx.find('id="integ-example-integrator"'):].split("</summary>")[0]
+    list_l = idx[idx.find('class="card allint"'):].split("</details>")[0]
+    setup_l = next((v for k, v in site_l.items() if k.startswith("setup/example-integrator-")), "")
+    check("an integrator's logo shows on its card, its list row and its setup pages",
+          img in card_l and img in list_l and f'src="../logos/example-integrator.svg"' in setup_l
+          and site_l.get("logos/example-integrator.svg") == good)
+
+    # An anonymous id has no name to put a logo beside, and a logo would name it.
+    audit = dict(bs.logo_audit(root, allow_l))
+    check("an anonymous integrator's logo is refused",
+          "example-anonymous.svg" not in str(list(site_l))
+          and "anonymous" in audit.get(f"{bs.INTEG_LOGO_DIR}/example-anonymous.svg", ""))
+    for f in logos.iterdir():
+        f.unlink()
+
+    # Each kind of active or external content is refused on its own.
+    unsafe = {
+        "script": '<svg><script>alert(1)</script></svg>',
+        "handler": '<svg onload="alert(1)"></svg>',
+        "link": '<svg><image href="https://example.com/x.png"/></svg>',
+        "foreign": '<svg><foreignObject><p>x</p></foreignObject></svg>',
+        "dtd": '<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY x "y">]><svg></svg>',
+        "css": '<svg><style>@import "https://example.com/x.css";</style></svg>',
+        "url": '<svg><rect fill="url(https://example.com/x)"/></svg>',
+        "html": '<html><svg></svg></html>',
+        "size": '<svg>' + " " * bs.INTEG_LOGO_MAX + '</svg>',
+    }
+    let_through = [k for k, v in unsafe.items() if not bs.logo_problems(v.encode())]
+    check("a logo with active or external content is refused",
+          not let_through and not bs.logo_problems(good.encode()), f"accepted {let_through}")
+
+    # The logos in the repository itself, which the cases above leave alone.
+    committed = bs.logo_audit(bs.pathlib.Path(ROOT), bs.load_allowlist(bs.pathlib.Path(ROOT)))
+    check("every committed logo is a safe SVG for a public integrator", not committed, f"{committed[:3]}")
+
     # Dates read YYYY-MM-DD or DD-MM, never month first.
     src = open(os.path.join(work, "scripts", "build_status.py")).read()
     bad_fmt = re.findall(r"(?<!%Y-)%m-%d|%m/%d", src)
@@ -1132,7 +1182,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 22, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 26, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

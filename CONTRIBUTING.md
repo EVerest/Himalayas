@@ -63,6 +63,25 @@ allowlist entry, and omit `extra.integrator.displayName` from your records. The 
 takes the name from the record, so a record that carries `displayName` names you whatever
 the allowlist says. Without it the page shows `your-id (anonymous)`.
 
+### Adding a logo
+
+A public integrator may add its logo, which the status site shows beside its name on the
+overview and on its setup pages. Add it as `integrators/logos/<your-id>.svg`, in the
+allowlist PR or a later PR of its own; either way a code owner reviews it. By adding it you
+confirm your organization may have it shown there.
+
+- **SVG only**, at most 32 KiB, starting with `<svg` (an `<?xml?>` declaration and comments
+  before it are fine).
+- **Inert.** No `<script>`, no `on...=` event handlers, no `<foreignObject>`, no `@import`,
+  and no `href` or `url()` that points outside the file. Convert text to paths, since
+  fonts cannot be loaded.
+- **Readable on white.** It is shown about 20 px tall on a small white plate, in light and
+  dark mode alike, so use the version made for light backgrounds.
+- **Not for anonymous ids.** A logo would name you, so an id without `display_name` gets
+  none.
+
+A logo that breaks a rule is left off the site, and the self-test names it.
+
 ---
 
 ## 2. Pick a pointer and record the commit
@@ -363,7 +382,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 146 checks, all of which must pass
+python3 scripts/selftest.py        # 150 checks, all of which must pass
 ```
 
 ---
