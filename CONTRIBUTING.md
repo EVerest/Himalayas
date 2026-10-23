@@ -72,9 +72,11 @@ confirm your organization may have it shown there.
 
 - **SVG only**, at most 32 KiB, starting with `<svg` (an `<?xml?>` declaration and comments
   before it are fine).
-- **Inert.** No `<script>`, no `on...=` event handlers, no `<foreignObject>`, no `@import`,
-  and no `href` or `url()` that points outside the file. Convert text to paths, since
-  fonts cannot be loaded.
+- **Static shapes only.** Paths, basic shapes, groups, gradients, clip paths, masks and a
+  `<style>` for fills. No `<script>`, event handlers, links (`<a>`), `<image>`, `<text>`,
+  animation or `<foreignObject>`, and no `href`, `url()` or `@import` that points outside the
+  file. Convert text to paths, and remove the link wrappers some design tools export.
+  The site publishes the logo as re-written from these parts, not your file byte for byte.
 - **Readable on white.** It is shown about 20 px tall on a small white plate, in light and
   dark mode alike, so use the version made for light backgrounds.
 - **Not for anonymous ids.** A logo would name you, so an id without `display_name` gets

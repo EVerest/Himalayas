@@ -39,6 +39,7 @@ import os
 import pathlib
 import re
 import sys
+import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 NOW = dt.datetime.now(dt.timezone.utc)
@@ -94,26 +95,60 @@ def reversed_logo(svg):
 # Integrators' own logos, one SVG per public id, shown beside their name.
 INTEG_LOGO_DIR = "integrators/logos"
 INTEG_LOGO_MAX = 32 * 1024
-# The site shows logos through <img>, where SVG scripts do not run. Refusing
-# active or external content anyway keeps a logo inert wherever it is opened.
-INTEG_LOGO_UNSAFE = [
-    (r"<script", "a script"), (r"<foreignObject", "embedded HTML"),
-    (r"\son[a-z]+\s*=", "an event handler"), (r"""href\s*=\s*["'](?!#)""", "an external link"),
-    (r"url\(\s*['\"]?(?!#)", "an external url()"), (r"@import", "an @import"),
-]
+# A published logo is also a document anyone can open on the site's origin, so
+# it is held to an allowlist of static SVG and re-serialized from the parsed
+# tree: what is published is exactly what was checked.
+SVG_NS = "http://www.w3.org/2000/svg"
+XLINK_HREF = "{http://www.w3.org/1999/xlink}href"
+ET.register_namespace("", SVG_NS)
+ET.register_namespace("xlink", "http://www.w3.org/1999/xlink")
+LOGO_ELEMENTS = {"svg", "g", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon", "defs",
+                 "linearGradient", "radialGradient", "stop", "clipPath", "mask", "use", "style", "title", "desc"}
+LOGO_ATTRS = {
+    "id", "class", "style", "version", "viewBox", "width", "height", "preserveAspectRatio", "transform",
+    "x", "y", "x1", "y1", "x2", "y2", "cx", "cy", "r", "rx", "ry", "fx", "fy", "d", "points", "offset",
+    "fill", "fill-rule", "fill-opacity", "stroke", "stroke-width", "stroke-linecap", "stroke-linejoin",
+    "stroke-miterlimit", "stroke-dasharray", "stroke-opacity", "opacity", "clip-path", "clip-rule", "mask",
+    "stop-color", "stop-opacity", "gradientUnits", "gradientTransform", "spreadMethod", "clipPathUnits",
+    "maskUnits", "maskContentUnits", "href", "data-name", "type",
+}
+# CSS that could fetch or run anything: imports, non-fragment url(), escapes
+# that could spell either.
+UNSAFE_CSS = re.compile(r"@import|url\(\s*['\"]?(?!#)|expression|javascript:|\\", re.I)
 
 
-def logo_problems(data):
-    """Why an integrator logo cannot be shown; empty when it can."""
+def clean_logo(data):
+    """(svg, problems): the logo re-serialized, or None and why it cannot be shown."""
     if len(data) > INTEG_LOGO_MAX:
-        return [f"larger than {INTEG_LOGO_MAX // 1024} KiB"]
+        return None, [f"larger than {INTEG_LOGO_MAX // 1024} KiB"]
+    if re.search(rb"<!(?:DOCTYPE|ENTITY)", data, re.I):
+        return None, ["contains a DTD"]
     try:
-        svg = data.decode("utf-8")
-    except UnicodeDecodeError:
-        return ["not UTF-8 SVG"]
-    if not re.match(r"\s*(?:<\?xml[^>]*>\s*)?(?:<!--.*?-->\s*)*<svg[\s>]", svg, re.S):
-        return ["not an SVG document"]
-    return [f"contains {what}" for pat, what in INTEG_LOGO_UNSAFE if re.search(pat, svg, re.I)]
+        root = ET.fromstring(data)
+    except ET.ParseError as e:
+        return None, [f"is not well-formed XML ({e})"]
+    if root.tag != f"{{{SVG_NS}}}svg":
+        return None, ["is not an SVG document"]
+    problems = []
+    for el in root.iter():
+        ns, _, name = el.tag.rpartition("}")
+        if ns[1:] != SVG_NS or name not in LOGO_ELEMENTS:
+            problems.append(f"contains <{name}>, which is not static SVG")
+            continue
+        if name == "style" and UNSAFE_CSS.search(el.text or ""):
+            problems.append("has a <style> that imports or links")
+        for k, v in el.attrib.items():
+            if k == XLINK_HREF:
+                k = "href"
+            if k not in LOGO_ATTRS:
+                problems.append(f"has the attribute {k} on <{name}>")
+            elif k == "href" and (name != "use" or not v.startswith("#")):
+                problems.append(f"links outside the file from <{name}>")
+            elif UNSAFE_CSS.search(v):
+                problems.append(f"has a {k} on <{name}> that imports or links")
+    if problems:
+        return None, sorted(set(problems))
+    return ET.tostring(root, encoding="unicode") + "\n", []
 
 
 def logo_audit(root, allow):
@@ -131,7 +166,7 @@ def logo_audit(root, allow):
         elif f.stem not in public:
             out.append((rel, "belongs to an anonymous id, and a logo would name it"))
         else:
-            out += [(rel, p) for p in logo_problems(f.read_bytes())]
+            out += [(rel, p) for p in clean_logo(f.read_bytes())[1]]
     return out
 
 
@@ -188,7 +223,7 @@ def load_allowlist(root=ROOT):
     for a in out:
         f = root / INTEG_LOGO_DIR / f"{a['id']}.svg"
         if f.is_file() and f"{INTEG_LOGO_DIR}/{f.name}" not in bad:
-            a["logo"] = f.read_text()
+            a["logo"] = clean_logo(f.read_bytes())[0]
     return out
 
 
@@ -500,6 +535,7 @@ td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;wi
 .pill.v-build-only.b-ok{background:var(--okbg);color:var(--ok);border:0;font-weight:700}.pill.v-build-only.b-bad{background:var(--badbg);color:var(--bad);border:0;font-weight:700}
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
 .ilogo{height:20px;width:auto;max-width:96px;vertical-align:middle;margin-right:8px;padding:2px 4px;background:#fff;border-radius:4px}
+.lslot{display:inline-block;width:104px;vertical-align:middle}.lslot .ilogo{margin-right:0}
 .allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b{font-size:20px;display:block;line-height:1.1}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
@@ -788,6 +824,8 @@ def all_integrators(P):
     for m in P["setups"]:
         groups.setdefault(m["integ"], []).append(m)
     detailed = pointer_file("detailed", P["name"])
+    # A fixed slot keeps names aligned whether or not their integrator has a logo.
+    slot = (lambda i: f'<span class="lslot">{integ_logo(P, i)}</span>') if P["logos"] else (lambda i: "")
     rows = []
     for integ, ms in groups.items():
         cur = current(ms)
@@ -797,12 +835,12 @@ def all_integrators(P):
         if len(ms) > len(cur):
             pills.append(f'<span class="pill v-not-exercised">{len(ms) - len(cur)} stale</span>')
         last = max(m["latest"]["start"] or 0 for m in ms)
-        rows.append(f'<tr><th scope="row">{integ_logo(P, integ)}<a href="#integ-{slug(integ)}">{esc(ms[0]["integ_name"])}</a></th>'
+        rows.append(f'<tr><th scope="row">{slot(integ)}<a href="#integ-{slug(integ)}">{esc(ms[0]["integ_name"])}</a></th>'
                     f'<td class="num"><a href="{detailed}#detail-{slug(integ)}">{len(ms)}</a></td><td><div class="pills">{"".join(pills)}</div></td>'
                     f'<td>{f"{ms_to_dt(last):%Y-%m-%d}" if last else "unknown"}</td></tr>')
     for a in P["silent"]:
         name = a["name"] if a["name"] != a["id"] else f'{a["id"]} (anonymous)'
-        rows.append(f'<tr><th scope="row">{integ_logo(P, a["id"])}{esc(name)}</th><td class="num">0</td>'
+        rows.append(f'<tr><th scope="row">{slot(a["id"])}{esc(name)}</th><td class="num">0</td>'
                     f'<td><span class="pill v-not-reported">{VERDICT_LABEL["not-reported"][0]} not reported yet</span></td><td>–</td></tr>')
     n, k = len(groups) + len(P["silent"]), len(groups)
     return (f'<details class="card allint"><summary><h2 style="display:inline">All integrators</h2> '

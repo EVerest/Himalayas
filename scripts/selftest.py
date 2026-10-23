@@ -1063,7 +1063,7 @@ def suite_build(work, verbose):
     setup_l = next((v for k, v in site_l.items() if k.startswith("setup/example-integrator-")), "")
     check("an integrator's logo shows on its card, its list row and its setup pages",
           img in card_l and img in list_l and f'src="../logos/example-integrator.svg"' in setup_l
-          and site_l.get("logos/example-integrator.svg") == good)
+          and site_l.get("logos/example-integrator.svg") == bs.clean_logo(good.encode())[0])
 
     # An anonymous id has no name to put a logo beside, and a logo would name it.
     audit = dict(bs.logo_audit(root, allow_l))
@@ -1073,21 +1073,33 @@ def suite_build(work, verbose):
     for f in logos.iterdir():
         f.unlink()
 
-    # Each kind of active or external content is refused on its own.
+    # Each kind of active or external content is refused on its own, in an
+    # otherwise valid SVG, and what is published is the re-serialized tree.
+    X = 'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"'
     unsafe = {
-        "script": '<svg><script>alert(1)</script></svg>',
-        "handler": '<svg onload="alert(1)"></svg>',
-        "link": '<svg><image href="https://example.com/x.png"/></svg>',
-        "foreign": '<svg><foreignObject><p>x</p></foreignObject></svg>',
-        "dtd": '<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY x "y">]><svg></svg>',
-        "css": '<svg><style>@import "https://example.com/x.css";</style></svg>',
-        "url": '<svg><rect fill="url(https://example.com/x)"/></svg>',
+        "script": f'<svg {X}><script>alert(1)</script></svg>',
+        "handler": f'<svg {X} onload="alert(1)"/>',
+        "animate": f'<svg {X}><a><animate attributeName="href" to="javascript:alert(1)"/></a></svg>',
+        "link": f'<svg {X}><a href="https://example.com"><path d="M0 0"/></a></svg>',
+        "image": f'<svg {X}><image xlink:href="https://example.com/x.png"/></svg>',
+        "use": f'<svg {X}><use href="data:image/svg+xml,&lt;svg/&gt;"/></svg>',
+        "foreign": f'<svg {X}><foreignObject><p>x</p></foreignObject></svg>',
+        "otherns": f'<svg {X}><h:style xmlns:h="http://www.w3.org/1999/xhtml">p{{}}</h:style></svg>',
+        "dtd": f'<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY x "y">]><svg {X}>&x;</svg>',
+        "import": f'<svg {X}><style>@import "https://example.com/x.css";</style></svg>',
+        "escape": f'<svg {X}><style>.a{{background:u\\72l(https://example.com)}}</style></svg>',
+        "url": f'<svg {X}><rect style="fill:url(https://example.com/x)"/></svg>',
         "html": '<html><svg></svg></html>',
-        "size": '<svg>' + " " * bs.INTEG_LOGO_MAX + '</svg>',
+        "malformed": f'<svg {X}><path></svg>',
+        "size": f'<svg {X}>' + " " * bs.INTEG_LOGO_MAX + '</svg>',
     }
-    let_through = [k for k, v in unsafe.items() if not bs.logo_problems(v.encode())]
+    let_through = [k for k, v in unsafe.items() if bs.clean_logo(v.encode())[0] is not None]
+    fine = f'<!-- art --><svg {X} viewBox="0 0 9 9"><defs><linearGradient id="g"><stop offset="0"/></linearGradient></defs>' \
+           f'<style>.a{{fill:url(#g)}}</style><use xlink:href="#p"/><path id="p" class="a" d="M0 0h9v9z"/></svg>'
+    cleaned, why = bs.clean_logo(fine.encode())
     check("a logo with active or external content is refused",
-          not let_through and not bs.logo_problems(good.encode()), f"accepted {let_through}")
+          not let_through and cleaned is not None and "art" not in cleaned,
+          f"accepted {let_through}" if let_through else f"static logo refused: {why}")
 
     # The logos in the repository itself, which the cases above leave alone.
     committed = bs.logo_audit(bs.pathlib.Path(ROOT), bs.load_allowlist(bs.pathlib.Path(ROOT)))
