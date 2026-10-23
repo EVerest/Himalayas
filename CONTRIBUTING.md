@@ -82,7 +82,8 @@ confirm your organization may have it shown there.
 - **Not for anonymous ids.** A logo would name you, so an id without `display_name` gets
   none.
 
-A logo that breaks a rule is left off the site, and the self-test names it.
+A logo that breaks a rule is left off the site, and the self-test names it. For an
+example, see [`integrators/logos/pionix.svg`](integrators/logos/pionix.svg).
 
 ---
 
