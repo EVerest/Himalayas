@@ -714,8 +714,8 @@ def overview(P, pointers):
     empty = "" if setups else (f'<p class="notice">No submission tested a commit in {esc(P["name"])}\'s log yet. '
                                 f'Results at other commits are not attributed here. <a href="contribute.html">Report a run</a>.</p>')
     return f"""<section class="row"><h1>{esc(P['name'])}</h1><span class="muted">{tipline}</span></section>
-{all_integrators(P) if setups else ""}<p class="cta">Run EVerest on your own hardware or CI? <a href="contribute.html">Report your results</a>: register once, then open one pull request per run.</p>
-{empty}<section class="summarybar" aria-label="Filter by verdict">{btns if setups else ""}</section>
+<p class="cta">Run EVerest on your own hardware or CI? <a href="contribute.html">Report your results</a>: register once, then open one pull request per run.</p>
+{all_integrators(P) if setups else ""}{empty}<section class="summarybar" aria-label="Filter by verdict">{btns if setups else ""}</section>
 {''.join(body)}"""
 
 
