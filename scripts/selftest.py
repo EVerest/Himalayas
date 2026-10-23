@@ -1070,8 +1070,8 @@ def suite_build(work, verbose):
     check("an anonymous integrator's logo is refused",
           "example-anonymous.svg" not in str(list(site_l))
           and "anonymous" in audit.get(f"{bs.INTEG_LOGO_DIR}/example-anonymous.svg", ""))
-    for f in logos.iterdir():
-        f.unlink()
+    for who in ("example-integrator", "example-anonymous"):
+        (logos / f"{who}.svg").unlink()
 
     # Each kind of active or external content is refused on its own, in an
     # otherwise valid SVG, and what is published is the re-serialized tree.
