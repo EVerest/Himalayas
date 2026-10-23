@@ -1,6 +1,6 @@
 {
  "version": 2,
- "generated": "2026-10-23 15:39 UTC",
+ "generated": "2026-10-23 15:41 UTC",
  "selfReported": true,
  "graceDays": 14,
  "pointers": {
@@ -158,15 +158,15 @@
     }
    ]
   },
-  "testing/stable-2026.02": {
-   "tracks": "stable/2026.02",
-   "tip": "a30b832d34fe73acf26f3e22b82ee7a43c7be8ad",
-   "unattributed": [],
-   "setups": []
-  },
   "testing/stable-2026.10": {
    "tracks": "stable/2026.10",
    "tip": "f45ba0d0827f29d53d516fec98960f2528460802",
+   "unattributed": [],
+   "setups": []
+  },
+  "testing/stable-2026.02": {
+   "tracks": "stable/2026.02",
+   "tip": "a30b832d34fe73acf26f3e22b82ee7a43c7be8ad",
    "unattributed": [],
    "setups": []
   }

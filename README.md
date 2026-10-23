@@ -80,8 +80,8 @@ EVerest maintains **floating pointer branches** that a CI job force-pushes forwa
 | Pointer | Tracks | Shown on the status site as |
 |---|---|---|
 | `testing/main` | `main` | main (development) |
-| `testing/stable-2026.02` | `stable/2026.02` | 2026.02 (stable, stops moving soon) |
 | `testing/stable-2026.10` | `stable/2026.10` | 2026.10 (stable) |
+| `testing/stable-2026.02` | `stable/2026.02` | 2026.02 (stable, stops moving soon) |
 
 The site's names come from each pointer's `label`, `kind` (`development` or `stable`) and
 optional `note` in [`pointers.json`](pointers.json). Each name links to the EVerest branch the
