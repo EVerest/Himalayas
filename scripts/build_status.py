@@ -419,9 +419,9 @@ a{color:var(--link)}code,.mono{font-family:var(--mono);font-size:.92em}
 button,select,summary{font:inherit;cursor:pointer;color:inherit}
 :focus-visible{outline:3px solid #2F96D0;outline-offset:2px}
 header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
-header.top .lockup{display:flex;align-items:center;gap:14px}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
+header.top .lockup{display:flex;align-items:center;gap:14px;color:#fff;text-decoration:none;border-radius:8px}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
 svg a:hover text{fill:var(--link);text-decoration:underline}
-header.top .brand{font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{font-size:13px;color:#C9D4E8;max-width:34ch}
+header.top .brand{display:block;font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{display:block;font-size:13px;color:#C9D4E8;max-width:34ch}
 header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 12px;border-radius:8px}
 header.top nav a[aria-current]{background:#21407A}.bar{height:4px;background:var(--lime)}
 main{max-width:1320px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px;display:flex;flex-direction:column;gap:18px}
@@ -581,9 +581,9 @@ def page(title, active, body, depth=0, pointer_sel=""):
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>{CSS}</style>
 <script>try{{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script></head><body>
-<header class="top"><div class="in"><div class="lockup"><a class="logo" href="https://github.com/EVerest/EVerest"><img src="{up}{LOGO}" alt="LF Energy EVerest" width="116" height="34"></a>
-<div><a class="brand" href="{up}index.html" style="color:#fff;text-decoration:none">Himalayas</a>
-<div class="sub">EVerest test results, self-reported by the companies that build on it</div></div></div>
+<header class="top"><div class="in"><a class="lockup" href="{up}index.html"><span class="logo"><img src="{up}{LOGO}" alt="LF Energy EVerest" width="116" height="34"></span>
+<span><span class="brand">Himalayas</span>
+<span class="sub">EVerest test results, self-reported by the companies that build on it</span></span></a>
 {pointer_sel}<nav aria-label="Views">{nav}</nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>

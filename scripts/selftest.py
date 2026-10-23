@@ -978,7 +978,7 @@ def suite_build(work, verbose):
     # assertion, so the page must also carry its own headline and the caveat
     # that this page is the only home for.
     check("index.html is not empty", len(page) > 4_000, f"{len(page)} bytes")
-    check("page carries its headline", 'class="brand"' in page and ">Himalayas</a>" in page
+    check("page carries its headline", 'class="brand">Himalayas<' in page
           and "EVerest test results, self-reported" in page)
     check("page carries the self-reported caveat", "self-reported" in page)
 

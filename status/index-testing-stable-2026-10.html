@@ -16,9 +16,9 @@ a{color:var(--link)}code,.mono{font-family:var(--mono);font-size:.92em}
 button,select,summary{font:inherit;cursor:pointer;color:inherit}
 :focus-visible{outline:3px solid #2F96D0;outline-offset:2px}
 header.top{background:#0C2351;color:#fff}header.top .in{max-width:1320px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
-header.top .lockup{display:flex;align-items:center;gap:14px}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
+header.top .lockup{display:flex;align-items:center;gap:14px;color:#fff;text-decoration:none;border-radius:8px}header.top .logo{display:flex;padding-right:14px;border-right:1px solid #3A5384}header.top .logo img{display:block;height:34px;width:auto}
 svg a:hover text{fill:var(--link);text-decoration:underline}
-header.top .brand{font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{font-size:13px;color:#C9D4E8;max-width:34ch}
+header.top .brand{display:block;font-family:var(--disp);font-size:28px;line-height:1.1}header.top .sub{display:block;font-size:13px;color:#C9D4E8;max-width:34ch}
 header.top nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}header.top nav a{color:#fff;text-decoration:none;padding:10px 12px;border-radius:8px}
 header.top nav a[aria-current]{background:#21407A}.bar{height:4px;background:var(--lime)}
 main{max-width:1320px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px;display:flex;flex-direction:column;gap:18px}
@@ -86,9 +86,9 @@ details.integ[open]>summary{border-radius:8px 8px 0 0}
 .tcbody{padding:4px 0 8px 18px}.msg{white-space:pre-wrap;font-family:var(--mono);font-size:12px;background:var(--line2);padding:8px 10px;border-radius:6px;margin:4px 0;overflow-x:auto}
 </style>
 <script>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script></head><body>
-<header class="top"><div class="in"><div class="lockup"><a class="logo" href="https://github.com/EVerest/EVerest"><img src="everest-logo.svg" alt="LF Energy EVerest" width="116" height="34"></a>
-<div><a class="brand" href="index.html" style="color:#fff;text-decoration:none">Himalayas</a>
-<div class="sub">EVerest test results, self-reported by the companies that build on it</div></div></div>
+<header class="top"><div class="in"><a class="lockup" href="index.html"><span class="logo"><img src="everest-logo.svg" alt="LF Energy EVerest" width="116" height="34"></span>
+<span><span class="brand">Himalayas</span>
+<span class="sub">EVerest test results, self-reported by the companies that build on it</span></span></a>
 <label class="small" style="display:flex;flex-direction:column;color:#C9D4E8">Pointer<select data-nav style="min-height:40px;padding:6px 8px;border-radius:8px;background:#fff;color:#1E2530;border:0"><option value="index.html">testing/main</option><option value="index-testing-stable-2026-02.html">testing/stable-2026.02</option><option value="index-testing-stable-2026-10.html" selected>testing/stable-2026.10</option></select></label><nav aria-label="Views"><a href="index.html" aria-current="page">Overview</a><a href="detailed.html">Detailed</a><a href="coverage.html">Coverage</a><a href="contribute.html">Contribute</a></nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
@@ -96,7 +96,7 @@ details.integ[open]>summary{border-radius:8px 8px 0 0}
 <p class="cta">Run EVerest on your own hardware or CI? <a href="contribute.html">Report your results</a>: register once, then open one pull request per run.</p>
 <p class="notice">No submission tested a commit in testing/stable-2026.10's log yet. Results at other commits are not attributed here. <a href="contribute.html">Report a run</a>.</p><section class="summarybar" aria-label="Filter by verdict"></section>
 </main>
-<footer>Built 2026-10-23 14:29 UTC from <code>results/</code>, <code>pointers.json</code> and
+<footer>Built 2026-10-23 14:33 UTC from <code>results/</code>, <code>pointers.json</code> and
 <code>schema/vocabulary.json</code>. Every result is self-reported by its integrator; conformance test cases are self-run, and nothing here is certification.
 <a href="contribute.html">How to contribute</a> ·
 Data: <a href="summary.json">summary.json</a> · <a href="regressions.json">regressions.json</a></footer>
