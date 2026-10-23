@@ -1116,10 +1116,20 @@ def suite_build(work, verbose):
     # names the lowest so a large suite cannot hide a small broken one.
     def fake(cfg, p, f):
         return {"config": cfg, "integ_name": "Example", "passed_n": p, "failed_n": f, "rate": bs.pass_rate(p, f)}
-    txt = bs.pooled_txt([fake("big", 466, 13), fake("small", 3, 1), fake("none", 0, 0)])
+    def plain(h):
+        return re.sub(r"<[^>]+>", "", h)
+    html_txt = bs.pooled_txt([fake("big", 466, 13), fake("small", 3, 1), fake("none", 0, 0)])
+    txt = plain(html_txt)
     check("a pooled pass rate sums judged tests and names the lowest setup",
-          txt.startswith("97.1% passed") and "lowest 75%" in txt and "Example / small" in txt
-          and bs.pooled_txt([fake("none", 0, 0)]) == "" and bs.pooled_txt([fake("one", 3, 1)]) == "75% passed", txt)
+          txt.startswith("97.1% passed") and "lowest 75%" in txt and "Example / small" in html_txt
+          and bs.pooled_txt([fake("none", 0, 0)]) == "" and plain(bs.pooled_txt([fake("one", 3, 1)])) == "75% passed", txt)
+
+    # Each rate is colored by its own value, along the failing-to-passing pill
+    # colors, so the shade and the number cannot disagree.
+    shades = re.findall(r'--p:([0-9.]+)%">([0-9.]+)%<', html_txt + bs.pct_html(1.0, 0))
+    check("a pass rate is shaded by its own value",
+          shades == [("97.1", "97.1"), ("75", "75"), ("100", "100")]
+          and "color-mix(in oklch,var(--ok) var(--p),var(--bad))" in page, f"{shades}")
 
     # summary.json carries the unrounded rate for other consumers.
     rates = [(st.get("passRate", "missing"), st["counts"]) for st in setups]
@@ -1231,7 +1241,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 31, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 32, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 

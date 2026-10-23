@@ -373,6 +373,12 @@ def pct(rate, failed):
     return f"{v:.1f}".removesuffix(".0") + "%"
 
 
+def pct_html(rate, failed):
+    """The rate, colored along the failing-to-passing pill colors by its value."""
+    t = pct(rate, failed)
+    return f'<span class="pr" style="--p:{t}">{t}</span>'
+
+
 def pooled(setups):
     """(passed, failed, lowest setup) over the setups that have a rate, or None."""
     rated = [m for m in setups if m["rate"] is not None]
@@ -388,11 +394,11 @@ def pooled_txt(setups):
     if not pl:
         return ""
     passed, failed, low = pl
-    head = f"{pct(pass_rate(passed, failed), failed)} passed"
+    head = f"{pct_html(pass_rate(passed, failed), failed)} passed"
     if len([m for m in setups if m["rate"] is not None]) < 2 or low["rate"] == pass_rate(passed, failed):
         return head
     return (f'{head} · <span title="{esc(low["integ_name"])} / {esc(low["config"])}">'
-            f'lowest {pct(low["rate"], low["failed_n"])}</span>')
+            f'lowest {pct_html(low["rate"], low["failed_n"])}</span>')
 
 
 def std_counts(rec):
@@ -573,11 +579,11 @@ td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;wi
 .cell{font-size:13px;white-space:nowrap}.cell.ok{color:var(--ok)}.cell.bad{color:var(--bad);font-weight:700}.cell.warn{color:var(--warn)}.cell.none{color:var(--dash)}
 .ilogo{height:20px;width:auto;max-width:96px;vertical-align:middle;margin-right:8px;padding:2px 4px;background:#fff;border-radius:4px}
 .allint td.lcell{width:1%;padding-right:0}.lcell .ilogo{margin-right:0}
-.allint .rate{margin-top:4px}.allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
+.rate{display:block;margin-top:4px;white-space:nowrap}.allint table{margin-top:10px}.allint .pills{display:flex;flex-wrap:wrap;gap:4px}tbody:target>tr>*{background:var(--warnbg)}tbody[id]{scroll-margin-top:96px}
 .summarybar{display:flex;flex-wrap:wrap;gap:8px}.summarybar button{min-height:52px;min-width:120px;text-align:left;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
 .summarybar button b,.rtile b{font-size:20px;display:block;line-height:1.1}
 .rtile{min-height:52px;padding:6px 14px;border-radius:10px;border:1px dashed var(--line);display:flex;flex-direction:column;justify-content:center}
-.vcol .rate{display:block;margin-top:4px}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
+.pr{font-weight:600;color:color-mix(in oklch,var(--ok) var(--p),var(--bad))}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
 details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
 .strip{display:flex;gap:2px}.strip span{width:12px;height:18px;border-radius:2px;display:inline-block}
 .s-passing{background:#1E8F64}.s-failing,.s-build-failed{background:#C0392B}.s-passing-partial{background:#D9922B}.s-not-exercised,.s-build-only{background:#8792A4}
@@ -815,7 +821,7 @@ def std_chips(m, stds):
 
 
 def rate_line(m):
-    return f'<span class="rate small">{pct(m["rate"], m["failed_n"])} passed</span>' if m["rate"] is not None else ""
+    return f'<span class="rate small">{pct_html(m["rate"], m["failed_n"])} passed</span>' if m["rate"] is not None else ""
 
 
 def verdict_cell(m):
@@ -1327,7 +1333,7 @@ def setup_page(m, P):
                 if L["report"] else "none")
     return f"""<nav aria-label="Breadcrumb" class="small muted"><a href="../{pointer_file("index", P["name"])}">{esc(P['label'])}</a> › {esc(m['integ_name'])} › {esc(m['config'])}</nav>
 <section class="card" style="display:flex;flex-direction:column;gap:14px"><div class="row"><h1>{esc(m['config'])}</h1>{vpill(m['verdict'])}{reg}
-<span class="muted">{oc['passed']} passed · {oc['failed']} failed · {oc['inconclusive']} inconclusive · {oc['accepted']} accepted · {oc['skipped']} skipped of {len(L['tests'])}{f" · {pct(m['rate'], m['failed_n'])} of judged tests passed" if m['rate'] is not None else ""}</span></div>
+<span class="muted">{oc['passed']} passed · {oc['failed']} failed · {oc['inconclusive']} inconclusive · {oc['accepted']} accepted · {oc['skipped']} skipped of {len(L['tests'])}{f" · {pct_html(m['rate'], m['failed_n'])} of judged tests passed" if m['rate'] is not None else ""}</span></div>
 <dl class="grid" style="margin:0">
 <div><dt class="small muted">Integrator</dt><dd style="margin:0">{integ_logo(P, m['integ'], "../")}{esc(m['integ_name'])}</dd></div>
 <div><dt class="small muted">Tested commit</dt><dd style="margin:0">{commit_link(L['commit'])} · {behind}</dd></div>
