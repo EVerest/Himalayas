@@ -585,7 +585,7 @@ td.tested{white-space:nowrap}td.vcol{min-width:9em}td.vcol .reg{display:block;wi
 .rtile{min-height:52px;padding:6px 14px;border-radius:10px;border:1px dashed var(--line);display:flex;flex-direction:column;justify-content:center}
 .pr{font-weight:600;color:color-mix(in oklch,var(--ok) var(--p),var(--bad))}.summarybar button[aria-pressed=true]{outline:2px solid var(--ink)}
 details>summary{min-height:32px}details.group{padding:0;overflow:hidden}details.group>summary{padding:12px 20px;background:var(--line2);list-style-position:inside}
-.strip{display:flex;gap:2px}.strip span{width:12px;height:18px;border-radius:2px;display:inline-block}
+.strip{display:flex;gap:2px;align-items:flex-end;height:18px}.strip span{width:12px;border-radius:2px;display:inline-block}
 .s-passing{background:#1E8F64}.s-failing,.s-build-failed{background:#C0392B}.s-passing-partial{background:#D9922B}.s-not-exercised,.s-build-only{background:#8792A4}
 .mx td{text-align:center;font-family:var(--mono);font-size:13px}.mx td.untested{color:var(--dash);border:1px dashed var(--dash)}.mx td.z{color:var(--ok)}.mx td.f{color:var(--bad);font-weight:700}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
@@ -924,12 +924,29 @@ def all_integrators(P):
             f'<th scope="col">Verdicts</th><th scope="col">Last reported</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></details>')
 
 
+STRIP_H = 18
+
+
 def run_strip(m, n=14):
+    """One bar per run, oldest first. A run with failures is a red bar as tall as its failed
+    count, scaled to the worst run shown; a clean run is a short green tick."""
     runs = m["runs"][-n:]
+    oc = [collections.Counter(t["outcome"] for t in r["tests"]) for r in runs]
+    worst = max([c["failed"] for c in oc] + [1])
     cells = []
-    for r in runs:
-        f = sum(1 for t in r["tests"] if t["outcome"] == "failed")
-        cells.append(f'<span class="s-{"failing" if f else "passing"}" title="{short(r["commit"])} {ms_to_dt(r["start"]):%d-%m %H:%M}: {f} failed"></span>')
+    for r, c in zip(runs, oc):
+        when = f'{short(r["commit"])} {ms_to_dt(r["start"]):%d-%m %H:%M}'
+        rate = pass_rate(c["passed"], c["failed"])
+        if r["build"] != "passed":
+            cls, h, tip = "s-build-failed", STRIP_H, "build failed"
+        elif rate is None:
+            cls, h, tip = "s-not-exercised", 4, "no judged tests"
+        elif c["failed"]:
+            cls, h = "s-failing", 6 + round((STRIP_H - 6) * c["failed"] / worst)
+            tip = f'{c["failed"]} failed of {c["passed"] + c["failed"]} judged · {pct(rate, c["failed"])} passed'
+        else:
+            cls, h, tip = "s-passing", 4, f'none failed of {c["passed"]} judged'
+        cells.append(f'<span class="{cls}" style="height:{h}px" title="{when}: {tip}"></span>')
     return f'<div class="strip" role="img" aria-label="last {len(runs)} runs, oldest first">{"".join(cells)}</div>'
 
 
@@ -1024,7 +1041,7 @@ def detail_shell(P, bodies):
 <thead><tr><th>Integrator</th><th>Setup</th><th>Verdict</th><th>Results</th><th>Tested commit</th><th>Tested on</th><th>Env</th><th>Build</th><th>Harness</th>
 <th>Last 14 runs</th><th>Evidence</th></tr></thead>
 {bodies or '<tbody><tr><td colspan="11" class="muted">No setups.</td></tr></tbody>'}</table></div>
-<p class="small muted" style="padding:0 20px 14px;margin:8px 0 0">Last 14 runs, oldest first: <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-passing"></span></span> no failed tests · <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-failing"></span></span> one or more failed tests</p></section>"""
+<p class="small muted" style="padding:0 20px 14px;margin:8px 0 0">Last 14 runs, oldest first: <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-passing" style="height:4px"></span></span> no failed tests · <span class="strip" style="display:inline-flex;vertical-align:-4px"><span class="s-failing" style="height:9px"></span><span class="s-failing" style="height:18px"></span></span> failed tests, taller for more, scaled to the worst run shown · hover a run for its counts</p></section>"""
 
 
 def comparison(P, others):

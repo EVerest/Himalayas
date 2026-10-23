@@ -56,7 +56,7 @@ The contributor-facing summary is
 | Sections: regressions panel, setups table, comparison. | The history matrix was dropped (see History). | Implemented |
 | The regressions panel is collapsed by default. Within each state, every integrator is its own collapsed section with a test count, holding that integrator's table. | An integrator heading row read as part of the column titles, and the panel has to scale to many integrators. | Implemented |
 | The setups table has one results column: passed and failed on the first line, total tests and any accepted, inconclusive or skipped on the second. | Six count columns took most of the width. | Implemented |
-| Each row shows the last 14 runs as bricks, oldest first: green for no failed tests, red for one or more, with a legend under the table. | A line chart and a third color for partial verdicts were harder to read than two colors. | Implemented |
+| Each row shows the last 14 runs as bars, oldest first. A run with failures is a red bar as tall as its failed count, scaled to the worst run shown; a clean run is a short green tick, a run with nothing judged a gray tick, and a failed build a full-height dark bar. Hovering a run gives its failed and judged counts and its pass rate. A legend sits under the table. | A line chart and a third color for partial verdicts were harder to read than two colors. Red or green alone hid evolution: 13 failures and 3 looked the same. Failure counts show change near 100% far better than shading by pass rate, where 97% and 100% look alike. | Implemented |
 
 ### Detail page
 

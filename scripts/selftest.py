@@ -1137,6 +1137,19 @@ def suite_build(work, verbose):
     check("the compare table shows pass rates under verdicts",
           'data-cmp=' in cmp_ and 'class="rate small"' in cmp_)
 
+    # The run strip sizes a failing run by its failed count, scaled to the
+    # worst run shown, so 12 failures and 3 do not look the same.
+    def run(failed, passed=100, build="passed"):
+        return {"commit": "0" * 40, "start": 0, "build": build,
+                "tests": [{"outcome": "failed"}] * failed + [{"outcome": "passed"}] * passed}
+    strip = bs.run_strip({"runs": [run(0), run(3), run(12), run(0, 0), run(1, build="failed")]})
+    bars = re.findall(r'class="(s-[a-z-]+)" style="height:(\d+)px"', strip)
+    hs = {c: int(h) for c, h in bars}
+    check("the run strip sizes failing runs by their failed count",
+          [c for c, _ in bars] == ["s-passing", "s-failing", "s-failing", "s-not-exercised", "s-build-failed"]
+          and int(bars[1][1]) < int(bars[2][1]) == bs.STRIP_H and int(bars[0][1]) < int(bars[1][1])
+          and "3 failed of 103 judged" in strip, f"{bars}")
+
     # summary.json carries the unrounded rate for other consumers.
     rates = [(st.get("passRate", "missing"), st["counts"]) for st in setups]
     off = [r for r, c in rates
@@ -1247,7 +1260,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
-          "archive": 9, "staleness": 6, "build": 33, "docs": 10}
+          "archive": 9, "staleness": 6, "build": 34, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
