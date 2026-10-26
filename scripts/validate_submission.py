@@ -29,12 +29,15 @@ REJECTS
   not-authorised      the submitting GitHub account is not listed for that
                       integrator id in integrators/allowlist.yaml
   too-big             the submission, or its inline attachments, exceed the caps
+  possible-secret     a string looks like a credential; named by rule and JSON
+                      path, never by value
 
 TOOL ERRORS - exit 2, and the workflow closes the pull request
   the submission file cannot be read, integrators/allowlist.yaml cannot be read,
-  pointers.json cannot be read, or the gate breaks on a document no schema
-  rejected. All four mean the gate cannot say whether the submission is valid,
-  which is a different statement from "this submission is wrong".
+  pointers.json cannot be read, the gate breaks on a document no schema
+  rejected, or the status site build fails with the record. All five mean the
+  gate cannot say whether the submission is valid, which is a different
+  statement from "this submission is wrong".
 
 WARNS - never blocks
   sourcecode          OpenHTF embeds test source by default and this repo is
@@ -58,7 +61,7 @@ from a legitimate rejection. And normalisation and every check after it run
 inside a guard: a break with a schema error already recorded is reported as that
 rejection, and a break with NOTHING recorded is our bug, so it becomes exit 2.
 """
-import argparse, json, os, re, sys, urllib.request, urllib.error
+import argparse, base64, binascii, json, os, re, sys, urllib.request, urllib.error
 
 try:
     import jsonschema
@@ -84,6 +87,49 @@ PATH_RE = re.compile(
     r"(?P<date>\d{8})(?:-(?P<seq>[2-9]|[1-9]\d+))?\.json$")
 
 
+# High-confidence credential shapes only. A match blocks auto-merge; the gate names
+# the rule and the JSON path, never the value, because its comment is public.
+SECRET_PATTERNS = (
+    ("private key", re.compile(r"-----BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY-----")),
+    ("GitHub token", re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{22,})")),
+    ("AWS access key", re.compile(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b")),
+    ("Slack token", re.compile(r"\bxox[abprs]-[A-Za-z0-9-]{10,}")),
+    ("Google API key", re.compile(r"\bAIza[0-9A-Za-z_-]{35}")),
+    ("JSON web token", re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}")),
+    ("bearer token", re.compile(r"\bBearer\s+[A-Za-z0-9._~+/-]{20,}=*")),
+    ("password in a URL", re.compile(r"\b[a-z][a-z0-9+.-]*://[^/\s:@]+:[^/\s@]+@")),
+    ("token in a URL", re.compile(r"[?&](?:access_token|token|sig|signature|X-Amz-Signature|X-Amz-Credential"
+                                  r"|api_?key|key)=[^&#\s\"]{8,}", re.I)),
+)
+
+
+def strings(node, path="$"):
+    """Every string in a document with its JSON path, base64 attachment data decoded as well."""
+    if isinstance(node, str):
+        yield path, node
+        if path.endswith(".data") and len(node) >= 16:
+            try:
+                yield path + " (base64)", base64.b64decode(node, validate=True).decode("utf-8", "ignore")
+            except (binascii.Error, ValueError):
+                pass
+    elif isinstance(node, dict):
+        for k, val in node.items():
+            yield from strings(val, f"{path}.{k}")
+    elif isinstance(node, list):
+        for i, val in enumerate(node):
+            yield from strings(val, f"{path}[{i}]")
+
+
+def redact(text):
+    for _, rx in SECRET_PATTERNS:
+        text = rx.sub("[withheld]", text)
+    return text
+
+
+def secret_hits(doc):
+    return [(path, name) for path, text in strings(doc) for name, rx in SECRET_PATTERNS if rx.search(text)]
+
+
 class ToolError(Exception):
     """The gate could not reach a verdict. Exit 2, and the workflow closes the PR."""
 
@@ -92,14 +138,15 @@ class Verdict:
     def __init__(self):
         self.errors, self.warnings, self.notes = [], [], []
 
+    # Messages quote submitted values, and the verdict is a public comment.
     def err(self, code, msg):
-        self.errors.append((code, msg))
+        self.errors.append((code, redact(msg)))
 
     def warn(self, code, msg):
-        self.warnings.append((code, msg))
+        self.warnings.append((code, redact(msg)))
 
     def note(self, msg):
-        self.notes.append(msg)
+        self.notes.append(redact(msg))
 
     @property
     def accepted(self):
@@ -143,7 +190,7 @@ def allowlist_entries():
 
     Returning the whole entry rather than the id is what makes the author binding
     possible: the accounts authorised to publish as an id live on the entry, and
-    the file is CODEOWNERS-protected, so adding one is an owner-approved change.
+    only a maintainer can merge a change to the file, so adding one is maintainer-approved.
     """
     p = os.path.join(ROOT, "integrators", "allowlist.yaml")
     if not os.path.exists(p) or yaml is None:
@@ -267,7 +314,7 @@ def main():
         v.err("bad-path",
               "Path must be `results/&lt;integrator&gt;/&lt;pointer&gt;/YYYYMMDD.json`, with an "
               "optional `-2`, `-3`&hellip; suffix for a second run the same day. "
-              "e.g. `results/deadbeef-charge/testing/main/20260909-2.json`. "
+              "e.g. `results/your-id/testing/main/20260909-2.json`. "
               f"Got `{rel}`.")
     who = m.group("who") if m else None
     path_ptr = m.group("pointer") if m else None
@@ -288,6 +335,16 @@ def main():
     except json.JSONDecodeError as e:
         v.err("not-json", f"Not valid JSON: {e}")
         return finish(v, rel, None, args)
+
+    hits = secret_hits(doc)
+    if hits:
+        where = "; ".join(f"`{path}` ({name})" for path, name in hits[:5])
+        v.err("possible-secret",
+              f"**{len(hits)} value(s) look like credentials**: {where}"
+              + (f" and {len(hits) - 5} more" if len(hits) > 5 else "") + ". The values are not "
+              "repeated here. If one is real, revoke or rotate it first: your branch already made "
+              "it public. Then remove it from the record and force-push. If none is a secret, ask a "
+              "maintainer to review and merge by hand.")
 
     fmt = detect(doc)
     if fmt is None:
@@ -544,7 +601,30 @@ def main():
         v.note("*Some checks could not run: this document is malformed in a way that "
                "stops the gate reading it. The failures above are the reason.*")
 
+    if v.accepted:
+        site_builds()
     return finish(v, rel, fmt, args)
+
+
+def site_builds():
+    """Build the status site over every stored record, this one included, as the deploy will.
+
+    A valid record the builder cannot handle would stop the site updating for everyone,
+    so it is refused here as a fault of ours. The message names the builder's frame,
+    never the record's values.
+    """
+    import build_status as bs
+    try:
+        declared, logs = bs.load_pointers()
+        with open(os.path.join(ROOT, "schema", "vocabulary.json")) as f:
+            vocab = json.load(f)
+        bs.build_site(bs.load_records(), declared, logs, bs.load_allowlist(), vocab)
+    except Exception as e:                                     # noqa: BLE001
+        import traceback
+        frame = traceback.extract_tb(e.__traceback__)[-1]
+        raise ToolError(f"the status site build fails with this record: {type(e).__name__} in "
+                        f"{frame.name}() at {os.path.basename(frame.filename)}:{frame.lineno}. "
+                        "The record passed every check, so the fault is ours; please raise an issue.")
 
 
 def finish(v, rel, fmt, args):
@@ -563,6 +643,7 @@ def write_report(args, text):
 def tool_error(args, rel, why):
     """Exit 2 WITH a verdict. A tool error that writes nothing leaves the
     workflow with a red check and no reason on the pull request."""
+    why = redact(why)
     out = (f"### Submission could not be processed &mdash; `{rel}`\n\n"
            f"The intake gate failed while checking this file, so it cannot say whether "
            f"the submission is valid.\n\n```\n{why}\n```\n\n"

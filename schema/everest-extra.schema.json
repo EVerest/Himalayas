@@ -93,12 +93,12 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "description": "Unique integrator id. Also the results/<id>/ directory name, which is what makes it unique under PR intake; under repository_dispatch it MUST be derived from the submitting token rather than self-declared, or uniqueness is unenforceable. Use a pseudonym to stay anonymous - there is no separate publication flag, because the repository is public.",
+          "description": "Unique integrator id. Also the results/<id>/ directory name, which is what makes it unique under PR intake; under repository_dispatch it MUST be derived from the submitting token rather than self-declared, or uniqueness is unenforceable. Use a pseudonym to withhold your name; there is no separate publication flag, because the repository is public.",
           "type": "string",
           "pattern": "^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])?$"
         },
         "displayName": {
-          "description": "Human-readable name. Omit to remain anonymous.",
+          "description": "Human-readable name. Omit to withhold your name.",
           "type": "string",
           "minLength": 1,
           "maxLength": 200,

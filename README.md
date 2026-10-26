@@ -1,17 +1,15 @@
 # Himalayas
 
-**EVerest federated testing.** Build and test results reported by EVerest integrators,
+**EVerest federated testing.** Build and test results reported by EVerest integrators
 against the floating `testing/` pointer branches of
-[EVerest](https://github.com/EVerest/EVerest).
+[EVerest](https://github.com/EVerest/EVerest), collected by pull request and shown on one
+status page.
+
+**[Status page](https://everest.github.io/Himalayas/)**: who has reported what, against
+which pointer, and how recently.
 
 All EVerest documentation and issue tracking lives in the
 [main EVerest repository](https://github.com/EVerest/everest).
-
-**→ [Status page](https://everest.github.io/Himalayas/)** - who has reported what,
-against which pointer, and how recently.
-
-Submissions are accepted as **CTRF** or **OpenHTF** and normalised to OpenHTF internally.
-**Both formats accept both SIL and HIL runs** — see [SCHEMA.md](SCHEMA.md).
 
 > ### These results are self-reported
 >
@@ -20,140 +18,156 @@ Submissions are accepted as **CTRF** or **OpenHTF** and normalised to OpenHTF in
 > may also report results from tests that are not public, so **a passing entry does not mean
 > a fixed, comparable suite was run.**
 
-## What EVerest actually checks
+## Submit your first test report in 5 steps
 
-Four things about the *result*:
+1. **Register.** Open a PR adding your id and the GitHub accounts that will submit to
+   [`integrators/allowlist.yaml`](integrators/allowlist.yaml), and wait for a maintainer to
+   merge it. ([details](CONTRIBUTING.md#1-register-once))
+2. **Pick a pointer and record the exact SHA.** Fetch `testing/main` (or a stable pointer)
+   from `EVerest/EVerest`, note the full 40-character commit with `git rev-parse`, and build
+   and test at it. ([details](CONTRIBUTING.md#2-pick-a-pointer-and-record-the-commit))
+3. **Produce [CTRF](https://ctrf.io) or [OpenHTF](https://github.com/google/openhtf) with the required fields:** commit, pointer, SIL or HIL, real
+   start and stop times, a passed build with its module list, and your integrator id. Tag
+   each test. ([minimal example](CONTRIBUTING.md#31-a-minimal-working-ctrf-record),
+   [field table](CONTRIBUTING.md#32-field-by-field-ctrf))
+4. **Validate locally** in a checkout of this repository:
+
+   ```bash
+   python3 -m pip install -r scripts/requirements.txt
+   python3 scripts/validate_submission.py results/your-id/testing/main/20260909.json
+   ```
+
+   ([details](CONTRIBUTING.md#5-validate-locally))
+5. **Open a PR** from your fork that adds only that file. The gate comments accept or
+   reject with the reason; an accepted PR auto-merges. ([details](CONTRIBUTING.md#6-open-the-pull-request))
+
+[CONTRIBUTING.md](CONTRIBUTING.md) is the full walkthrough, including a fully automated
+submission from any CI. [SCHEMA.md](SCHEMA.md) is the contract.
+
+### Add your logo
+
+Optional, for a public integrator: add `integrators/logos/<your-id>.svg`, check it with
+`python3 scripts/build_status.py --check-logos`, and open a PR. The site shows it beside your
+name. See [Adding a logo](CONTRIBUTING.md#adding-a-logo) for the rules and an example.
+
+## What the gate checks
+
+About the *result*:
 
 1. The record validates against the schemas for its format.
 2. The commit is a **full 40-character SHA** that exists in `EVerest/EVerest`.
-3. That commit **appears in `pointers.json`** for the pointer claimed — i.e. it really was
-   an agreed base at some point.
+3. That commit **appears in `pointers.json`** for the pointer claimed, so it really was an
+   agreed base.
 4. The reported build **passed**.
 
-And four about the *submission itself*: the file is named
-`results/<id>/<pointer>/YYYYMMDD.json`, the integrator id in the file matches the directory,
-that id is on [`integrators/allowlist.yaml`](integrators/allowlist.yaml), and the GitHub
-account opening the pull request is one that entry authorises. `results/` is **append-only**,
-so a pull request that removes, edits or renames an existing record is refused outright.
+About the *submission*: the file is named `results/<id>/<pointer>/YYYYMMDD.json`, the
+integrator id in the file matches the directory, that id is in the allowlist, and the
+GitHub account opening the PR is one that entry authorizes. `results/` is **append-only**:
+a PR that removes, edits or renames an existing record is refused.
 
-The full list of rejection codes, each with its reason, is the `REJECTS` block at the top of
-[`scripts/validate_submission.py`](scripts/validate_submission.py). That file is the
-authority; this section is the summary.
+**Beyond the build, no test is mandatory.** Which tests you run is your choice, and they may
+be closed source. That lowers the bar to participating, at the cost of results not being
+directly comparable between integrators. The rest of the record is not optional:
+[SCHEMA.md](SCHEMA.md) lists the fields a record is rejected for omitting.
 
-**Beyond the build, no test is mandatory.** The build is the only *test outcome* the gate
-requires — which tests you run is your choice, and they may be closed source. That is a
-deliberate trade: it lowers the bar to participating, at the cost of results not being
-directly comparable between integrators. It does not mean the rest of a submission is
-optional: [SCHEMA.md](SCHEMA.md) lists the fields a record is rejected for omitting, and the
-module list is among them.
+The full list of rejection codes is the `REJECTS` block at the top of
+[`scripts/validate_submission.py`](scripts/validate_submission.py), which is the authority.
 
-## Submitting
+## Pointer branches
 
-Open a pull request adding one file at `results/<your-id>/<pointer>/YYYYMMDD.json` — for
-example `results/deadbeef-charge/testing/main/20260909.json`. For a second run on the same
-pointer the same day, add a numeric suffix: `20260909-2.json`, then `-3` and so on.
-**`-1` is not a legal name**, deliberately: the first submission of a day has no suffix, so
-allowing `-1` would give two legal names for the same thing.
+EVerest maintains **floating pointer branches** that a CI job force-pushes forward:
 
-Only *added* files are accepted. `results/` is an append-only record: a correction is a new
-file, never an edit, and a removal needs write access and a human.
+| Pointer | Tracks | Shown on the status site as |
+|---|---|---|
+| `testing/main` | `main` | main (development) |
+| `testing/stable-2026.10` | `stable/2026.10` | 2026.10 (stable) |
+| `testing/stable-2026.02` | `stable/2026.02` | 2026.02 (stable, stops moving soon) |
 
-A bot validates the submission and comments accept or reject **with the reason**; accepted
-submissions auto-merge and the status page redeploys within 20 minutes.
-
-Your CI does not have to be GitHub Actions, and a PR from your own fork needs **no write
-access here** — see [CONTRIBUTING.md](CONTRIBUTING.md), which includes a working
-REST-API-only example.
-
-## What a pointer branch is
-
-EVerest maintains **floating pointer branches** that a CI job force-pushes forward daily:
-
-| Pointer | Tracks |
-|---|---|
-| `testing/main` | `main` |
-| `testing/stable-2026.02` | `stable/2026.02` |
-| `testing/stable-2026.10` | `stable/2026.10` |
+The site's names come from each pointer's `label`, `kind` (`development` or `stable`) and
+optional `note` in [`pointers.json`](pointers.json). Each name links to the EVerest branch the
+pointer tracks. `"tracks_pending": true` marks a tracked branch that does not exist yet, such
+as `stable/2026.10` before it is cut; the name is then not linked. Remove it once the branch
+exists.
 
 Fetch one to get the agreed base to test against. They are **not releases**: no support
-promise, no backports, and they are **ungated** — a pointer can point at a broken `main`. That
-is deliberate: the point is a fast signal about whether something broke.
-
-Note the names. They deliberately do **not** live under `stable/`, because `stable/2026.02` is
-already a real protected branch that receives backports.
+promise, no backports, and they are **ungated**, so a pointer can point at a broken `main`.
+The point is a fast signal about whether something broke. They deliberately do not live
+under `stable/`, because `stable/2026.02` is already a real protected branch that receives
+backports.
 
 **A force-pushed branch keeps no history**, so [`pointers.json`](pointers.json) is an
 append-only log of every commit each pointer has pointed at. That log is what makes a
-submission auditable: without it, "I tested `testing/main`" would be uncheckable a day later.
-The gate verifies a submitted commit appears in it.
-
-Discovery: subscribe to `https://github.com/EVerest/EVerest/commits/testing/main.atom`, or
-watch `pointers.json`.
+submission auditable, and the gate verifies a submitted commit appears in it. To follow
+moves, watch `pointers.json` or subscribe to
+`https://github.com/EVerest/EVerest/commits/testing/main.atom`.
 
 EVerest's supported releases are separate, on a six-month cadence, and are not what this
 repository tracks.
+
+## Staleness
+
+A result is marked stale once the pointer has **moved off** the commit it tested **and** the
+result is more than **14 days** old. Both must hold: the pointers move often, so a newer
+base alone means little. This is why run timestamps must be real; a result without one can
+never be aged.
 
 ## Layout
 
 | Path | What it is |
 |---|---|
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to submit, step by step |
 | [`SCHEMA.md`](SCHEMA.md) | The submission contract, and why `extra` has to exist |
-| `schema/ctrf.schema.json` | The normative CTRF schema, vendored so validation is reproducible |
-| `schema/everest-extra.schema.json` | **EVerest's own contract** for `results.extra` |
-| `schema/everest-profile.schema.json` | A **stricter overlay on CTRF**, constraining the freeform string fields CTRF leaves open |
-| `schema/everest-htf-profile.schema.json` | The structural profile for a normalised OpenHTF record |
-| `schema/everest-htf-metadata.schema.json` | **EVerest's contract** for OpenHTF `metadata` — commit, pointer, build, integrator |
-| `schema/vocabulary.json` | The controlled vocabulary for `test.tags` and build targets |
-| `schema/everest-modules.txt` | EVerest module names, used to warn on typos |
-| `examples/minimal-ctrf.json` | The smallest legal CTRF submission |
-| `examples/ctrf-hil-dc.json` | A worked **HIL** submission in CTRF: build matrix, per-test tags, a private test |
-| `examples/minimal-openhtf.json` | The smallest legal OpenHTF submission |
-| `examples/openhtf-hil-dc.json` | A worked **HIL** submission in OpenHTF, with measurements and their limits |
-| `integrators/allowlist.yaml` | Who may submit, under which id |
-| `pointers.json` | **Append-only log** of where each pointer branch has pointed |
-| `results/<id>/<pointer>/<YYYYMMDD>.json` | Submissions, grouped by pointer |
-| `scripts/normalise.py` | Detects CTRF or OpenHTF and normalises to OpenHTF |
+| `schema/ctrf.schema.json` | The normative CTRF schema (v0.0.4, MIT, see [THIRD_PARTY.md](THIRD_PARTY.md)), vendored so validation is reproducible |
+| `schema/everest-extra.schema.json` | EVerest's contract for CTRF `results.extra` |
+| `schema/everest-profile.schema.json` | A stricter overlay on CTRF for the freeform fields it leaves open |
+| `schema/everest-htf-profile.schema.json` | The structural profile for a normalized OpenHTF record |
+| `schema/everest-htf-metadata.schema.json` | EVerest's contract for OpenHTF `metadata` |
+| `schema/vocabulary.json` | The controlled vocabulary for test tags and build targets |
+| `schema/everest-modules.txt` | EVerest module names, used to warn on typos. Never hand-edit |
+| `examples/` | The smallest legal record and a worked HIL record, for each format |
+| `integrators/allowlist.yaml` | Who may submit, under which id, from which accounts. Logos go in `integrators/logos/<id>.svg` |
+| `pointers.json` | Append-only log of where each pointer has pointed |
+| `results/<id>/<pointer>/<YYYYMMDD>.json` | Submissions |
+| `testdata/results/` | Fixture submissions used by the self-test |
+| `testdata/allowlist.yaml` | The example integrator ids, allowlisted only inside the self-test |
 | `scripts/validate_submission.py` | The intake gate. Run it locally before you push |
+| `scripts/normalise.py` | Detects CTRF or OpenHTF and normalizes to OpenHTF |
+| `scripts/classify_pr_files.py` | Decides what a PR is, and refuses any change to an existing record |
 | `scripts/verify_pointers.py` | Checks the pointer branches and the log agree |
-| `scripts/record_pointer_move.py` | Appends one pointer move to the log. Called by `record-pointer-move.yml`, never by hand |
-| `scripts/classify_pr_files.py` | Decides what a pull request is, and refuses any change to an existing record |
-| `scripts/refresh_module_names.py` | Regenerates `schema/everest-modules.txt` by walking `modules/**/manifest.yaml` in EVerest. **Run by hand when the list goes stale; never hand-edit the list** |
-| `scripts/archive.py` | Strips traces and attachments off records older than 6 months. **Run by hand; no workflow invokes it** |
-| `scripts/selftest.py` | **147 checks, almost all negative.** Run this after touching anything in `scripts/` or `schema/` |
-| `scripts/build_status.py` | Generates `status/index.html` and `status/summary.json` |
-| `status/` | Generated, and deployed to Pages |
+| `scripts/record_pointer_move.py` | Appends one pointer move to the log. Called by a workflow, never by hand |
+| `scripts/refresh_module_names.py` | Regenerates `schema/everest-modules.txt` from EVerest's module manifests. Run by hand when the list goes stale |
+| `scripts/archive.py` | Strips traces and attachments off records older than 6 months. Run by hand |
+| `scripts/selftest.py` | 199 checks, almost all negative. Run after touching `scripts/` or `schema/` |
+| `scripts/build_status.py` | Generates the status site: an overview, detailed and coverage page per pointer, a page per setup, a contribute page generated from this README and CONTRIBUTING.md, and `summary.json` and `regressions.json` |
+| `status/` | Generated by `build_status.py` and deployed to Pages; not committed |
+| `docs/design/` | Design records |
+| `docs/images/everest_horizontal-color.svg` | EVerest's logo, shown in the status site header. See [`THIRD_PARTY.md`](THIRD_PARTY.md) |
 
 ## Running it locally
 
 ```bash
 python3 -m pip install -r scripts/requirements.txt
 
-# the same gate CI runs; --skip-commit-check works offline
-python3 scripts/validate_submission.py results/deadbeef-charge/testing/main/20260909.json
+# the gate CI runs; the path is relative to the repository root.
+# --skip-commit-check works offline
+python3 scripts/validate_submission.py results/your-id/testing/main/20260909.json
 
-# rebuild the page
+# rebuild the site from results/ and pointers.json; no network needed
 python3 scripts/build_status.py --grace-days 14
 open status/index.html
 
 # check the pointer branches and the log agree
 python3 scripts/verify_pointers.py
 
-# assert the gate still REJECTS what it should - run this after any change
+# assert the gate still rejects what it should; all 199 checks must pass
 python3 scripts/selftest.py
 ```
 
-## Staleness
-
-A result is marked stale once the pointer branch has **moved off** the commit it tested **and**
-the result is more than **14 days** old. Both conditions must hold: the pointers move daily, so
-a newer base alone means very little.
-
-This is why the run timestamps must be real. `junit-to-ctrf` leaves them at `0`, and a result
-with no timestamp can never be aged — see
-[CONTRIBUTING.md §4](CONTRIBUTING.md#4-producing-the-file).
-
 ## Machine-readable output
 
-[`status/summary.json`](status/summary.json) carries the current state per integrator:
-pointer, commit, environment, build status, pass/fail counts, age in days, and the stale
-flag. It is the file to read from, rather than scraping the page.
+[`summary.json`](https://everest.github.io/Himalayas/summary.json) carries the latest result per pointer, per
+integrator and configuration: commit, moves behind the tip, freshness, environment,
+submission count, outcome counts per standard, tag coverage, failing measurements, and
+the path of the record. It also lists records whose commit is not in the pointer's log.
+[`regressions.json`](https://everest.github.io/Himalayas/regressions.json) lists each regression with its last
+good and first bad commit. Read these rather than scraping the pages.

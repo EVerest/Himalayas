@@ -1,0 +1,13 @@
+# Example integrators, for the self-test only. selftest.py appends these entries
+# to the throwaway copy's integrators/allowlist.yaml, so examples/ and
+# testdata/results/ validate there and nowhere else.
+  - id: example-integrator
+    display_name: Example Integrator GmbH
+    contact: ci@example.com
+    github_users:
+      - example-integrator-ci
+      - example-integrator-release
+  - id: example-unnamed
+    # deliberately unnamed: no display_name, no contact
+    github_users:
+      - example-unnamed-bot

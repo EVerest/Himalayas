@@ -130,7 +130,7 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "description": "Unique integrator id. Also the results/<id>/ directory name. Use a pseudonym to stay anonymous; there is no separate publication flag because the repository is public.",
+          "description": "Unique integrator id. Also the results/<id>/ directory name. Use a pseudonym to withhold your name; there is no separate publication flag because the repository is public.",
           "type": "string",
           "pattern": "^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])?$"
         },

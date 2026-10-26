@@ -1,26 +1,16 @@
 # Integrator allowlist. A submission from an id not listed here is rejected.
 # The id is also the results/<id>/ directory name, which is what makes it unique.
-# Omit display_name to stay anonymous - the repository is public, so anonymity comes
-# from using a pseudonymous id, not from any per-submission flag.
+# Omit display_name to withhold your name. The repository is public, so this entry,
+# including contact and github_users, is public too; see CONTRIBUTING.md.
 #
 # github_users is the accounts authorised to publish as that id.
 # It is MANDATORY and must be non-empty: an entry without it authorises nobody, and
-# every submission under that id is rejected. This file is CODEOWNERS-protected, so
-# adding an account is an owner-approved change - which is what the binding rests on.
+# every submission under that id is rejected. Only a maintainer can merge a change
+# to this file, so adding an account is maintainer-approved; the binding rests on that.
 # A submission whose pull request author is not listed here is rejected quietly:
 # nothing is sent to the contact below, so the gate cannot be used to enumerate an
 # integrator's accounts or to generate mail to them.
 integrators:
-  - id: deadbeef-charge
-    display_name: DEADBEEF Charge GmbH
-    contact: ci@deadbeef-charge.example
-    github_users:
-      - deadbeef-charge-ci
-      - deadbeef-charge-release
-  - id: anon-7f3a
-    # deliberately anonymous: no display_name, no contact
-    github_users:
-      - anon-7f3a-bot
   - id: pionix
     display_name: Pionix GmbH
     github_users:

@@ -20,7 +20,7 @@
         "status": "passed",
         "modules": ["EvseManager"]
       },
-      "integrator": { "id": "anon-7f3a" }
+      "integrator": { "id": "example-unnamed" }
     },
     "tests": []
   }
