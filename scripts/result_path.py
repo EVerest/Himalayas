@@ -2,6 +2,10 @@
 classifier so the two cannot drift apart."""
 import re
 
+# The whole-file cap. results/ keeps files indefinitely, and the intake skips a
+# larger file rather than open a pull request the gate must refuse.
+MAX_FILE_BYTES = 1_048_576
+
 # results/<integrator>/<pointer>/<YYYYMMDD>[-<label>][-N].json - the pointer keeps
 # its slash, so testing/main becomes two path segments.
 #

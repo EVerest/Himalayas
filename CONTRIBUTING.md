@@ -37,17 +37,19 @@ Open a PR adding yourself to [`integrators/allowlist.yaml`](integrators/allowlis
   - id: your-id                 # lowercase letters, digits, dashes; 1-40 chars
     display_name: Your Org      # omit this line to withhold your name
     contact: ci@your-org.example # public; use a role address
-    github_users:               # required, and must list at least one account
-      - your-ci-bot             # the account that will open your pull requests
+    github_users:               # the accounts that will open your pull requests
+      - your-ci-bot
 ```
 
 Your `id` is also your `results/<id>/` directory, which is what makes it unique. It may not
 start or end with a dash. A maintainer reviews and merges each addition, so this
 is not instant.
 
-**`github_users` is mandatory.** It lists the accounts allowed to publish as your id. A
-submission opened by any other account is rejected with `not-authorised`, and an entry with
-no list authorizes nobody. Without this binding any GitHub account could publish an
+**`github_users` or `sources` is mandatory.** `github_users` lists the accounts allowed to
+publish as your id by pull request. A submission opened by any other account is rejected with
+`not-authorised`, and an entry with neither list authorizes nobody. If you would rather not
+hold a bot account at all, bind a public repository instead
+([Setting up a source repository](#setting-up-a-source-repository)). Without this binding any GitHub account could publish an
 auto-merged result in your name. List every account your CI might open pull requests from:
 a change to this file needs a maintainer, so it is not something to fix in a hurry later.
 
@@ -421,7 +423,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 227 checks, all of which must pass
+python3 scripts/selftest.py        # 270 checks, all of which must pass
 ```
 
 ---
@@ -531,6 +533,76 @@ needs a label or `-2` added to `FILE` and `BRANCH`.
 fine-grained PAT scoped to your fork with *Contents: write* and *Pull requests: write*. It
 needs **nothing** on `EVerest/Himalayas`.
 
+### Setting up a source repository
+
+The script above needs an account, a token and a fork held by someone. Instead, your CI can
+write records to a **public repository you control**, and Himalayas copies them from there
+every four hours. You hold no credential for Himalayas, and no account opens pull requests.
+
+1. **Create a public repository**, or use a branch of your Himalayas fork. Keep records in one
+   directory, laid out by pointer: `<path><pointer>/<file>`, where `<file>` follows the rules in
+   [section 6](#6-open-the-pull-request). For example, with `path: records/`:
+
+   ```
+   records/testing/main/20261027-nightly.json
+   records/testing/stable-2026.10/20261027-nightly.json
+   ```
+
+2. **Find its numeric id.** Himalayas reads the repository by id, so a rename keeps working
+   and someone who later takes the old name gets nothing:
+
+   ```bash
+   gh api repos/example-org/conformance-records --jq .id
+   ```
+
+3. **Bind it** in your allowlist entry, in its own PR, like any allowlist change:
+
+   ```yaml
+     - id: example-org
+       display_name: Example Org
+       contact: ci@example-org.example
+       sources:
+         - repo: example-org/conformance-records
+           repo_id: 123456789          # from step 2
+           ref: results                # a branch, not a tag, commit or pull request
+           path: records/              # empty, or a directory ending in /
+           label: nightly              # optional, see below
+   ```
+
+   `github_users` is optional when `sources` is set; keep it if you also submit by pull request.
+   One repository can be bound to one id only. The binding follows the repository id, so it
+   survives a rename and also a transfer to another owner: if you transfer the repository, ask
+   for the binding to be reviewed.
+
+4. **Have your CI commit each new record** to that branch. If the CI is GitHub Actions in that
+   repository, its own `GITHUB_TOKEN` is enough. Otherwise use a deploy key scoped to that one
+   repository.
+
+5. **Protect that branch.** Whoever can get a commit onto it publishes as your id: every
+   collaborator with write access, and every workflow in the repository. Restrict who can push,
+   and require pull requests if others work in the repository.
+
+**What happens next.** For each file not yet in Himalayas, the intake opens a pull request
+titled `intake: <id> <pointer>/<file>`, labeled `intake:<id>`, as `himalayas-accessor[bot]`.
+The gate re-reads the file from your repository, checks it is byte-identical, and runs every
+other check. Accepted records merge on their own; a rejected one is closed with the verdict as
+a comment. Watch the `intake:<id>` label to see them. If the gate itself fails, for example
+because your repository could not be read, the pull request stays open and a maintainer re-runs
+the check. A run opens at most 15 pull requests, so a backlog arrives over several runs.
+
+**A record is taken once.** A rejected record is not retried, and a file edited after it was
+taken is not taken again. A file over 1 MB is never taken, and the intake's run fails until
+it is removed or replaced with a smaller one. Publish the fix under a new name (`-2`, or a different label), as
+you would for a pull request.
+
+**`label`** reserves a filename label for this source. Every record from it must carry the
+label (`20261027-nightly.json`, `20261027-nightly-ocpp201.json`), and a pull request under the
+same id may not use it, so a source and a bot submitting by pull request never race for the
+same filename. Leave it out if the source is your only route.
+
+**Evidence links** (`reportUrl`, `logUrl`) may point into the source. Link a commit
+(`/blob/<sha>/...`), not the branch, so the link still shows the same file later.
+
 ---
 
 ## 8. Common rejections and how to fix them
@@ -552,7 +624,9 @@ The gate lists every failed check at once. The codes, roughly in the order peopl
 | `hil-needs-board` | A HIL run submitted as CTRF names no board | Set `extra.hardware.board` |
 | `id-missing` / `id-mismatch` | No integrator id, or it differs from the `results/<id>/` directory | Make them equal |
 | `not-allowlisted` | The id is not in `integrators/allowlist.yaml` | Register first ([section 1](#1-register-once)) |
-| `not-authorised` | The PR author is not in that entry's `github_users`, or the entry has none | Open the PR from a listed account, or have an owner add the account |
+| `not-authorised` | The PR author is not in that entry's `github_users`, or the entry has neither `github_users` nor `sources` | Open the PR from a listed account, or have an owner add the account |
+| `source-mismatch` | An intake pull request whose file is not byte-identical to the same path in a source bound to the id, or lacks the source's `label` | Publish the record in the source first; do not edit it afterwards |
+| `source-label` | A pull request uses a filename label one of the id's sources reserves | Use a different label for records submitted by pull request |
 | `pointer-unknown` | The pointer in the path is not declared in `pointers.json` | Use a declared pointer |
 | `bad-path` | Not `results/<id>/<pointer>/YYYYMMDD[-label][-N].json`, or a `-1` suffix | Rename the file |
 | `too-big` | Over 1 MB, or over 256 KB of inline bulk | Truncate traces, export OpenHTF with `inline_attachments=False` |

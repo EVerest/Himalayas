@@ -48,6 +48,8 @@ name: Validate submission
 #   submission              0 | run   run   POST   skip  ARM       GREEN
 #   submission              1 | run   run   POST   skip  skip      red
 #   submission              2 | run   run   POST   CLOSE skip      red
+#   intake bot submission   1 | run   run   POST   CLOSE skip      red
+#   intake bot submission   2 | run   run   POST   skip  skip      red
 #
 # The two things to preserve: `not-a-submission` must be GREEN and silent, or a
 # required check deadlocks every code and allowlist pull request; and a skipped
@@ -154,6 +156,8 @@ jobs:
           # publish as it. The login reaches the gate through the environment, never
           # interpolated into the shell.
           SUBMISSION_AUTHOR: ${{ github.event.pull_request.user.login }}
+          # The intake bot is recognized by numeric id; see scripts/sources.py.
+          SUBMISSION_AUTHOR_ID: ${{ github.event.pull_request.user.id }}
         run: |
           : > verdict.md
           rc=0
@@ -226,13 +230,21 @@ jobs:
                 issue_number: context.payload.pull_request.number, body: payload });
             }
 
-      # A submission the gate cannot process is the integrator's to fix, not ours. A
-      # submission the gate cannot process is the submitter's to fix and resubmit, so
+      # A submission the gate cannot process is the submitter's to fix and resubmit, so
       # the pull request is closed rather than left waiting for a push. A plain
       # rejection (exit 1) is NOT closed: the verdict says what to fix and the gate
       # re-runs on the next push.
+      #
+      # The source intake (user id below, himalayas-accessor[bot], the same literal
+      # as INTAKE_BOT_ID in scripts/sources.py) is the other way round. Nobody pushes
+      # to its branch, so a rejection is final and closed; the closed pull request
+      # keeps its branch, which stops the intake taking the record again. Nobody can
+      # resubmit it either, so a pull request the gate could not process stays open
+      # for a maintainer to re-run the check.
       - name: Close the PR when the gate could not process it
-        if: steps.gate.outputs.rc == '2'
+        if: >-
+          (steps.gate.outputs.rc == '2' && github.event.pull_request.user.id != 332461223) ||
+          (steps.gate.outputs.rc == '1' && github.event.pull_request.user.id == 332461223)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
