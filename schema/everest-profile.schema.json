@@ -105,8 +105,120 @@
                   "type": "string",
                   "minLength": 1
                 }
+              },
+              "extra": {
+                "description": "EVerest's per-test conventions (CONTRIBUTING.md section 10). Only the keys named here are constrained; CTRF leaves the rest open.",
+                "type": "object",
+                "properties": {
+                  "acceptedDeviation": {
+                    "description": "This test fails because the integrator accepts a deviation from a clause. The test keeps status failed, and the status page shows it as accepted, never as a pass.",
+                    "type": "object",
+                    "required": [
+                      "reason",
+                      "clause"
+                    ],
+                    "properties": {
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      },
+                      "clause": {
+                        "description": "The requirement or test-specification clause deviated from, e.g. V2G3-M06-08.",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                      },
+                      "since": {
+                        "description": "When the deviation was accepted.",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                      }
+                    }
+                  },
+                  "inconclusive": {
+                    "description": "Neither pass nor fail, e.g. a precondition could not be established. The test has status other, and the status page shows it as inconclusive, never as a pass or a failure.",
+                    "type": "object",
+                    "required": [
+                      "reason"
+                    ],
+                    "properties": {
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      }
+                    }
+                  },
+                  "failureKey": {
+                    "description": "Groups this failure with others of the same cause on the status page, in place of the message's first line.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "description": {
+                    "description": "The test case's title in plain text, e.g. from the test specification. Shown next to the name on the status page. Not part of the test's identity: the name is.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500,
+                    "pattern": "^[^\\r\\n]*$"
+                  },
+                  "logUrl": {
+                    "description": "Link to this test's own log. Shown on the status page as an unverified link; the page never fetches it.",
+                    "type": "string",
+                    "pattern": "^https://",
+                    "maxLength": 2048
+                  }
+                }
               }
-            }
+            },
+            "allOf": [
+              {
+                "$comment": "An accepted deviation is a failure the integrator accepts, so it is never reported as skipped or passed.",
+                "if": {
+                  "properties": {
+                    "extra": {
+                      "required": [
+                        "acceptedDeviation"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "extra"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "status": {
+                      "const": "failed"
+                    }
+                  }
+                }
+              },
+              {
+                "$comment": "Inconclusive is its own outcome and is reported as other, never as failed or skipped.",
+                "if": {
+                  "properties": {
+                    "extra": {
+                      "required": [
+                        "inconclusive"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "extra"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "status": {
+                      "const": "other"
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       },

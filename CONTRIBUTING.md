@@ -242,8 +242,12 @@ optional, but missing it costs you something on the status page or draws a warni
 | `tests[].tags` | Encouraged | see [section 4.1](#41-tag-your-tests). Without tags a test counts toward no protocol |
 | `tests[].suite` | Encouraged | non-empty list of non-empty strings, e.g. recovered from the JUnit `classname` |
 | `tests[].message` | Encouraged | for failures and skips. Keep it short |
+| `tests[].extra.logUrl` | Optional | `https://` only. A link to this test's own log, shown on the test as an unverified link |
+| `tests[].extra.description` | Optional | the test case's title in plain text, one line of at most 500 characters. Shown next to the name; the name stays the identity |
 | `extra.configuration` | Encouraged | needed when you submit several setups per pointer. `[A-Za-z0-9][A-Za-z0-9._-]{0,63}`, e.g. `dc-full-ocpp`. Each configuration gets its own card; without it your newest submission hides the others |
 | `environment.branchName` | Optional | `main` or `stable/yyyy.mm` |
+| `extra.reportSha256` | Optional | SHA-256 of the file at `reportUrl`, 64 lowercase hex digits. Only with `reportUrl` |
+| `extra.testSystem` | Optional | `{name, version}` of the test system that ran the tests against EVerest, such as a conformance test tool. Shown as the run's provenance |
 | `environment.appName` | Optional | if present, `EVerest` |
 | `environment.osPlatform` | Optional | `linux`, `darwin` or `windows` (lowercase) |
 | `environment.healthy` | Optional | a boolean mirror of the build status, for generic CTRF readers |
@@ -312,6 +316,7 @@ Tags are what put a test into a per-protocol view. They come from a controlled v
 | High-level comms | `ISO15118-2` `ISO15118-3` `ISO15118-20` `DIN70121` |
 | Basic comms | `IEC61851` |
 | OCPP | `OCPP1.6` `OCPP2.0.1` `OCPP2.1` |
+| OCPP conformance | `OCPP1.6-TestCases` `OCPP2.0.1-Part6` `OCPP2.1-Part6` |
 | Features | `TLS` `PnC` `SmartCharging` `Eichrecht` `Reservation` `EEBUS` `V2X` |
 | Lifecycle | `mandatory` `smoke` `compliance` `regression` |
 
@@ -364,7 +369,10 @@ Two links, both optional, both `https://` only:
 | A human-readable report (PDF or HTML) | `extra.reportUrl` | `metadata.everest.reportUrl` | **report**, next to the run link |
 
 Use `reportUrl` especially when the CI run itself is not public. The status page never
-fetches either link.
+fetches either link. To pin the report, add its SHA-256 as `extra.reportSha256`
+(`metadata.everest.reportSha256` in OpenHTF): the page shows the hash as declared, and a
+reader who downloads the report can check it. A Vendor Declaration of Conformance (VDoC) is
+not a separate field: link it as the report.
 
 **Truncate `trace`.** A few hundred characters is plenty. On a real EVerest run a failed
 test is about 4,000 bytes of CTRF against about 123 for a passed one, so failures dominate
@@ -413,18 +421,28 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 199 checks, all of which must pass
+python3 scripts/selftest.py        # 227 checks, all of which must pass
 ```
 
 ---
 
 ## 6. Open the pull request
 
-Add one file per run at `results/<your-id>/<pointer>/<YYYYMMDD>.json`, e.g.
-`results/your-id/testing/main/20260909.json`. For a second run on the same pointer the same
-day, add a numeric suffix: `20260909-2.json`, then `-3` and so on. **`-1` is rejected**: the
-first submission of a day carries no suffix, so `-1` would be a second legal name for the
-same thing. One PR may add several files, for example one per configuration.
+Add one file per run at `results/<your-id>/<pointer>/<YYYYMMDD>[-<label>][-N].json`, e.g.
+`results/your-id/testing/main/20260909.json`.
+
+- **A different run the same day**, such as another suite or another bot submitting under
+  your id, takes a label: lowercase segments joined by `-`, each starting with a letter,
+  at most four segments of up to 16 characters, e.g. `20260909-ocpp201-sil.json`. Give
+  each producer its own label and two of them never race for the same name.
+- **A re-run the same day** takes a numeric suffix after the label, if any:
+  `20260909-2.json` or `20260909-ocpp201-sil-2.json`, then `-3` and so on. **`-1` is
+  rejected**: the first run carries no number, so `-1` would be a second legal name for
+  the same thing.
+
+The filename only keeps records apart. A setup is `results.extra.configuration`, and its
+latest run is the last one on the newest commit it tested, by `summary.start`. One PR may
+add several files, for example one per configuration.
 
 The gate comments the verdict, with every reason at once. On rejection, push a fix to the
 same branch and it re-runs. On acceptance auto-merge lands it, and the status page
@@ -506,8 +524,8 @@ curl -fsSL -X POST "${H[@]}" "$API/repos/$UPSTREAM/pulls" \
   | jq -r '"PR opened: \(.html_url)"'
 ```
 
-The script names the file by today's date with no suffix, so a second run on the same day
-needs `-2` added to `FILE` and `BRANCH`.
+The script names the file by today's date with no suffix, so another run on the same day
+needs a label or `-2` added to `FILE` and `BRANCH`.
 
 `$GH_TOKEN` needs write access to **your fork only**: `public_repo` on a classic PAT, or a
 fine-grained PAT scoped to your fork with *Contents: write* and *Pull requests: write*. It
@@ -536,7 +554,7 @@ The gate lists every failed check at once. The codes, roughly in the order peopl
 | `not-allowlisted` | The id is not in `integrators/allowlist.yaml` | Register first ([section 1](#1-register-once)) |
 | `not-authorised` | The PR author is not in that entry's `github_users`, or the entry has none | Open the PR from a listed account, or have an owner add the account |
 | `pointer-unknown` | The pointer in the path is not declared in `pointers.json` | Use a declared pointer |
-| `bad-path` | Not `results/<id>/<pointer>/YYYYMMDD.json`, or a `-1` suffix | Rename the file |
+| `bad-path` | Not `results/<id>/<pointer>/YYYYMMDD[-label][-N].json`, or a `-1` suffix | Rename the file |
 | `too-big` | Over 1 MB, or over 256 KB of inline bulk | Truncate traces, export OpenHTF with `inline_attachments=False` |
 | `possible-secret` | A string matches a credential pattern, or gitleaks flagged one. The verdict names the JSON path or line, not the value | If it is real, revoke or rotate it first, then remove it and force-push. If it is not a secret, ask a maintainer to merge by hand |
 | `not-json` / `unknown-format` | Unparseable, or neither CTRF (`reportFormat`, `specVersion`) nor OpenHTF (`dut_id`, `phases`) | Start from an example |
@@ -547,7 +565,8 @@ under `results/` (append-only), or if it adds results **and** changes anything o
 
 **Warnings never block:** `no-build-url`, `tag-vocabulary` (a tag outside the vocabulary),
 `module-names` (a module name not in EVerest), `target-vocabulary` (a build target EVerest
-does not build), `attachments-large`, `sourcecode` (embedded test source), and
+does not build), `attachments-large`, `sourcecode` (embedded test source),
+`deviation-undeclared` (an `x-accepted-deviation` tag with no clause declared), and
 `commit-uncheckable` (the GitHub API did not answer).
 
 ---
@@ -558,8 +577,9 @@ does not build), `attachments-large`, `sourcecode` (embedded test source), and
       URLs, no personal data.
 - [ ] My id is in `integrators/allowlist.yaml`, and the account opening the PR is in its
       `github_users`.
-- [ ] The file is at `results/<my-id>/<pointer>/YYYYMMDD.json` (`-2`, `-3`... for a second
-      run the same day, never `-1`), and the PR changes nothing outside `results/`.
+- [ ] The file is at `results/<my-id>/<pointer>/YYYYMMDD[-label][-N].json` (a label for a
+      different run the same day, `-2`, `-3`... for a re-run, never `-1`), and the PR
+      changes nothing outside `results/`.
 - [ ] `commit` is the full SHA that `git rev-parse` printed for the pointer I tested.
 - [ ] `appVersion` is that pointer name, and matches the path.
 - [ ] `summary.start` and `stop` are real epoch milliseconds, not `0`.
@@ -576,19 +596,21 @@ does not build), `attachments-large`, `sourcecode` (embedded test source), and
 
 ## 10. Reporting conventions
 
-These conventions are agreed for a redesigned status page that is not built yet. Adopting
-them now keeps your history comparable once it is. Each says what the gate and the page do
-**today**. The design record is [docs/design/status-page.md](docs/design/status-page.md).
+These conventions are what the status page reads to tell a failure from an accepted
+deviation, an inconclusive result or a rig limitation. Each says what the gate and the page
+do today, and marks what is still planned. The design record is
+[docs/design/status-page.md](docs/design/status-page.md).
 
 ### Stable test names
 
-The test name is the test's identity: comparisons, history and regression detection will
+The test name is the test's identity: comparisons, history and regression detection
 match tests by name across runs. Keep each name the same from run to run, keep run-specific
 values (timestamps, ports, serial numbers) out of it, keep names unique within a record, and
 use one naming scheme within a suite, e.g. not a pytest node id like
 `tests/test_x.py::test_y[dut]` among `TC_...` names.
 
-*Planned: the gate does not check this yet.* It will warn on duplicate names, on a suite
+The page lists duplicate names in a setup's latest run and marks a test with no tag from
+the vocabulary as untagged. *Planned:* the gate will warn on duplicate names, on a suite
 mixing naming schemes, and on a test with no tag from the vocabulary.
 
 ### Conformance tags
@@ -608,8 +630,8 @@ A test derived from a requirement of the standard can carry the requirement id a
 e.g. `V2G3-M06-08`, `V2G2-...`, `V2G20-...`, `V2G-DC-...`, `IEC61851-1-...`,
 `OCPP2.0.1-...`. Keep the protocol tag (`ISO15118-2` and so on) as well.
 
-Today these tags are well-formed and accepted, and they warn `tag-vocabulary` until the
-vocabulary lists them. *Planned:* the `compliance` lifecycle tag will be deprecated with a
+The OCPP spec tags are in the vocabulary. The others are well-formed and accepted, and they
+warn `tag-vocabulary` until the vocabulary lists them. *Planned:* the `compliance` lifecycle tag will be deprecated with a
 warning, so prefer a spec tag for new tests.
 
 ### Accepted deviations
@@ -626,12 +648,12 @@ A test that fails on purpose, because you accept a deviation from a clause, keep
     "since": "2026-09-01" } } }
 ```
 
-Today the gate accepts `tests[].extra` (CTRF leaves it open and no EVerest schema constrains
-it), but the normalizer drops it, so **the status page shows such a test as failed.**
-*Planned:* the page shows it as accepted, never as a pass. Do not report a deviation as
-`skipped`. The bare tag `x-accepted-deviation` on a skipped test is accepted today;
-*planned:* it will warn and show as "accepted (clause not declared)" for a transition
-period.
+`reason` and `clause` are required, and a test carrying `acceptedDeviation` must be
+`failed`, or the gate rejects it (`ctrf-profile`). The page shows it as accepted with its
+clause, never as a pass, and leaves it out of the pass rate. Do not report a deviation as
+`skipped`. The bare tag `x-accepted-deviation` on a skipped test, the encoding from before
+this field, is accepted for a transition period: it warns `deviation-undeclared` and shows
+as accepted with "clause not declared".
 
 ### Inconclusive results
 
@@ -644,30 +666,28 @@ be established, is `"status": "other"` with `tests[].extra.inconclusive`:
   "extra": { "inconclusive": { "reason": "Precondition not established" } } }
 ```
 
-Today the gate accepts this, but `other` is normalized to an OpenHTF `ERROR`, so **the page
-counts it as a failure and marks the run failed.** *Planned:* inconclusive becomes its own
-outcome, never a pass or a failure. Do not report it as `failed` with an `x-inconclusive`
-tag or as `skipped`.
+`reason` is required, and a test carrying `inconclusive` must be `other`, or the gate
+rejects it (`ctrf-profile`). The page shows any `other` test as inconclusive, its own
+outcome: never a pass or a failure, and out of the pass rate. Passed to inconclusive is not
+a regression; the setup page lists it as "inconclusive since". Do not report it as
+`failed` with an `x-inconclusive` tag or as `skipped`.
 
 ### Rig limitations
 
 A test your rig cannot exercise is `"status": "skipped"` with the tag `x-rig-limitation` and
-the reason in `message`. This works today as an ordinary skip. *Planned:* the page labels it
-"not exercised on this rig", and a passed test carrying the tag stays a pass with a
-footnote.
+the reason in `message`. The page counts it as a skip and notes "rig limitation" on the
+test. A passed test carrying the tag stays a pass, with the same note.
 
 ### Failure keys
 
 Put the stable cause of a failure on the **first line** of `message`, and volatile detail
-after it. *Planned:* failures will be grouped by that first line with hex addresses,
-decimals, ISO timestamps and UUIDs blanked (integers are kept). To choose the group
-yourself, set `tests[].extra.failureKey` to a short string. It is accepted today and
-ignored.
+after it. The page groups failures by that first line with hex addresses, decimals, ISO
+timestamps and UUIDs blanked (integers are kept). To choose the group yourself, set
+`tests[].extra.failureKey` to a short string (at most 200 characters).
 
 ### Evidence hashes and test systems
 
-*Planned, and rejected today:* `extra.reportSha256` (a SHA-256 of the file at `reportUrl`)
-and a `testSystem` (`{name, version}`) for runs made with a reference test system.
-`results.extra` is closed, so the gate rejects each of them with `extra-contract`. A
-Vendor Declaration of Conformance (VDoC) is not a separate field: link it as the report. **Do not emit them** until the
-schema adds them. Use `extra.reportUrl` for the report link today.
+`extra.reportSha256` pins the file at `reportUrl`, and `extra.testSystem` (`{name,
+version}`) names the test system a run was made with. Both are optional; see
+[section 4.3](#43-link-the-report-and-keep-the-file-small). The page shows the hash as
+declared and does not fetch the report to check it.

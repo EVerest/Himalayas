@@ -1,0 +1,110 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "generatedBy": "example-integrator conformance export 0.1.0",
+  "timestamp": "2026-09-09T10:20:00.000Z",
+  "results": {
+    "tool": {
+      "name": "example-integrator conformance runner",
+      "version": "0.4.0"
+    },
+    "summary": {
+      "tests": 4,
+      "passed": 1,
+      "failed": 2,
+      "skipped": 0,
+      "pending": 0,
+      "other": 1,
+      "start": 1788948000000,
+      "stop": 1788948600000,
+      "duration": 600000
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "fdf2ac5415425e0a6af7d30caacf46f2bf9316ee",
+      "branchName": "main",
+      "repositoryUrl": "https://github.com/EVerest/EVerest",
+      "testEnvironment": "SIL",
+      "healthy": true,
+      "osPlatform": "linux",
+      "buildUrl": "https://ci.example.com/pipelines/48300",
+      "reportName": "example-integrator OCPP 2.0.1 conformance, SIL"
+    },
+    "extra": {
+      "reportUrl": "https://ci.example.com/pipelines/48300/report.pdf",
+      "reportSha256": "9f2c4e1a7b3d5f6e8a0c2b4d6f8e0a1c3b5d7f9e1a3c5b7d9f0e2a4c6b8d0f1e",
+      "testSystem": {
+        "name": "Example OCPP test system",
+        "version": "1.0.0"
+      },
+      "configuration": "ocpp201-sil",
+      "build": {
+        "status": "passed",
+        "modules": [
+          "EvseManager",
+          "OCPP201"
+        ]
+      },
+      "integrator": {
+        "id": "example-integrator",
+        "displayName": "Example Integrator GmbH"
+      }
+    },
+    "tests": [
+      {
+        "name": "TC_B_01_CS",
+        "status": "passed",
+        "duration": 41200,
+        "suite": ["OCPP 2.0.1 conformance", "B Provisioning"],
+        "tags": ["OCPP2.0.1", "OCPP2.0.1-Part6"],
+        "extra": {
+          "description": "Cold Boot Charging Station - Accepted",
+          "logUrl": "https://ci.example.com/pipelines/48300/logs/TC_B_01_CS.log"
+        }
+      },
+      {
+        "name": "TC_A_09_CS",
+        "status": "failed",
+        "duration": 18300,
+        "suite": ["OCPP 2.0.1 conformance", "A Security"],
+        "tags": ["OCPP2.0.1", "OCPP2.0.1-Part6", "TLS"],
+        "message": "Expected SetVariablesResponse status Accepted, got Rejected\nStep 3 of 6",
+        "extra": {
+          "description": "Update Charging Station Password for HTTP Basic Authentication - Accepted",
+          "logUrl": "https://ci.example.com/pipelines/48300/logs/TC_A_09_CS.log"
+        }
+      },
+      {
+        "name": "TC_E_39_CS",
+        "status": "failed",
+        "duration": 22900,
+        "suite": ["OCPP 2.0.1 conformance", "E Transactions"],
+        "tags": ["OCPP2.0.1", "OCPP2.0.1-Part6"],
+        "message": "Expected TransactionEventRequest with triggerReason StopAuthorized",
+        "extra": {
+          "description": "Stop transaction options - Deauthorized - timeout",
+          "acceptedDeviation": {
+            "reason": "Kept for compatibility with deployed back offices",
+            "clause": "E06.FR.04",
+            "since": "2026-09-01"
+          }
+        }
+      },
+      {
+        "name": "TC_C_02_CS",
+        "status": "other",
+        "duration": 15800,
+        "suite": ["OCPP 2.0.1 conformance", "C Authorization"],
+        "tags": ["OCPP2.0.1", "OCPP2.0.1-Part6"],
+        "message": "Precondition not established: no idToken presented within 60 s",
+        "extra": {
+          "description": "Authorization through authorization cache - Accepted",
+          "inconclusive": {
+            "reason": "Precondition not established"
+          }
+        }
+      }
+    ]
+  }
+}

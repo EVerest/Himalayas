@@ -108,6 +108,8 @@ keys, so this is enforced, not advisory.
 | build health as a boolean | `results.environment.healthy` | mirror of `extra.build.status`, so generic CTRF readers see it |
 | link back to your CI run | `results.environment.buildUrl` | optional, **strongly encouraged** — with traces truncated it is the only route to full detail |
 | link to a human-readable report of the run | `results.extra.reportUrl` | optional; shown on the status page as **report** next to the run log. For a PDF/HTML test report, especially when the CI run itself is not public. OpenHTF: `metadata.everest.reportUrl` |
+| SHA-256 of that report | `results.extra.reportSha256` | optional, only with `reportUrl`; 64 lowercase hex digits. Shown as declared, never checked. OpenHTF: `metadata.everest.reportSha256` |
+| test system that ran the tests, e.g. a conformance test tool | `results.extra.testSystem` | optional; `{name, version}`, shown as the run's provenance. OpenHTF: `metadata.testSystem` |
 | SUT configuration, when you submit several per pointer | `results.extra.configuration` | optional; e.g. `dc-full-ocpp`. Each configuration gets its own card on the status page &mdash; without it your newest submission hides the others. OpenHTF: `metadata.everest.configuration` |
 | OS / arch | `results.environment.osPlatform`, `osVersion`, `osRelease` | |
 | run start and end | `results.summary.start`, `stop` | **Required by CTRF, and must not be `0`.** Staleness is computed from these |
@@ -172,9 +174,13 @@ It constrains only the fields it names; everything else stays governed by CTRF.
 | `environment.osPlatform` | `linux` \| `darwin` \| `windows` | |
 | `environment.buildUrl` | must start `https://` | |
 | `extra.reportUrl` | must start `https://` | |
+| `extra.reportSha256` | 64 lowercase hex digits, only with `reportUrl` | a hash with nothing to pin is meaningless |
+| `extra.testSystem` | `name` required, `version` optional | |
 | `extra.configuration` | `[A-Za-z0-9][A-Za-z0-9._-]{0,63}` | it is a card title and a summary key, not prose |
 | `summary.start`, `summary.stop` | integer **≥ 1** | `junit-to-ctrf` emits `0`. A result with no timestamp **can never be aged**, so the staleness rule could never govern it. This is why it is an error and not a warning |
 | `test.tags[]` | `PascalCase`, `lowercase`, or `x-`-prefixed | free text here is exactly what breaks per-protocol rollups |
+| `test.extra.logUrl` | must start `https://` | the page links it as unverified and never fetches it |
+| `test.extra.description` | one line, at most 500 characters | a title shown next to the name, never part of the test's identity |
 | `build.targets[].target` | a well-formed triple | |
 | `build.targets[].toolchain` | `<compiler> <version>`, e.g. `gcc 13.2.0` | comparable across integrators without hand-parsing |
 | `build.modules[]` | PascalCase identifier | |
@@ -200,6 +206,7 @@ EVerest than this repository was last updated against, so they only warn.
 | High-level comms | `ISO15118-2` `ISO15118-3` `ISO15118-20` `DIN70121` |
 | Basic comms | `IEC61851` |
 | OCPP | `OCPP1.6` `OCPP2.0.1` `OCPP2.1` |
+| OCPP conformance | `OCPP1.6-TestCases` `OCPP2.0.1-Part6` `OCPP2.1-Part6` |
 | Features | `TLS` `PnC` `SmartCharging` `Eichrecht` `Reservation` `EEBUS` `V2X` |
 | Lifecycle | `mandatory` `smoke` `compliance` `regression` |
 

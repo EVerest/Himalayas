@@ -105,15 +105,15 @@ Sections, in order:
 
 | Decision | Rationale | Status |
 |---|---|---|
-| `tests[].extra.acceptedDeviation {reason, clause, since}` is the source of truth. The test keeps `status: failed`. | The clause is structured data, and a deviation is not a pass. | Rendered by the builder; not yet in the schema or the gate |
+| `tests[].extra.acceptedDeviation {reason, clause, since}` is the source of truth. The test keeps `status: failed`. | The clause is structured data, and a deviation is not a pass. | Implemented; the profile requires `reason` and `clause` and `status: failed` |
 | An accepted deviation is never shown as a pass. | The test did not meet the clause. | Implemented |
-| The bare tag `x-accepted-deviation` draws a gate warning and is shown as "accepted (clause not declared)" for a transition period. This is today's Pionix encoding: `status: skipped`, `rawStatus: "FAIL EXPECTED"`, clause only in the message text. | Existing records keep rendering while producers move to the structured form. | Rendered as "clause not declared"; the gate warning is not implemented |
+| The bare tag `x-accepted-deviation` draws a gate warning and is shown as "accepted (clause not declared)" for a transition period. This is today's Pionix encoding: `status: skipped`, `rawStatus: "FAIL EXPECTED"`, clause only in the message text. | Existing records keep rendering while producers move to the structured form. | Implemented; the gate warns `deviation-undeclared` on CTRF |
 
 ### Inconclusive
 
 | Decision | Rationale | Status |
 |---|---|---|
-| Inconclusive is its own outcome: CTRF `status: "other"` plus `tests[].extra.inconclusive {reason}`. | Today the same harness verdict is emitted as `failed` (tag `x-inconclusive`) or as `skipped` (tag `x-rig-limitation`), inconsistently. | Rendered by the builder; not yet in the schema or the gate |
+| Inconclusive is its own outcome: CTRF `status: "other"` plus `tests[].extra.inconclusive {reason}`. | Today the same harness verdict is emitted as `failed` (tag `x-inconclusive`) or as `skipped` (tag `x-rig-limitation`), inconsistently. | Implemented; the profile requires `reason` and `status: other` |
 | Never a pass or a failure. Shown amber; makes the row `passing-partial` at most. | No verdict was reached. | Implemented |
 | `passed` to `inconclusive` is not a regression. It is listed as "inconclusive since" on the detail page. | Nothing is known to have broken. | Implemented |
 
@@ -138,7 +138,7 @@ Sections, in order:
 |---|---|---|
 | A conformance test is a test carrying a conformance-spec tag. | Explicit tagging, never inference from names. | Decided, not implemented |
 | A vocabulary group `conformanceSpecs` maps test spec to standard: `ISO15118-4` to ISO 15118-2, `ISO15118-5` to ISO 15118-3, `ISO15118-21` to ISO 15118-20, `DIN70122` to DIN 70121. | The cell belongs to the standard, the tag names the test specification. | Decided, not implemented |
-| OCPP tags `OCPP1.6-TestCases`, `OCPP2.0.1-Part6`, `OCPP2.1-Part6`, one chip per version. | OCPP versions are separate standards. | Decided, not implemented |
+| OCPP tags `OCPP1.6-TestCases`, `OCPP2.0.1-Part6`, `OCPP2.1-Part6`, one chip per version. | OCPP versions are separate standards. | Implemented |
 | The `compliance` lifecycle tag is deprecated, with a warning. | It says nothing about which specification. | Decided, not implemented |
 | Wording for every standard: "Conformance test cases, self-run". Never "certified" or "compliant", and no logos. | Results are self-reported; certification is a separate process. | Implemented |
 
@@ -161,8 +161,8 @@ Sections, in order:
 | Decision | Rationale | Status |
 |---|---|---|
 | Provenance is self-declared at three levels: own harness (`results.tool.name`); reference test system (`testSystem {name, version}` from a vocabulary, plus an attached report); certified (only a link to OCA's Certified Products List). | The reader can tell what kind of claim a result is. | Implemented for own harness and reference test system; the certified level is not |
-| Optional `extra.reportSha256` next to `reportUrl`. | A hash pins the document a link pointed at. | Decided, not implemented |
-| A VDoC (the Vendor Declaration of Conformance PDF that OCTT generates) is submitted as the report. There is no separate VDoC field. | It is evidence like any other report; a second field adds nothing. | Decided, not implemented |
+| Optional `extra.reportSha256` next to `reportUrl`. | A hash pins the document a link pointed at. | Implemented; the page shows it as declared and does not fetch the report |
+| A VDoC (the Vendor Declaration of Conformance PDF that OCTT generates) is submitted as the report. There is no separate VDoC field. | It is evidence like any other report; a second field adds nothing. | Implemented |
 | Evidence is labeled "linked by the integrator"; a link without a hash shows "unverified link", muted. | Linking is not verification. | Implemented; every link shows as unverified until `reportSha256` exists |
 | The builder never fetches evidence, and reports are not mirrored into the repository. | No third-party content is hosted or vouched for. | Implemented |
 
@@ -267,7 +267,6 @@ Also unresolved, found while documenting the conventions:
 
 | Question | Note |
 |---|---|
-| Where does `testSystem` live in a record? | `results.extra` is closed, so the extra contract must add it. |
 | What format does `acceptedDeviation.since` take: a date, a commit, or either? | Not fixed by the decision. |
 | How do accepted deviations, inconclusive results and failure keys map onto the OpenHTF path? | The decisions name CTRF fields only. OpenHTF phases accept extra keys today. |
 | What does the gate warning for the bare `x-accepted-deviation` tag become after the transition period? | The length of the period is not set. |

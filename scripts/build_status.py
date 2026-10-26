@@ -287,9 +287,9 @@ def ctrf_tests(r):
     for t in r.get("tests", []):
         ex = t.get("extra") or {}
         tests.append({
-            "name": t["name"], "outcome": outcome(t), "std": standard_of(t),
+            "name": t["name"], "desc": ex.get("description", ""), "outcome": outcome(t), "std": standard_of(t),
             "tags": t.get("tags", []), "message": t.get("message", ""),
-            "file": t.get("filePath", ""),
+            "file": t.get("filePath", ""), "log": ex.get("logUrl"),
             "key": ex.get("failureKey"), "clause": (ex.get("acceptedDeviation") or {}).get("clause"),
             "rig": "x-rig-limitation" in t.get("tags", []), "raw": t.get("rawStatus", ""),
             "measurements": [],
@@ -319,8 +319,8 @@ def htf_tests(doc):
         details = ph.get("outcome_details") or []
         msg = "\n".join(d.get("description", "") if isinstance(d, dict) else str(d) for d in details)
         tests.append({
-            "name": t["name"], "outcome": outcome(t), "std": standard_of(t), "tags": tags,
-            "message": msg, "file": "", "key": None, "clause": None,
+            "name": t["name"], "desc": "", "outcome": outcome(t), "std": standard_of(t), "tags": tags,
+            "message": msg, "file": "", "log": None, "key": None, "clause": None,
             "rig": "x-rig-limitation" in tags, "raw": ph.get("outcome") or "", "measurements": meas,
         })
     return tests
@@ -346,6 +346,7 @@ def load_records(root=ROOT):
                 "start": r.get("summary", {}).get("start", 0), "env": env.get("testEnvironment", "unknown"),
                 "os": env.get("osPlatform", ""), "build": x.get("build", {}), "tool": r.get("tool", {}).get("name", ""),
                 "test_system": x.get("testSystem"), "report": x.get("reportUrl"),
+                "report_sha": x.get("reportSha256"),
                 "pointer": env.get("appVersion") or "/".join(f.parts[-3:-1]),
             }
         elif isinstance(d.get("phases"), list):
@@ -358,7 +359,8 @@ def load_records(root=ROOT):
                 "config": ev.get("configuration") or f.parts[-4], "commit": ev.get("commit", ""),
                 "start": d.get("start_time_millis") or d.get("end_time_millis") or 0,
                 "env": ev.get("testEnvironment", "unknown"), "os": "", "build": md.get("build") or {},
-                "tool": d.get("station_id") or "", "test_system": None, "report": ev.get("reportUrl"),
+                "tool": d.get("station_id") or "", "test_system": md.get("testSystem"), "report": ev.get("reportUrl"),
+                "report_sha": ev.get("reportSha256"),
                 "pointer": ev.get("pointer") or "/".join(f.parts[-3:-1]),
             }
         else:
@@ -482,7 +484,7 @@ def build_pointer(name, log, recs, allow, grace_days=GRACE_DAYS):
     # Pointers can share a commit; a record belongs only to the pointer it was filed under.
     mine = [r for r in recs if r["pointer"] == name and r["commit"] in index]
     setups = collections.OrderedDict()
-    for r in sorted(mine, key=lambda r: r["start"]):
+    for r in sorted(mine, key=lambda r: (r["start"], r["path"])):
         setups.setdefault((r["integ"], r["config"]), []).append(r)
 
     model = []
@@ -570,7 +572,7 @@ def phase_history(tested, shas, latest):
         mixed = moves[0] in {i for i, o in seq[:k]}
         before = seq[:k][-10:]
         prev_flaky = sum(1 for a, b in zip(before, before[1:]) if a[1] != b[1]) >= 2
-        item = {"name": n, "std": t["std"], "message": t["message"], "key": t.get("key"),
+        item = {"name": n, "desc": t["desc"], "std": t["std"], "message": t["message"], "key": t.get("key"),
                 "since": shas[moves[0]], "runs_failed": len(streak), "previously_flaky": prev_flaky}
         steady = len(moves) >= 2 and not mixed
         if not steady and (mixed or flips >= 2):
@@ -1201,7 +1203,8 @@ def regressions_panel(P):
                         where += '<br><span class="muted">previously flaky</span>'
                 else:
                     where = f'since {commit_link(r["since"])}'
-                names = "<br>".join(f"<code>{esc(x['name'])}</code>" for x in rs[:4]) + (f"<br>+{len(rs) - 4} more" if len(rs) > 4 else "")
+                names = "<br>".join(f"<code>{esc(x['name'])}</code>" + (f' <span class="muted">{esc(x["desc"])}</span>' if x["desc"] else "")
+                                    for x in rs[:4]) + (f"<br>+{len(rs) - 4} more" if len(rs) > 4 else "")
                 rows.append(f'<tr><td><a href="{m["href"]}">{esc(m["config"])}</a></td>'
                             f'<td>{STD_LABEL.get(r["std"], r["std"])} · {len(rs)}</td><td class="small">{names}</td>'
                             f'<td class="small">{esc(msg)}</td><td class="small">{where}</td></tr>')
@@ -1487,6 +1490,8 @@ def test_item(t, m, P, marks):
         notes.append("<b>untagged</b>")
     cluster = norm_msg(t["message"], t["key"]) if t["message"] else "(no message)"
     msg = f'<pre class="msg">{esc(t["message"].strip())}</pre>' if t["message"] else '<p class="muted small">No message reported.</p>'
+    if t["log"]:
+        msg += f'<p class="small"><a href="{esc(t["log"])}">log</a> · linked by the integrator · <span class="muted">unverified link</span></p>'
     if t["measurements"]:
         mrows = "".join(
             f'<tr class="{"meas-ok" if x["outcome"] == "PASS" else "meas-fail"}"><td>{esc(str(x["name"]))}</td>'
@@ -1497,7 +1502,8 @@ def test_item(t, m, P, marks):
     std = STD_LABEL.get(t["std"], t["std"])
     return (f'<details class="tc" data-status="{t["outcome"]}" data-status-label="{STATUS_LABEL[t["outcome"]]}" '
             f'data-std="{esc(std)}" data-tags="{esc(" ".join(t["tags"]))}" data-cluster="{esc(cluster)}" data-since="{since_i}" data-name="{esc(t["name"])}">'
-            f'<summary>{badge} <code>{esc(t["name"])}</code> <span class="small muted">{std}{" · " + " · ".join(notes) if notes else ""}</span></summary>'
+            f'<summary>{badge} <code>{esc(t["name"])}</code>{" " + esc(t["desc"]) if t["desc"] else ""} '
+            f'<span class="small muted">{std}{" · " + " · ".join(notes) if notes else ""}</span></summary>'
             f'<div class="tcbody">{f"<p class=small>{when}</p>" if when else ""}{msg}'
             f'<p class="small muted">raw status <code>{esc(t["raw"] or "–")}</code> · tags <code>{esc(", ".join(t["tags"]))}</code>'
             f'{" · <code>" + esc(t["file"]) + "</code>" if t["file"] else ""}</p></div></details>')
@@ -1550,7 +1556,9 @@ def setup_page(m, P):
     reg = reg_badge(m)
     nsus = len(m["regs"]) - len(m["confirmed"])
     reg += f' <span class="reg" style="border-style:dashed">▵ {nsus} suspected</span>' if nsus else ""
-    evidence = (f'<a href="{esc(L["report"])}">report</a> · linked by the integrator · <span class="muted">unverified link (no hash)</span>'
+    pin = (f'SHA-256 <code title="{esc(L["report_sha"])}">{esc(L["report_sha"][:12])}…</code> declared, not checked here'
+           if L["report_sha"] else "no hash")
+    evidence = (f'<a href="{esc(L["report"])}">report</a> · linked by the integrator · <span class="muted">unverified link ({pin})</span>'
                 if L["report"] else "none")
     return f"""<nav aria-label="Breadcrumb" class="small muted"><a href="../{pointer_file("index", P["name"])}">{esc(P['label'])}</a> › {esc(m['integ_name'])} › {esc(m['config'])}</nav>
 <section class="card" style="display:flex;flex-direction:column;gap:14px"><div class="row"><h1>{esc(m['config'])}</h1>{vpill(m['verdict'])}{reg}

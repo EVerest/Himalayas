@@ -30,17 +30,13 @@ Writes a decision to --github-output if given, and a human verdict to --verdict.
 
 Exit 0 always: the workflow decides what to do with the decision.
 """
-import argparse, json, os, re, sys
+import argparse, json, os, sys
 
-# Same shape validate_submission.py enforces, applied HERE because the fetch
-# step writes these names to disk. The only prior check was `grep -v '^results/'`,
-# which accepts `results/../../etc`, and PATH_RE ran afterwards - so delivery
-# depended on git refusing `..` in a tree, an invariant this repository neither
-# owns nor documented.
-PATH_RE = re.compile(
-    r"^results/[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?/"
-    r"testing/(?:main|stable-\d{4}\.\d{2})/"
-    r"\d{8}(?:-(?:[2-9]|[1-9]\d+))?\.json$")
+# The fetch step writes these names to disk, so the shape is checked HERE as well
+# as in the gate. The only prior check was `grep -v '^results/'`, which accepts
+# `results/../../etc`.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from result_path import RESULT_PATH_RE as PATH_RE              # noqa: E402
 
 
 def md_code(s):
@@ -110,8 +106,9 @@ def verdict_for(reason, added, forbidden, outside):
     elif reason == "bad-path":
         bad = [n for n in added if not PATH_RE.match(n)]
         L += ["A submission must be named "
-              "`results/<integrator>/<pointer>/YYYYMMDD.json`, with an optional "
-              "`-2`, `-3`... suffix for a second run the same day. These are not:\n"]
+              "`results/<integrator>/<pointer>/YYYYMMDD[-label][-N].json`: an "
+              "optional lowercase label such as `-ocpp201-sil` for a different run "
+              "the same day, and `-2`, `-3`... for a re-run. These are not:\n"]
         L += [f"- {md_code(n)}" for n in bad]
         L += [""]
     L.append(CAVEAT)

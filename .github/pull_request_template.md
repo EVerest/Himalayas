@@ -11,9 +11,10 @@
 
 - [ ] This PR changes files under `results/` only
 - [ ] My integrator id is in `integrators/allowlist.yaml` (add it in a separate PR first)
-- [ ] The file is named `results/<my-id>/<pointer>/YYYYMMDD.json`, e.g.
-      `results/your-id/testing/main/20260909.json` (add `-2`, `-3`... for a
-      second run the same day; `-1` is not a legal name)
+- [ ] The file is named `results/<my-id>/<pointer>/YYYYMMDD[-label][-N].json`,
+      e.g. `results/your-id/testing/main/20260909.json` (add a label such as
+      `-ocpp201-sil` for a different run the same day, `-2`, `-3`... for a
+      re-run; `-1` is not a legal name)
 - [ ] `results.extra.build.status` is `passed`
 - [ ] `summary.start` / `summary.stop` are real timestamps, not `0`
 - [ ] Traces are truncated; full detail is reachable via `environment.buildUrl`

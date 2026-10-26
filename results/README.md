@@ -3,7 +3,7 @@
 Accepted integrator submissions live here, one directory per integrator id:
 
 ```
-results/<integrator-id>/<pointer>/<YYYYMMDD>.json
+results/<integrator-id>/<pointer>/<YYYYMMDD>[-<label>][-N].json
 ```
 
 It is empty because no integrator has published yet. The first accepted

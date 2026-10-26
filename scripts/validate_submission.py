@@ -5,7 +5,7 @@ Accepts a CTRF report or an OpenHTF TestRecord, normalises to OpenHTF (the
 internal format), and gates it.
 
 REJECTS
-  bad-path            not results/<id>/<pointer>/<YYYYMMDD>.json
+  bad-path            not results/<id>/<pointer>/<YYYYMMDD>[-label][-N].json
   not-json            unparseable
   unknown-format      neither CTRF nor OpenHTF
   htf-profile         the normalised record breaks the structural profile
@@ -47,6 +47,8 @@ WARNS - never blocks
   target-vocabulary   a build target EVerest does not itself build
   module-names        a module name not found in EVerest
   no-build-url        no link back to the run
+  deviation-undeclared  a CTRF test tagged x-accepted-deviation with no
+                      tests[].extra.acceptedDeviation naming the clause
 
 Exit 0 accepted, 1 rejected, 2 tool error. The distinction is load-bearing: the
 workflow closes the pull request on a tool error, because the tool cannot say
@@ -75,16 +77,9 @@ except ImportError:
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from normalise import detect, ctrf_to_openhtf                  # noqa: E402
+from result_path import RESULT_PATH_RE as PATH_RE              # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# results/<integrator>/<pointer>/<YYYYMMDD>[-N].json - the pointer keeps its
-# slash, so testing/main becomes two path segments. The optional -N suffix exists
-# because the pointers move daily: a re-run after a flake, or a SIL and a HIL run
-# on the same day, would otherwise overwrite each other.
-PATH_RE = re.compile(
-    r"^results/(?P<who>[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?)/"
-    r"(?P<pointer>testing/(?:main|stable-\d{4}\.\d{2}))/"
-    r"(?P<date>\d{8})(?:-(?P<seq>[2-9]|[1-9]\d+))?\.json$")
 
 
 # High-confidence credential shapes only. A match blocks auto-merge; the gate names
@@ -312,9 +307,10 @@ def main():
     m = PATH_RE.match(rel)
     if not m:
         v.err("bad-path",
-              "Path must be `results/&lt;integrator&gt;/&lt;pointer&gt;/YYYYMMDD.json`, with an "
-              "optional `-2`, `-3`&hellip; suffix for a second run the same day. "
-              "e.g. `results/your-id/testing/main/20260909-2.json`. "
+              "Path must be `results/&lt;integrator&gt;/&lt;pointer&gt;/YYYYMMDD[-label][-N].json`: "
+              "an optional lowercase label such as `-ocpp201-sil` for a different run the "
+              "same day, and `-2`, `-3`&hellip; for a re-run. "
+              "e.g. `results/your-id/testing/main/20260909-ocpp201-sil-2.json`. "
               f"Got `{rel}`.")
     who = m.group("who") if m else None
     path_ptr = m.group("pointer") if m else None
@@ -579,6 +575,19 @@ def main():
                 v.warn("target-vocabulary", "target(s) EVerest does not itself build: "
                        + ", ".join(f"`{t}`" for t in odd_t[:5])
                        + ". Fine, but not directly comparable with upstream.")
+        # The bare tag is the encoding from before tests[].extra.acceptedDeviation
+        # existed. It still renders, as "clause not declared", during the transition.
+        if fmt == "ctrf":
+            bare = [t.get("name") for t in (doc["results"].get("tests") or [])
+                    if "x-accepted-deviation" in (t.get("tags") or [])
+                    and not (t.get("extra") or {}).get("acceptedDeviation")]
+            if bare:
+                v.warn("deviation-undeclared",
+                       f"**{len(bare)} test(s) tagged `x-accepted-deviation` declare no clause.** "
+                       f"First: `{bare[0]}`. The status page shows them as accepted, clause not "
+                       "declared. Report each as `\"status\": \"failed\"` with "
+                       "`extra.acceptedDeviation` `{reason, clause}` (CONTRIBUTING.md section 10).")
+
         mods = load_module_names()
         if mods:
             unknown = sorted(m for m in (build.get("modules") or []) if m not in mods)
