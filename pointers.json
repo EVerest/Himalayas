@@ -11,7 +11,8 @@
     },
     "testing/stable-2026.10": {
       "tracks": "stable/2026.10",
-      "description": "Same, for the 2026.10 line. Starts at the 2026.10.0 release candidate and is moved by hand until stable/2026.10 exists, then by the pointer-moving CI job. Supersedes testing/stable-2026.02, which stops moving."
+      "description": "Same, for the 2026.10 line. Starts at the 2026.10.0 release candidate and is moved by hand until stable/2026.10 exists, then by the pointer-moving CI job. Supersedes testing/stable-2026.02, which stops moving.",
+      "tracks_pending": true
     }
   },
   "log": [
