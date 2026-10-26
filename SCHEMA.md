@@ -62,6 +62,18 @@ actually exercised, so two greens covering entirely different module sets look i
 A submission arriving as CTRF is a **CTRF** document plus an `extra` block that EVerest
 defines, converted on intake.
 
+### Supported CTRF versions
+
+The vendored schema is CTRF 0.2.0, and the gate accepts a `specVersion` of `0.1.x` or
+`0.2.x`. Before CTRF 1.0.0 a minor release may change the report shape, so any other
+version is refused as `ctrf-version` rather than validated against a schema it may not
+match.
+
+`"1.0.0"` predates CTRF's own versioning: it is what this repository asked for before
+CTRF numbered its releases, and every record stored so far carries it. It is accepted
+with the warning `ctrf-legacy-version`. Once a CTRF 1.0.0 schema is vendored, `"1.0.0"`
+means that version, so retiring the legacy value goes with that update.
+
 Validate before you push:
 
 ```bash

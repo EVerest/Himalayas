@@ -158,7 +158,7 @@ id it passes the gate as is:
 ```json
 {
   "reportFormat": "CTRF",
-  "specVersion": "1.0.0",
+  "specVersion": "0.2.0",
   "results": {
     "tool": { "name": "your-harness", "version": "1.4.0" },
     "summary": {
@@ -223,7 +223,7 @@ optional, but missing it costs you something on the status page or draws a warni
 | Field | | Rule |
 |---|---|---|
 | `reportFormat` | Required | `"CTRF"` |
-| `specVersion` | Required | SemVer, e.g. `"1.0.0"` |
+| `specVersion` | Required | The CTRF version you emit: `0.1.x` or `0.2.x`, e.g. `"0.2.0"`. `"1.0.0"`, which older versions of this guide asked for, is accepted with the warning `ctrf-legacy-version` |
 | `results.tool.name` | Required | the harness that produced the run. `tool.version` is optional |
 | `results.summary.tests`, `passed`, `failed`, `skipped`, `pending`, `other` | Required | integers, consistent with `tests[]`. A nonzero `failed` marks the run failed even if no test in `tests[]` did |
 | `results.summary.start`, `stop` | Required | real epoch milliseconds, **at least 1**. `junit-to-ctrf` writes `0`, which is rejected |
@@ -413,7 +413,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 199 checks, all of which must pass
+python3 scripts/selftest.py        # 208 checks, all of which must pass
 ```
 
 ---
@@ -523,6 +523,7 @@ The gate lists every failed check at once. The codes, roughly in the order peopl
 |---|---|---|
 | `ctrf-profile` | A constrained field is malformed: `start`/`stop` of `0`, a short SHA, `sil` instead of `SIL`, `Linux` instead of `linux`, a free-text tag, an `http://` `buildUrl` | Fix the field named in the message; [section 3.2](#32-field-by-field-ctrf) has every rule |
 | `ctrf-schema` | Not valid CTRF: a test without `duration`, no `results.tool`, a missing summary count, an unknown key under `environment` or a test | Add the missing field or remove the unknown key |
+| `ctrf-version` | `specVersion` is a CTRF version the gate does not validate, e.g. `"0.3.0"` | Emit `"0.2.0"` |
 | `extra-contract` | `results.extra` has an unknown key or a malformed value, e.g. no `modules` | Use only the keys in [SCHEMA.md](SCHEMA.md#resultsextra) |
 | `htf-profile` / `htf-metadata` | The normalized record breaks the OpenHTF profile or the metadata contract. On the CTRF path this usually repeats a CTRF error | Fix the CTRF error first; on the OpenHTF path, fix `metadata` |
 | `pointer-mismatch` | The pointer in the path and `appVersion` (or `metadata.everest.pointer`) disagree | Make them the same pointer name |
@@ -545,7 +546,7 @@ Before the gate runs, the PR itself is refused if it **removes, edits or renames
 under `results/` (append-only), or if it adds results **and** changes anything outside
 `results/`.
 
-**Warnings never block:** `no-build-url`, `tag-vocabulary` (a tag outside the vocabulary),
+**Warnings never block:** `no-build-url`, `ctrf-legacy-version` (`specVersion` `"1.0.0"`), `tag-vocabulary` (a tag outside the vocabulary),
 `module-names` (a module name not in EVerest), `target-vocabulary` (a build target EVerest
 does not build), `attachments-large`, `sourcecode` (embedded test source), and
 `commit-uncheckable` (the GitHub API did not answer).
