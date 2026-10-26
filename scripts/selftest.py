@@ -46,9 +46,9 @@ def report(name, ok, detail=""):
     return ok
 
 
-def sh(work, *args):
+def sh(work, *args, env=None):
     return subprocess.run([PY, os.path.join(work, "scripts", args[0]), *args[1:]],
-                          capture_output=True, text=True, cwd=work)
+                          capture_output=True, text=True, cwd=work, env=env)
 
 
 def codes(out):
@@ -624,6 +624,82 @@ def newest_moved_at(work):
     return max(stamps)
 
 
+class FakeGitHub:
+    """A local stand-in for api.github.com: path -> (status, body), 404 otherwise."""
+
+    def __init__(self):
+        import http.server, threading
+        routes = self.routes = {}
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                status, body = routes.get(self.path, (404, {"message": "Not Found"}))
+                data = json.dumps(body).encode()
+                self.send_response(status)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+
+            def log_message(self, *a):
+                pass
+
+        self.server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+        self.env = {k: v for k, v in os.environ.items() if k != "GITHUB_TOKEN"}
+        self.env["VERIFY_POINTERS_API"] = f"http://127.0.0.1:{self.server.server_port}"
+
+    def close(self):
+        self.server.shutdown()
+        self.server.server_close()
+
+
+def pending_cases(work, verbose, fresh, moved_at):
+    """tracks_pending skips check 2 only while the tracked branch is missing."""
+    sha = "0" * 39 + "b"
+    fixture = os.path.join(work, "pointers-pending.json")
+
+    def write(spec):
+        with open(fixture, "w") as f:
+            json.dump({"pointers": {"testing/next": spec},
+                       "log": [{"pointer": "testing/next", "tracks": spec.get("tracks"),
+                                "sha": sha, "moved_at": moved_at}]}, f)
+
+    gh = FakeGitHub()
+    gh.routes["/repos/EVerest/EVerest/branches/testing%2Fnext"] = (200, {"commit": {"sha": sha}})
+    tracked = "/repos/EVerest/EVerest/branches/stable%2Fnext"
+    pending = {"tracks": "stable/next", "tracks_pending": True}
+    cases = [
+        # label, spec, tracked branch response, extra args, want rc, want in stdout
+        ("passes while the tracked branch is missing", pending, (404, {}), (),
+         0, "note: testing/next: tracks stable/next, not created yet; reachability not checked"),
+        ("fails once the tracked branch exists", pending, (200, {"commit": {"sha": sha}}), (),
+         1, "Remove tracks_pending from pointers.json"),
+        ("fails when the branch lookup errors", pending, (500, {}), (),
+         1, "could not look up pending branch 'stable/next' (HTTP 500)"),
+        ("unset still fails a missing tracked branch", {"tracks": "stable/next"}, (404, {}), (),
+         1, "the reachability check could not run (HTTP 404)"),
+        ("must be a boolean", {"tracks": "stable/next", "tracks_pending": "yes"}, (404, {}),
+         ("--offline",), 1, "tracks_pending must be true or false"),
+        ("needs tracks", {"tracks_pending": True}, (404, {}),
+         ("--offline",), 1, "tracks_pending is set but the pointer tracks nothing"),
+    ]
+    try:
+        for label, spec, resp, extra, want_rc, want_says in cases:
+            write(spec)
+            gh.routes[tracked] = resp
+            r = sh(work, "verify_pointers.py", "--pointers", fixture, "--now", fresh,
+                   *extra, env=gh.env)
+            ok = r.returncode == want_rc and want_says in r.stdout and "Traceback" not in r.stderr
+            report(f"tracks_pending {label}", ok,
+                   f"rc={r.returncode} want {want_rc} {r.stdout[-200:]} {r.stderr[-200:]}")
+            if verbose or not ok:
+                print(f"  {'ok  ' if ok else 'FAIL'} tracks_pending {label:44} rc={r.returncode}")
+    finally:
+        gh.close()
+        os.remove(fixture)
+
+
 def suite_pointers(work, verbose):
     import datetime
     # The clock is injected. Without --now this check compared the committed log
@@ -669,6 +745,8 @@ def suite_pointers(work, verbose):
     report("verifier refuses an undeclared --pointer", ok, f"rc={r.returncode}")
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} verifier refuses undeclared --pointer rc={r.returncode}")
+
+    pending_cases(work, verbose, fresh, base.strftime("%Y-%m-%dT%H:%M:%SZ"))
 
     pj = os.path.join(work, "pointers.json")
     sha_a = "0" * 39 + "a"
@@ -1094,7 +1172,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 11,
+EXPECT = {"gate": 66, "intake": 14, "normalise": 8, "pointers": 17,
           "archive": 9, "staleness": 6, "build": 17, "docs": 10}
 TOTAL = sum(EXPECT.values())
 

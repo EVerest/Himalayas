@@ -17,7 +17,10 @@ CHECKS
   1. every declared pointer branch exists
   2. every pointer's tip is REACHABLE FROM the branch it claims to track -
      a pointer pointing at a commit that is not on main is the failure mode
-     that matters, and nothing else would catch it
+     that matters, and nothing else would catch it. A pointer declared with
+     "tracks_pending": true is cut before its tracked branch exists, so check 2
+     is skipped with a note while that branch is missing, and FAILS once it
+     exists, so the flag cannot outlive its reason and quietly disable the check
   3. the log's newest entry per pointer matches the live tip
   4. the log only ever moves forward: each sha is a descendant of the one
      before it, so the pointer was never rewound. Checked over the last
@@ -47,7 +50,7 @@ Exit 0 all checks pass, 1 a check failed, 2 tool error.
 import argparse, json, os, sys, urllib.request, urllib.error, datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-API = "https://api.github.com"
+API = os.environ.get("VERIFY_POINTERS_API", "https://api.github.com")   # the self-test fakes it
 
 
 def api(path, token):
@@ -136,6 +139,13 @@ def main():
 
     for name, spec in declared.items():
         tracks = spec.get("tracks")
+        pending = spec.get("tracks_pending", False)
+        if not isinstance(pending, bool):
+            fails.append(f"{name}: tracks_pending must be true or false, not {pending!r}")
+            pending = False
+        elif pending and not tracks:
+            fails.append(f"{name}: tracks_pending is set but the pointer tracks nothing")
+            pending = False
         entries = per.get(name) or []
         if not entries:
             fails.append(f"{name}: declared but has no log entry")
@@ -194,7 +204,17 @@ def main():
                           f"appending to pointers.json, so this move is unauditable.")
 
         # --- 2. the tip is actually on the branch it claims to track -------
-        if tracks:
+        if pending:
+            _, err = api(f"/repos/{args.repo}/branches/{tracks.replace('/', '%2F')}", token)
+            if err == "HTTP 404":
+                notes.append(f"{name}: tracks {tracks}, not created yet; "
+                             "reachability not checked")
+            elif err:
+                fails.append(f"{name}: could not look up pending branch '{tracks}' ({err})")
+            else:
+                fails.append(f"{name}: '{tracks}' now exists. Remove tracks_pending from "
+                             "pointers.json so the reachability check runs again.")
+        elif tracks:
             st, err = compare(args.repo, tracks, tip, token)
             if err:
                 fails.append(f"{name}: the reachability check could not run ({err}). "
