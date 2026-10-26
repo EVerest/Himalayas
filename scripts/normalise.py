@@ -35,7 +35,7 @@ The earlier version of this note said "Lossy in this direction: nothing
 material", which was not true. Stated properly:
 
 LOST. `test.device` (per-test hardware, which OpenHTF models per RECORD, not per
-phase), `test.retries` / `retryAttempts`, `test.filePath` / `line`, `test.steps`,
+phase), `test.retries` / `retryAttempts`, `test.attemptId`, `test.filePath` / `line`, `test.steps`,
 `test.insights`, `test.parameters`, `test.extra`. None is read by anything
 downstream today, which is why the direction is still the right one - but "not
 read" is not "not material", and a later reader should know they were dropped

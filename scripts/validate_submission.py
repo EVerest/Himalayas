@@ -11,6 +11,7 @@ REJECTS
   htf-profile         the normalised record breaks the structural profile
   htf-metadata        metadata breaks the EVerest contract
   ctrf-schema         a CTRF submission is not valid CTRF
+  ctrf-version        a CTRF specVersion other than 0.1.x, 0.2.x or the legacy 1.0.0
   ctrf-profile        a CTRF submission breaks the EVerest CTRF profile, which
                       includes the rule that a HIL run must name its board
   extra-contract      results.extra breaks the EVerest extra contract
@@ -47,6 +48,7 @@ WARNS - never blocks
   target-vocabulary   a build target EVerest does not itself build
   module-names        a module name not found in EVerest
   no-build-url        no link back to the run
+  ctrf-legacy-version specVersion 1.0.0, which predates CTRF's own versioning
 
 Exit 0 accepted, 1 rejected, 2 tool error. The distinction is load-bearing: the
 workflow closes the pull request on a tool error, because the tool cannot say
@@ -246,6 +248,28 @@ def commit_exists(sha, repo, token):
         return None, str(e)
 
 
+# Before CTRF 1.0.0 a MINOR release may change the report shape, so only the
+# versions the vendored schema (0.2.0) covers are accepted.
+CTRF_VERSIONS = {(0, 1), (0, 2)}
+# What CONTRIBUTING told integrators to write before CTRF versioned its spec.
+# Retire it when a newer CTRF is vendored: from CTRF 1.0.0 on it names a real version.
+CTRF_LEGACY = "1.0.0"
+
+
+def ctrf_version(v, sv):
+    m = re.match(r"(\d+)\.(\d+)\.\d+(?:[-+]|$)", sv) if isinstance(sv, str) else None
+    if m is None:
+        return  # ctrf-schema already rejects it
+    if sv == CTRF_LEGACY:
+        v.warn("ctrf-legacy-version",
+               '`specVersion` `"1.0.0"` predates CTRF\'s own versioning and is accepted for now. '
+               'Emit `"0.2.0"`: once CTRF 1.0.0 exists, `"1.0.0"` will be validated as that version.')
+    elif (int(m[1]), int(m[2])) not in CTRF_VERSIONS:
+        v.err("ctrf-version",
+              f'`specVersion` `{sv}` is not a CTRF version this gate supports. It validates '
+              'CTRF 0.1 and 0.2, whose minor releases may differ in shape. Emit `"0.2.0"`.')
+
+
 def schema_errors(v, checks):
     """Record up to six errors per (code, schema, target) triple."""
     for name, schema_file, target in checks:
@@ -377,6 +401,8 @@ def main():
                      ("htf-metadata", "everest-htf-metadata.schema.json",
                       doc.get("metadata"))]
     schema_errors(v, submitted)
+    if fmt == "ctrf":
+        ctrf_version(v, doc.get("specVersion"))
 
     # Normalisation is attempted only AFTER the submitted document has been
     # schema-checked, and everything downstream of it runs inside the guard

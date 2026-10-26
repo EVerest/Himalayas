@@ -30,7 +30,7 @@ has no count guard because growing is what it does. Fixtures the repository
 owns - examples/ - are covered here, since they change only when someone
 edits them and that is exactly what the count guard exists to surface.
 """
-import argparse, base64, copy, json, os, re, shutil, subprocess, sys, tempfile
+import argparse, base64, copy, hashlib, json, os, re, shutil, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PY = sys.executable
@@ -83,6 +83,9 @@ def suite_gate(work, verbose):
         ("format: not CTRF or OpenHTF", {"hello": "world"}, None, "unknown-format", P),
         ("ctrf: invalid CTRF", ctrf, lambda d: d["results"]["summary"].pop("passed"), "ctrf-schema", P),
         ("ctrf: missing specVersion", ctrf, lambda d: d.pop("specVersion"), "ctrf-schema", P),
+        ("ctrf: specVersion 0.3.0, past the vendored schema", ctrf, lambda d: d.update(specVersion="0.3.0"), "ctrf-version", P),
+        ("ctrf: specVersion 7.3.0", ctrf, lambda d: d.update(specVersion="7.3.0"), "ctrf-version", P),
+        ("ctrf: specVersion 0.3.0-rc.1", ctrf, lambda d: d.update(specVersion="0.3.0-rc.1"), "ctrf-version", P),
         ("ctrf: per-test duration missing", ctrf, lambda d: d["results"]["tests"][0].pop("duration"), "ctrf-schema", P),
         ("profile: appName not EVerest", ctrf, lambda d: d["results"]["environment"].update(appName="fork"), "ctrf-profile", P),
         ("profile: osPlatform Linux", ctrf, lambda d: d["results"]["environment"].update(osPlatform="Linux"), "ctrf-profile", P),
@@ -438,6 +441,26 @@ def suite_gate(work, verbose):
     report("reject attachments over cap", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} reject attachments over cap          rc={rc} {','.join(cs)}")
+
+    # The vendored schema covers CTRF 0.1 and 0.2. "1.0.0" is what integrators
+    # were told to write before CTRF versioned its spec, so it only warns.
+    for sv in ("0.2.0", "0.1.0", "0.2.3"):
+        d = copy.deepcopy(ctrf)
+        d["specVersion"] = sv
+        rc, cs, out = gate(work, d, P)
+        ok = rc == 0 and "ctrf-legacy-version" not in out
+        report(f"accept CTRF specVersion {sv}", ok, f"rc={rc} codes={cs}")
+    d = copy.deepcopy(ctrf)
+    d["specVersion"] = "1.0.0"
+    rc, cs, out = gate(work, d, P)
+    report("accept + warn on the legacy CTRF specVersion 1.0.0", rc == 0 and "ctrf-legacy-version" in out, f"rc={rc} codes={cs}")
+    d = copy.deepcopy(ctrf)
+    d["results"]["tests"][0]["attemptId"] = "run-7-attempt-1"
+    rc, cs, out = gate(work, d, P)
+    report("accept a CTRF 0.2 attemptId", rc == 0, f"rc={rc} codes={cs}")
+    pinned = re.search(r"`schema/ctrf\.schema\.json`.*?sha256 `([0-9a-f]{64})`", open(os.path.join(ROOT, "THIRD_PARTY.md")).read())
+    got = hashlib.sha256(open(os.path.join(ROOT, "schema", "ctrf.schema.json"), "rb").read()).hexdigest()
+    report("the vendored CTRF schema matches the sha256 THIRD_PARTY.md pins", bool(pinned) and pinned[1] == got, got)
 
     # sourcecode WARNS and is accepted - warn-only by design
     d = copy.deepcopy(htf)
@@ -1568,7 +1591,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 71, "intake": 14, "normalise": 8, "pointers": 17,
+EXPECT = {"gate": 80, "intake": 14, "normalise": 8, "pointers": 17,
           "archive": 9, "staleness": 6, "build": 64, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
