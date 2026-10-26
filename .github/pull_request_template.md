@@ -12,11 +12,13 @@
 - [ ] This PR changes files under `results/` only
 - [ ] My integrator id is in `integrators/allowlist.yaml` (add it in a separate PR first)
 - [ ] The file is named `results/<my-id>/<pointer>/YYYYMMDD.json`, e.g.
-      `results/deadbeef-charge/testing/main/20260909.json` (add `-2`, `-3`... for a
+      `results/your-id/testing/main/20260909.json` (add `-2`, `-3`... for a
       second run the same day; `-1` is not a legal name)
 - [ ] `results.extra.build.status` is `passed`
 - [ ] `summary.start` / `summary.stop` are real timestamps, not `0`
 - [ ] Traces are truncated; full detail is reachable via `environment.buildUrl`
+- [ ] I may publish everything in the file, permanently: no credentials, no tokens in
+      URLs, no personal data
 
 The gate runs automatically and comments the result. If it rejects the submission it says
 why; push a fix to this branch and it re-runs.

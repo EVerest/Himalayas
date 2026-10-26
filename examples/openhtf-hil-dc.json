@@ -11,8 +11,8 @@
       "pointer": "testing/main",
       "tracks": "main",
       "testEnvironment": "HIL",
-      "buildUrl": "https://ci.deadbeef-charge.example/pipelines/48219",
-      "reportUrl": "https://ci.deadbeef-charge.example/pipelines/48219/report.pdf",
+      "buildUrl": "https://ci.example.com/pipelines/48219",
+      "reportUrl": "https://ci.example.com/pipelines/48219/report.pdf",
       "configuration": "dc-150kw"
     },
     "build": {
@@ -32,8 +32,8 @@
       ]
     },
     "integrator": {
-      "id": "deadbeef-charge",
-      "displayName": "DEADBEEF Charge GmbH"
+      "id": "example-integrator",
+      "displayName": "Example Integrator GmbH"
     },
     "hardware": {
       "bsp": "yeti-fw-1.4.2",

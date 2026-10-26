@@ -123,7 +123,7 @@ keys, so this is enforced, not advisory.
 | Key | Required | Contents |
 |---|:---:|---|
 | `build` | **yes** | `status`: `passed` \| `failed`. **Required `modules[]`**, unique non-empty strings. Optional `targets[]` of `{target, status, toolchain}` |
-| `integrator` | **yes** | `id` (**required**, must equal your `results/<id>/` directory). Optional `displayName` — omit to stay anonymous |
+| `integrator` | **yes** | `id` (**required**, must equal your `results/<id>/` directory). Optional `displayName`: omit to withhold your name |
 | `hardware` | no | `bsp`, `board`, `chargeController`. Only meaningful when `testEnvironment` is `HIL` |
 
 `additionalProperties: false` at **every** level. This is a contract: an unrecognised key is
@@ -145,7 +145,7 @@ each target, and the overall `status` is your call — the gate only reads `stat
   carries no information. The caveat lives on the status page and in the README, where a
   reader will actually see it.
 - **No `publication` or visibility flag.** The repository is public; there is no private
-  submission to opt out of. Anonymity is a pseudonymous `id` with `displayName` omitted.
+  submission to opt out of. Withholding a name is a pseudonymous `id` with `displayName` omitted.
 
 ---
 

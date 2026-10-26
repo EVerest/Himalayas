@@ -105,8 +105,8 @@ def verdict_for(reason, added, forbidden, outside):
               "This one also changes:\n"]
         L += [f"- {md_code(n)} &mdash; *{s}*" for s, n in outside]
         L += ["\nAllowlist changes, schema changes and code changes go in separate "
-              "pull requests, because those are reviewed by a code owner and "
-              "submissions are not.\n"]
+              "pull requests, because a maintainer reviews and merges those, while "
+              "submissions merge automatically.\n"]
     elif reason == "bad-path":
         bad = [n for n in added if not PATH_RE.match(n)]
         L += ["A submission must be named "
