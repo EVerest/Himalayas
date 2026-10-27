@@ -1,0 +1,113 @@
+name: Intake from source repositories
+
+# The second way a result is submitted. An integrator id may bind public
+# repositories it controls in integrators/allowlist.yaml (`sources`). This job
+# copies each new record found there onto its own intake/ branch and opens a pull
+# request as himalayas-accessor[bot]. Everything after that is the ordinary
+# submission path: validate-submission.yml runs as the required check, re-reads
+# the source to confirm the file is byte-identical, posts its verdict, and arms
+# auto-merge or closes the pull request.
+#
+# WHY THE APP AND NOT GITHUB_TOKEN
+#
+# GitHub documents that events triggered by GITHUB_TOKEN "will not create a new
+# workflow run", so a pull request it opened would never get the required check
+# and would sit forever. A pull request opened with the App's token does.
+#
+# The App is the pointer log's, which main's ruleset names as a bypass actor.
+# This job never merges and writes only refs under intake/, and
+# intake_sources.py refuses any other branch before it writes. The token is
+# narrowed to the two permissions the job uses, and it is minted in a job of its
+# own that installs nothing from PyPI and runs Python isolated, so no third-party
+# package ever runs next to it.
+#
+# Sources are public and read with GITHUB_TOKEN, by numeric repository id.
+
+on:
+  schedule:
+    - cron: '17 */4 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: intake-sources
+  cancel-in-progress: false   # two runs would open the same branch
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write             # to create the intake:<id> label the first time
+    outputs:
+      count: ${{ steps.plan.outputs.count }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet -r scripts/requirements.txt
+
+      - name: List new records in every bound source
+        id: plan
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          python scripts/intake_sources.py plan --out plan.json
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+          echo "count=$(jq length plan.json 2>/dev/null || echo 0)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v7
+        if: steps.plan.outputs.count != '0'
+        with:
+          name: plan
+          path: plan.json
+          retention-days: 1
+
+      - name: Make sure each intake label exists
+        if: steps.plan.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          jq -r '.[].id' plan.json | sort -u | while IFS= read -r id; do
+            gh label create "intake:$id" --force --color BAF419 \
+              --description "Copied from a source bound to $id"
+          done
+
+      # A source that could not be read did not stop the others, but it must not
+      # pass quietly either. The apply job still opens what was found.
+      - name: Fail the run if a source could not be read
+        if: steps.plan.outputs.rc != '0'
+        run: exit 1
+
+  apply:
+    needs: plan
+    if: ${{ !cancelled() && needs.plan.outputs.count != '0' && needs.plan.outputs.count != '' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: plan
+
+      - uses: actions/create-github-app-token@v3
+        id: app
+        with:
+          app-id: ${{ secrets.POINTER_LOG_APP_ID }}
+          private-key: ${{ secrets.POINTER_LOG_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      # The runner's own Python, isolated: no site-packages, no PYTHONPATH.
+      - name: Open one pull request per new record
+        env:
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+        run: python3 -I scripts/intake_sources.py apply --plan plan.json

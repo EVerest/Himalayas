@@ -30,7 +30,8 @@ has no count guard because growing is what it does. Fixtures the repository
 owns - examples/ - are covered here, since they change only when someone
 edits them and that is exactly what the count guard exists to surface.
 """
-import argparse, base64, copy, json, os, re, shutil, subprocess, sys, tempfile
+import argparse, base64, contextlib, copy, io, json, os, re, shutil, subprocess, sys, tempfile
+import urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PY = sys.executable
@@ -355,6 +356,140 @@ def suite_gate(work, verbose):
     report("reject an id whose entry lists no accounts", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} reject id with no github_users        rc={rc} {','.join(cs)}")
+
+    # --- the source binding: records the intake copied from a bound repository ---
+    # The gate re-reads the source rather than trusting the intake, so these run
+    # against a fixture directory standing in for GitHub.
+    import yaml
+    with open(al) as f:
+        original = f.read()
+    with open(al, "a") as f:
+        f.write("  - id: example-sourced\n    github_users: [example-sourced-ci]\n"
+                "    sources:\n      - repo: example/records\n        repo_id: 4242\n"
+                "        ref: results\n        path: records/\n        label: nightly\n")
+    fix = os.path.join(work, "_sources")
+    sd = copy.deepcopy(ctrf)
+    sd["results"]["extra"]["integrator"]["id"] = "example-sourced"
+    SP = "results/example-sourced/testing/main/20260901-nightly.json"
+
+    def publish(doc, name="20260901-nightly.json"):
+        d = os.path.join(fix, "4242", "results", "records", "testing", "main")
+        shutil.rmtree(fix, ignore_errors=True)
+        os.makedirs(d)
+        with open(os.path.join(d, name), "w") as f:
+            json.dump(doc, f, indent=2)
+
+    bot = ("--author", "himalayas-accessor[bot]", "--author-id", "332461223",
+           "--source-fixtures", fix)
+    publish(sd)
+    altered = copy.deepcopy(sd)
+    altered["results"]["tests"][0]["name"] += " (edited after publishing)"
+    source_cases = [
+        ("accept an intake record byte-identical to its bound source",
+         lambda: gate(work, sd, SP, extra=bot), 0, None),
+        ("reject an intake record that differs from its source",
+         lambda: gate(work, altered, SP, extra=bot), 1, "source-mismatch"),
+        ("reject an intake record its source does not hold",
+         lambda: (publish(sd, "20260902-nightly.json"), gate(work, sd, SP, extra=bot))[1],
+         1, "source-mismatch"),
+        ("reject an intake record without its source's declared label",
+         lambda: (publish(sd, "20260901.json"),
+                  gate(work, sd, "results/example-sourced/testing/main/20260901.json",
+                       extra=bot))[1], 1, "source-mismatch"),
+        ("the bot is known by id: its login alone authorizes nothing",
+         lambda: (publish(sd), gate(work, sd, SP,
+                                    extra=("--author", "himalayas-accessor[bot]",
+                                           "--source-fixtures", fix)))[1],
+         1, "not-authorised"),
+        ("reject a pull request that uses a label reserved for a source",
+         lambda: gate(work, sd, SP, extra=("--author", "example-sourced-ci")), 1, "source-label"),
+        ("accept a pull request under a sourced id with another label",
+         lambda: gate(work, sd, "results/example-sourced/testing/main/20260901-manual.json",
+                      extra=("--author", "example-sourced-ci")), 0, None),
+        ("accept a pull request under a sourced id with no label",
+         lambda: gate(work, sd, "results/example-sourced/testing/main/20260901.json",
+                      extra=("--author", "example-sourced-ci")), 0, None),
+        ("reject an intake record under an id its source is not bound to",
+         lambda: gate(work, ctrf, "results/example-integrator/testing/main/20260901-nightly.json",
+                      extra=bot), 1, "source-mismatch"),
+    ]
+    for label, run, want_rc, want in source_cases:
+        rc, cs, _ = run()
+        ok = rc == want_rc and (want is None or want in cs)
+        report(label, ok, f"rc={rc} codes={cs}")
+        if verbose or not ok:
+            print(f"  {'ok  ' if ok else 'FAIL'} {label:60} rc={rc} {','.join(cs)}")
+
+    # A source the gate cannot read is ours to fix, and nobody can resubmit an
+    # intake record, so the verdict must not tell anyone to.
+    shutil.rmtree(os.path.join(fix, "4242"))
+    with open(os.path.join(fix, "4242"), "w"):
+        pass
+    rc, cs, out = gate(work, sd, SP, extra=bot)
+    ok = rc == 2 and "could not be read" in out and "stays open" in out
+    report("an unreachable source exits 2 and keeps the intake PR open", ok, f"rc={rc}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} unreachable source exits 2, PR stays open   rc={rc}")
+
+    # The intake bot's id reaches the gate through the environment, as the login does.
+    publish(sd)
+    full = os.path.join(work, SP)
+    os.makedirs(os.path.dirname(full), exist_ok=True)
+    with open(full, "w") as f:
+        json.dump(altered, f, indent=2)
+    r = subprocess.run([PY, os.path.join(work, "scripts", "validate_submission.py"), SP,
+                        "--skip-commit-check", "--source-fixtures", fix],
+                       capture_output=True, text=True, cwd=work,
+                       env=dict(os.environ, SUBMISSION_AUTHOR="himalayas-accessor[bot]",
+                                SUBMISSION_AUTHOR_ID="332461223"))
+    os.remove(full)
+    ok = r.returncode == 1 and "source-mismatch" in codes(r.stdout)
+    report("intake bot id is read from SUBMISSION_AUTHOR_ID", ok, f"rc={r.returncode}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} bot id via SUBMISSION_AUTHOR_ID       rc={r.returncode}")
+
+    # A malformed source is the allowlist's fault, not the submitter's: exit 2.
+    with open(al) as f:
+        bound = f.read()
+    with open(al, "w") as f:
+        f.write(bound.replace("repo_id: 4242", "repo_id: example"))
+    rc, cs, out = gate(work, sd, SP, extra=bot)
+    ok = rc == 2 and "malformed source" in out
+    report("a malformed source in the allowlist exits 2", ok, f"rc={rc} codes={cs}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} malformed allowlist source exits 2   rc={rc}")
+    rc, cs, out = gate(work, sd, SP, extra=("--author", "example-sourced-ci"))
+    ok = rc == 2 and "being closed" in out
+    report("a tool error on a submitter's PR says it is being closed", ok, f"rc={rc}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} tool error closes a submitter's PR   rc={rc}")
+    with open(al, "w") as f:
+        f.write(original)
+    shutil.rmtree(fix, ignore_errors=True)
+
+    # validate-submission.yml closes the bot's rejected pull requests by user id,
+    # and leaves its unprocessable ones open, so its literal must be the gate's.
+    with open(os.path.join(work, ".github", "workflows", "validate-submission.yml")) as f:
+        wf = yaml.safe_load(f)
+    sys.path.insert(0, os.path.join(work, "scripts"))
+    import sources as src_mod
+    close = next((st.get("if", "") for st in wf["jobs"]["validate"]["steps"]
+                  if st.get("name", "").startswith("Close the PR")), "")
+    me = f"github.event.pull_request.user.id == {src_mod.INTAKE_BOT_ID}"
+    ok = (f"(steps.gate.outputs.rc == '1' && {me})" in close
+          and f"(steps.gate.outputs.rc == '2' && {me.replace('==', '!=')})" in close)
+    report("validate-submission.yml names the gate's intake bot id", ok, close)
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} workflow and gate agree on the bot id")
+
+    # The shipped allowlist must bind no malformed source: the gate would exit 2
+    # on every record from that id, and the intake would refuse to run at all.
+    with open(os.path.join(ROOT, "integrators", "allowlist.yaml")) as f:
+        shipped = {e["id"]: e for e in (yaml.safe_load(f) or {}).get("integrators") or []}
+    bad = src_mod.allowlist_problems(shipped)
+    report("the shipped allowlist binds no malformed source", not bad, "; ".join(bad))
+    if verbose or not bad == []:
+        print(f"  {'ok  ' if not bad else 'FAIL'} shipped allowlist sources are well formed")
 
     # --- exit 2 is reserved for "the gate could not tell" --------------------
     # The workflow closes the pull request on exit 2 and leaves it open on exit 1,
@@ -1679,10 +1814,177 @@ def suite_build(work, verbose):
           "if(location.hash)apply" not in bs.JS and 'button[data-f="${CSS.escape(h)}"]' in bs.JS)
 
 
+def suite_sources(work, verbose):
+    """The source intake's planner and the allowlist rules it relies on.
+
+    The planner decides what is new, and a mistake there either drops a record
+    silently or opens the same pull request every four hours. GitHub is replaced
+    by canned responses, so plan and apply run whole without a network.
+    """
+    sys.path.insert(0, os.path.join(work, "scripts"))
+    import sources as S
+    import intake_sources as I
+
+    def check(label, cond, detail=""):
+        report(label, cond, detail)
+        if verbose or not cond:
+            print(f"  {'ok  ' if cond else 'FAIL'} {label}"
+                  + (f"   {detail}" if detail and not cond else ""))
+
+    src = {"repo": "example/records", "repo_id": 7, "ref": "results",
+           "path": "records/", "label": "nightly"}
+    tree = ["README.md",
+            "records/testing/main/20261027-nightly.json",
+            "records/testing/main/20261028-nightly.json",
+            "records/testing/stable-2026.10/20261027-nightly.json",
+            "records/testing/main/notes.txt",
+            "records/testing/main/20261029.json",
+            "records/testing/feature/20261027.json",
+            "other/testing/main/20261027.json"]
+    got = I.candidates("example-sourced", src, tree)
+    check("candidates are the valid record paths under the source path",
+          [d for _, d in got] == [
+              "results/example-sourced/testing/main/20261027-nightly.json",
+              "results/example-sourced/testing/main/20261028-nightly.json",
+              "results/example-sourced/testing/stable-2026.10/20261027-nightly.json"],
+          str(got))
+    on_main = {"results/example-sourced/testing/main/20261027-nightly.json"}
+    branches = {"intake/example-sourced/testing/stable-2026.10/20261027-nightly.json"}
+    new = [d for _, d in I.new_records("example-sourced", src, tree, on_main, branches)]
+    check("candidates skip a file its source's label does not admit",
+          not any(d.endswith("/20261029.json") for _, d in got), str(got))
+    check("a record on main or with an intake branch is not new",
+          new == ["results/example-sourced/testing/main/20261028-nightly.json"], str(new))
+    check("the intake branch names the pointer, so dates on two pointers differ",
+          I.branch_for("results/x/testing/main/20261027.json")
+          == "intake/x/testing/main/20261027.json")
+    try:
+        I.open_one({"branch": "main", "dest": "results/x/testing/main/20261027.json"},
+                   "EVerest/Himalayas", "0" * 40, "no-token")
+        refused = False
+    except ValueError:
+        refused = True
+    check("apply refuses to write a branch outside intake/", refused)
+
+    check("a declared label admits itself and its extensions",
+          S.label_admits(src, "nightly") and S.label_admits(src, "nightly-ocpp201"))
+    check("a declared label does not admit a prefix-alike or no label",
+          not S.label_admits(src, "nightlyx") and not S.label_admits(src, None))
+    check("a source with no label admits any filename",
+          S.label_admits(dict(src, label=None), None))
+
+    good = {"repo": "a/b", "repo_id": 1, "ref": "main", "path": "records/"}
+    for label, entry, want in [
+        ("repo_id given as a name", dict(good, repo_id="a/b"), "repo_id"),
+        ("path climbing out with ..", dict(good, path="../x/"), "path"),
+        ("path without a trailing slash", dict(good, path="records"), "path"),
+        ("label that is not a filename label", dict(good, label="Nightly"), "label"),
+        ("unknown key", dict(good, branch="main"), "unknown key"),
+        ("path that is the root as ./", dict(good, path="./"), "path"),
+        ("ref that is a pull request head", dict(good, ref="refs/pull/1/head"), "ref"),
+        ("ref that is a pull request merge", dict(good, ref="pull/1/merge"), "ref"),
+        ("ref that is a commit", dict(good, ref="a" * 40), "ref"),
+    ]:
+        _, bad = S.entry_sources({"sources": [entry]})
+        check(f"allowlist source rejected: {label}", any(want in b for b in bad), str(bad))
+    _, bad = S.entry_sources({"sources": [dict(good, label="x"), dict(good, repo_id=2, label="x")]})
+    check("allowlist source rejected: one label declared twice", any("twice" in b for b in bad), str(bad))
+    probs = S.allowlist_problems({"a": {"sources": [good]}, "b": {"sources": [good]}})
+    check("one repository cannot be bound to two ids", any("both" in p for p in probs), str(probs))
+    check("a well-formed source has no problems", S.entry_sources({"sources": [good]})[1] == [])
+    try:
+        probs = S.allowlist_problems({"a": {"sources": [dict(good, repo_id=[1])]}})
+        crashed = None
+    except Exception as e:                                     # noqa: BLE001
+        probs, crashed = [], e
+    check("an unhashable repo_id is reported, not a crash",
+          crashed is None and any("repo_id" in p for p in probs), f"{crashed!r} {probs}")
+
+    # --- plan and apply against canned GitHub responses ---------------------
+    big = 2_000_000
+    blobs = {"records/testing/main/20261027-nightly.json": 10,
+             "records/testing/main/20261028-nightly.json": 10,
+             "records/testing/main/20261029-nightly.json": big,
+             "records/testing/main/20261030-nightly.json": 10,
+             "records/testing/main/20261031-nightly.json": 10}
+    stranded = "intake/example-sourced/testing/main/20261027-nightly.json"
+    taken = "intake/example-sourced/testing/main/20261028-nightly.json"
+    s1 = dict(src, repo_id=7)
+    s2 = dict(src, repo="example/mirror", repo_id=8, label=None)
+    allow = {"example-sourced": {"sources": [s1, s2]}}
+
+    def fake_json(path, token):
+        if path.startswith("/repositories/") and path.count("/") == 2:
+            return {"full_name": {"7": "example/records", "8": "example/mirror"}[path[14:]]}
+        if "/branches/" in path:
+            return {"commit": {"sha": "c" * 40}}
+        if "/git/trees/" in path:
+            return {"tree": [{"path": p, "type": "blob", "size": n} for p, n in blobs.items()]}
+        if "/pulls?head=" in path:
+            return [] if urllib.parse.quote(stranded, safe="") in path else [{"number": 1}]
+        raise AssertionError(path)
+
+    saved = (S.api_json, S.api_list, S.fetch_file, I.load_allowlist, I.MAX_PER_RUN)
+    S.api_json = fake_json
+    S.api_list = lambda path, token: [{"ref": f"refs/heads/{b}"} for b in (stranded, taken)]
+    S.fetch_file = lambda s, p, token, fixtures=None: b"{}"
+    I.load_allowlist = lambda root: allow
+    I.MAX_PER_RUN = 2
+    out = os.path.join(work, "_plan.json")
+    buf = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(buf):
+            rc = I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out))
+    finally:
+        S.api_json, S.api_list, S.fetch_file, I.load_allowlist, I.MAX_PER_RUN = saved
+    with open(out) as f:
+        items = json.load(f)
+    log = buf.getvalue()
+    dests = [i["dest"].rsplit("/", 1)[1] for i in items]
+    check("plan takes again a branch a dead run left without a pull request",
+          [i["resume"] for i in items if i["branch"] == stranded] == [True], str(items))
+    check("plan skips a branch that has a pull request",
+          "20261028-nightly.json" not in dests, str(dests))
+    check("plan refuses a file over the cap and fails the run",
+          rc == 1 and "20261029-nightly.json is 2,000,000 bytes" in log, log)
+    check("plan opens at most MAX_PER_RUN and defers the rest",
+          len(items) == 2 and "1 more new record" in log, f"{dests} {log}")
+    check("plan lists one file held by two sources of one id once",
+          len(dests) == len(set(dests)) and "20261030-nightly.json" in dests, str(dests))
+
+    # Rate limited at the second item's pull request: stop rather than fail
+    # every later write, including the clean-up.
+    calls = []
+
+    def fake_call(method, path, token, body=None):
+        calls.append((method, path))
+        if method == "GET":
+            return {"object": {"sha": "b" * 40}}
+        if method == "POST" and path.endswith("/pulls"):
+            raise S.ApiError(method, path, 403, "secondary rate limit")
+        return None
+
+    saved, I.call = I.call, fake_call
+    os.environ["APP_TOKEN"] = "fake"
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc = I.apply(argparse.Namespace(repo="EVerest/Himalayas", plan=out))
+    finally:
+        I.call = saved
+        del os.environ["APP_TOKEN"]
+    first = [c for c in calls if c[0] != "GET"]
+    check("apply deletes a stranded branch before taking it again",
+          first[:2] and first[0][0] == "DELETE" and first[1] == ("POST", "/repos/EVerest/Himalayas/git/refs"),
+          str(first))
+    check("apply cleans up and stops at a rate limit",
+          rc == 1 and first[-1][0] == "DELETE"
+          and not any("20261030" in c[1] for c in calls), str(calls))
+
+
 SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normalise,
           "pointers": suite_pointers, "archive": suite_archive,
           "staleness": suite_staleness, "build": suite_build,
-          "docs": suite_docs}
+          "docs": suite_docs, "sources": suite_sources}
 
 # How many checks each suite must run. A suite whose count drops has had cases
 # deleted, and deleting a case is the one failure this file cannot otherwise see:
@@ -1692,8 +1994,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 94, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 67, "docs": 10}
+EXPECT = {"gate": 109, "intake": 16, "normalise": 8, "pointers": 17,
+          "archive": 9, "staleness": 6, "build": 67, "docs": 10, "sources": 28}
 TOTAL = sum(EXPECT.values())
 
 

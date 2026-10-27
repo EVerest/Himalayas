@@ -3,10 +3,13 @@
 # Omit display_name to withhold your name. The repository is public, so this entry,
 # including contact and github_users, is public too; see CONTRIBUTING.md.
 #
-# github_users is the accounts authorised to publish as that id.
-# It is MANDATORY and must be non-empty: an entry without it authorises nobody, and
-# every submission under that id is rejected. Only a maintainer can merge a change
-# to this file, so adding an account is maintainer-approved; the binding rests on that.
+# github_users is the accounts authorized to publish as that id by pull request.
+# sources is the public repositories the intake copies records from for that id,
+# each read by its numeric repo_id (CONTRIBUTING.md, Setting up a source
+# repository). An entry needs at least one of the two: with neither it authorizes
+# nobody, and every submission under that id is rejected. Only a maintainer can
+# merge a change to this file, so adding an account or a source is
+# maintainer-approved; the binding rests on that.
 # A submission whose pull request author is not listed here is rejected quietly:
 # nothing is sent to the contact below, so the gate cannot be used to enumerate an
 # integrator's accounts or to generate mail to them.

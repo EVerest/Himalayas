@@ -28,16 +28,21 @@ REJECTS
   commit-missing      no metadata.everest.commit at all
   not-authorised      the submitting GitHub account is not listed for that
                       integrator id in integrators/allowlist.yaml
+  source-mismatch     opened by the intake bot, but the file is not
+                      byte-identical to the same path in a source bound to the id
+  source-label        the filename label is reserved for records from one of
+                      the id's sources, and this one did not come from it
   too-big             the submission, or its inline attachments, exceed the caps
   possible-secret     a string looks like a credential; named by rule and JSON
                       path, never by value
 
 TOOL ERRORS - exit 2, and the workflow closes the pull request
-  the submission file cannot be read, integrators/allowlist.yaml cannot be read,
-  pointers.json cannot be read, the gate breaks on a document no schema
-  rejected, or the status site build fails with the record. All five mean the
-  gate cannot say whether the submission is valid, which is a different
-  statement from "this submission is wrong".
+  the submission file cannot be read, integrators/allowlist.yaml cannot be read
+  or binds a source malformed, pointers.json cannot be read, a bound source
+  cannot be reached, the gate breaks on a document no schema rejected, or the
+  status site build fails with the record. All of these mean the gate cannot
+  say whether the submission is valid, which is a different statement from
+  "this submission is wrong".
 
 WARNS - never blocks
   sourcecode          OpenHTF embeds test source by default and this repo is
@@ -77,7 +82,8 @@ except ImportError:
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from normalise import detect, ctrf_to_openhtf                  # noqa: E402
-from result_path import RESULT_PATH_RE as PATH_RE              # noqa: E402
+from result_path import MAX_FILE_BYTES, RESULT_PATH_RE as PATH_RE  # noqa: E402
+import sources                                                 # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -292,7 +298,15 @@ def main():
                          "and a submission from any other account is rejected. Reads "
                          "SUBMISSION_AUTHOR if not given, so the workflow can pass it "
                          "through env: rather than interpolating it into a shell command.")
-    ap.add_argument("--max-file-bytes", type=int, default=1_048_576,
+    ap.add_argument("--author-id", type=int,
+                    default=int(os.environ["SUBMISSION_AUTHOR_ID"])
+                    if os.environ.get("SUBMISSION_AUTHOR_ID", "").isdigit() else None,
+                    help="numeric GitHub id of the pull request author. The intake "
+                         "bot is recognized by id, not login. Reads SUBMISSION_AUTHOR_ID.")
+    ap.add_argument("--source-fixtures",
+                    help="self-test only: read bound sources from <dir>/<repo_id>/<ref>/ "
+                         "instead of GitHub")
+    ap.add_argument("--max-file-bytes", type=int, default=MAX_FILE_BYTES,
                     help="whole submission cap; this repository keeps files indefinitely")
     ap.add_argument("--max-attachment-bytes", type=int, default=262_144,
                     help="inline bulk cap - attachments, traces and messages. OpenHTF "
@@ -314,6 +328,7 @@ def main():
               f"Got `{rel}`.")
     who = m.group("who") if m else None
     path_ptr = m.group("pointer") if m else None
+    path_label = m.group("label") if m else None
 
     # --- size, before anything else ------------------------------------
     try:
@@ -442,12 +457,21 @@ def main():
             # nothing notifies the integrator's registered contact, so an
             # outsider cannot use the gate to enumerate an
             # integrator's accounts or to generate mail to them.
-            authorised = allow[claimed].get("github_users")
-            if not isinstance(authorised, list) or not authorised:
+            entry = allow[claimed]
+            srcs, bad = sources.entry_sources(entry)
+            if bad:
+                raise ToolError(f"integrators/allowlist.yaml binds a malformed source to "
+                                f"`{claimed}`: " + "; ".join(bad))
+            authorised = entry.get("github_users")
+            if not isinstance(authorised, list):
+                authorised = []
+            if not authorised and not srcs:
                 v.err("not-authorised",
-                      f"`{claimed}` has no `github_users` list in "
-                      "`integrators/allowlist.yaml`, so no account is authorised to publish "
-                      "as it. An owner must add the list before submissions are accepted.")
+                      f"`{claimed}` has neither `github_users` nor `sources` in "
+                      "`integrators/allowlist.yaml`, so nothing is authorised to publish "
+                      "as it. An owner must add one before submissions are accepted.")
+            elif args.author_id == sources.INTAKE_BOT_ID:
+                bind_source(v, claimed, srcs, rel, abspath, path_ptr, path_label, args)
             elif args.author is None:
                 # Local runs have no author. Say so rather than passing silently: the
                 # check that binds a submission to an account was not performed.
@@ -458,6 +482,13 @@ def main():
                       f"The account that opened this pull request is not authorised to "
                       f"publish as `{claimed}`. If it should be, an owner must add it to "
                       f"that entry's `github_users` in `integrators/allowlist.yaml`.")
+            else:
+                owner = sources.reserved_label(srcs, path_label)
+                if owner:
+                    v.err("source-label",
+                          f"The label `{owner['label']}` is reserved for records from "
+                          f"`{owner['repo']}`, which the intake copies itself. Use a "
+                          "different label for records submitted by pull request.")
 
         # --- HIL on the CTRF path must name its board -----------------------
         # The schema enforces this too, but a bare "'hardware' is a required property"
@@ -615,6 +646,42 @@ def main():
     return finish(v, rel, fmt, args)
 
 
+def bind_source(v, claimed, srcs, rel, abspath, pointer, label, args):
+    """A pull request from the intake bot publishes as `claimed` only if the file
+    is byte-identical to the same path in one of the id's bound sources.
+
+    The gate re-reads the source itself rather than trusting the intake that
+    copied it, so a fault or a compromise there cannot land a record its
+    integrator never published.
+    """
+    if not pointer:
+        return                                     # bad-path already says why
+    name = os.path.basename(rel)
+    with open(abspath, "rb") as f:
+        mine = f.read()
+    tried = []
+    for s in srcs:
+        if not sources.label_admits(s, label):
+            continue
+        relpath = sources.source_path(s, pointer, name)
+        tried.append(f"`{relpath}` in `{s['repo']}`")
+        try:
+            theirs = sources.fetch_file(s, relpath, os.environ.get("GITHUB_TOKEN"),
+                                        args.source_fixtures)
+        except sources.SourceUnreachable as e:
+            raise ToolError(f"a source bound to `{claimed}` could not be read: {e}")
+        if theirs == mine:
+            v.note(f"*Copied from {tried[-1]} at `{s['ref']}`, byte for byte.*")
+            return
+    why = (f"tried {', '.join(tried)}" if tried
+           else "no bound source admits this filename's label" if srcs
+           else "it binds no source")
+    v.err("source-mismatch",
+          f"This pull request was opened by the intake, but the file is not byte-identical "
+          f"to the same path in any source bound to `{claimed}` ({why}). The intake only "
+          "copies; the record must be published in the source first.")
+
+
 def site_builds():
     """Build the status site over every stored record, this one included, as the deploy will.
 
@@ -649,16 +716,19 @@ def write_report(args, text):
             f.write(text + "\n")
 
 
-def tool_error(args, rel, why):
+def tool_error(args, rel, why, from_intake=False):
     """Exit 2 WITH a verdict. A tool error that writes nothing leaves the
     workflow with a red check and no reason on the pull request."""
     why = redact(why)
     out = (f"### Submission could not be processed &mdash; `{rel}`\n\n"
            f"The intake gate failed while checking this file, so it cannot say whether "
            f"the submission is valid.\n\n```\n{why}\n```\n\n"
-           "This pull request is being closed. Please open a new one once the "
-           "submission is fixed; if the file looks correct, raise an issue &mdash; the "
-           "fault may be ours.")
+           + ("This pull request stays open: nobody can resubmit a record the intake "
+              "copied. A maintainer re-runs the check once the fault is fixed."
+              if from_intake else
+              "This pull request is being closed. Please open a new one once the "
+              "submission is fixed; if the file looks correct, raise an issue &mdash; the "
+              "fault may be ours."))
     write_report(args, out)
     print(out)
     print(f"tool error: {why}", file=sys.stderr)
@@ -670,7 +740,7 @@ def cli():
 
     Any unexpected exception has to become exit 2, never exit 1: the workflow
     reads exit 1 as "the integrator's file is wrong" and exit 2 as "we could not
-    tell", and it closes the pull request only on the second.
+    tell", and it closes a submitter's pull request only on the second.
     """
     rel = " ".join(a for a in sys.argv[1:] if not a.startswith("-")) or "(unknown)"
     shim = argparse.Namespace(report=None)
@@ -678,17 +748,22 @@ def cli():
         i = sys.argv.index("--report")
         if i + 1 < len(sys.argv):
             shim.report = sys.argv[i + 1]
+    author_id = os.environ.get("SUBMISSION_AUTHOR_ID", "")
+    if "--author-id" in sys.argv:
+        i = sys.argv.index("--author-id")
+        author_id = sys.argv[i + 1] if i + 1 < len(sys.argv) else ""
+    bot = author_id == str(sources.INTAKE_BOT_ID)
     try:
         return main()
     except SystemExit:
         raise
     except ToolError as e:
-        return tool_error(shim, rel, str(e))
+        return tool_error(shim, rel, str(e), bot)
     except Exception as e:                                     # noqa: BLE001
         import traceback
         return tool_error(shim, rel,
                           f"{type(e).__name__}: {e}\n\n"
-                          + "".join(traceback.format_exc()).strip())
+                          + "".join(traceback.format_exc()).strip(), bot)
 
 
 if __name__ == "__main__":
