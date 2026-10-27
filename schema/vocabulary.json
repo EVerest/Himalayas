@@ -5,6 +5,7 @@
     "highLevelComms": ["ISO15118-2", "ISO15118-3", "ISO15118-20", "DIN70121"],
     "basicComms": ["IEC61851"],
     "ocpp": ["OCPP1.6", "OCPP2.0.1", "OCPP2.1"],
+    "ocppConformance": ["OCPP1.6-TestCases", "OCPP2.0.1-Part6", "OCPP2.1-Part6"],
     "features": ["TLS", "PnC", "SmartCharging", "Eichrecht", "Reservation", "EEBUS", "V2X"],
     "lifecycle": ["mandatory", "smoke", "compliance", "regression"],
     "escapeHatch": {

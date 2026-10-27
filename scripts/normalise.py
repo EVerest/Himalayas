@@ -27,7 +27,7 @@ CTRF -> OpenHTF mapping
   environment.testEnvironment      -> metadata.everest.testEnvironment,
                                       and dut_id for a SIL run
   environment.commit/branchName    -> metadata.everest.*
-  extra.build/integrator/hardware  -> metadata.*
+  extra.build/integrator/hardware/testSystem -> metadata.*
 
 WHAT IS LOST, AND WHAT IS INVENTED
 ----------------------------------
@@ -36,10 +36,11 @@ material", which was not true. Stated properly:
 
 LOST. `test.device` (per-test hardware, which OpenHTF models per RECORD, not per
 phase), `test.retries` / `retryAttempts`, `test.filePath` / `line`, `test.steps`,
-`test.insights`, `test.parameters`, `test.extra`. None is read by anything
-downstream today, which is why the direction is still the right one - but "not
-read" is not "not material", and a later reader should know they were dropped
-here rather than never sent.
+`test.insights`, `test.parameters`, `test.extra`. Nothing downstream of this
+output reads them: it feeds only the gate's OpenHTF checks. The status page reads
+each record as submitted, so `test.extra` (accepted deviations, inconclusive
+results, failure keys) reaches the page unchanged. A later reader should still
+know they were dropped here rather than never sent.
 
 SYNTHESISED. OpenHTF requires fields CTRF has no equivalent for, so three values
 are manufactured, and every one of them is listed in
@@ -173,6 +174,7 @@ def ctrf_to_openhtf(doc):
             "buildUrl": env.get("buildUrl"),
             # CTRF has no report-link field; the EVerest extra contract does.
             "reportUrl": extra.get("reportUrl"),
+            "reportSha256": extra.get("reportSha256"),
             "configuration": extra.get("configuration"),
         }.items() if v is not None},
         "source": {k: v for k, v in {
@@ -186,7 +188,7 @@ def ctrf_to_openhtf(doc):
             "synthesised": ["dut_id", "station_id"],
         }.items() if v is not None},
     }
-    for key in ("build", "integrator", "hardware"):
+    for key in ("build", "integrator", "hardware", "testSystem"):
         if extra.get(key):
             md[key] = extra[key]
 

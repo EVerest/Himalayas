@@ -61,7 +61,17 @@
           "type": "string",
           "pattern": "^https://",
           "maxLength": 2048
+        },
+        "reportSha256": {
+          "description": "SHA-256 of the file at metadata.everest.reportUrl, as 64 lowercase hex digits, so a reader can tell whether the linked report is still the one submitted. Optional, and only alongside metadata.everest.reportUrl. Himalayas does not fetch the report to check it.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
         }
+      },
+      "dependencies": {
+        "reportSha256": [
+          "reportUrl"
+        ]
       }
     },
     "build": {
@@ -161,6 +171,26 @@
           "type": "string",
           "maxLength": 100,
           "description": "Charge controller model or firmware, if it is a separate unit from the board."
+        }
+      }
+    },
+    "testSystem": {
+      "description": "The test system that ran the tests against EVerest, such as a conformance test tool, with its release. Optional. Shown on the status page as the run's provenance. A harness that only drives EVerest's own tests belongs in results.tool instead.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
         }
       }
     },

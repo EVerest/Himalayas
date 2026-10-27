@@ -80,6 +80,12 @@ def suite_gate(work, verbose):
         ("path: wrong filename", ctrf, None, "bad-path", "results/example-integrator/testing/main/nope.json"),
         ("path: missing pointer dir", ctrf, None, "bad-path", "results/example-integrator/20260901.json"),
         ("path: -1 suffix", ctrf, None, "bad-path", "results/example-integrator/testing/main/20260901-1.json"),
+        ("path: label then -1", ctrf, None, "bad-path", "results/example-integrator/testing/main/20260901-nightly-1.json"),
+        ("path: label segment starts with a digit", ctrf, None, "bad-path",
+         "results/example-integrator/testing/main/20260901-nightly-201ocpp.json"),
+        ("path: uppercase label", ctrf, None, "bad-path", "results/example-integrator/testing/main/20260901-NIGHTLY.json"),
+        ("path: label of five segments", ctrf, None, "bad-path",
+         "results/example-integrator/testing/main/20260901-a-b-c-d-e.json"),
         ("format: not CTRF or OpenHTF", {"hello": "world"}, None, "unknown-format", P),
         ("ctrf: invalid CTRF", ctrf, lambda d: d["results"]["summary"].pop("passed"), "ctrf-schema", P),
         ("ctrf: missing specVersion", ctrf, lambda d: d.pop("specVersion"), "ctrf-schema", P),
@@ -140,6 +146,38 @@ def suite_gate(work, verbose):
         ("htf: reportUrl not https", htf,
          lambda d: d["metadata"]["everest"].update(reportUrl="http://ci.example/report.pdf"),
          "htf-metadata", P),
+        # reportSha256 pins the file reportUrl names, so it needs one to pin.
+        ("extra: reportSha256 not hex", ctrf,
+         lambda d: d["results"]["extra"].update(reportSha256="ABC123"), "extra-contract", P),
+        ("extra: reportSha256 without reportUrl", ctrf,
+         lambda d: (d["results"]["extra"].pop("reportUrl"), d["results"]["extra"].update(reportSha256="0" * 64)),
+         "extra-contract", P),
+        ("htf: reportSha256 without reportUrl", htf,
+         lambda d: (d["metadata"]["everest"].pop("reportUrl"), d["metadata"]["everest"].update(reportSha256="0" * 64)),
+         "htf-metadata", P),
+        ("extra: testSystem without a name", ctrf,
+         lambda d: d["results"]["extra"].update(testSystem={"version": "1.0"}), "extra-contract", P),
+        ("htf: testSystem without a name", htf,
+         lambda d: d["metadata"].update(testSystem={"version": "1.0"}), "htf-metadata", P),
+        # Section 10: a deviation stays failed, an inconclusive result is other.
+        ("tests: accepted deviation reported as skipped", ctrf,
+         lambda d: d["results"]["tests"][0].update(status="skipped", extra={"acceptedDeviation": {
+             "reason": "Kept for deployed EVs", "clause": "V2G3-M06-08"}}), "ctrf-profile", P),
+        ("tests: accepted deviation without a clause", ctrf,
+         lambda d: d["results"]["tests"][0].update(status="failed", extra={"acceptedDeviation": {
+             "reason": "Kept for deployed EVs"}}), "ctrf-profile", P),
+        ("tests: inconclusive reported as failed", ctrf,
+         lambda d: d["results"]["tests"][0].update(status="failed", extra={"inconclusive": {
+             "reason": "Precondition not established"}}), "ctrf-profile", P),
+        ("tests: failureKey empty", ctrf,
+         lambda d: d["results"]["tests"][0].update(status="failed", extra={"failureKey": ""}), "ctrf-profile", P),
+        # description is a one-line title, not a second message.
+        ("tests: description over two lines", ctrf,
+         lambda d: d["results"]["tests"][0].update(extra={"description": "Title\nand more"}), "ctrf-profile", P),
+        ("tests: description too long", ctrf,
+         lambda d: d["results"]["tests"][0].update(extra={"description": "x" * 501}), "ctrf-profile", P),
+        ("tests: logUrl not https", ctrf,
+         lambda d: d["results"]["tests"][0].update(extra={"logUrl": "http://ci.example/t1.log"}), "ctrf-profile", P),
         # configuration is a card title and a summary key, not prose.
         ("extra: configuration is prose", ctrf,
          lambda d: d["results"]["extra"].update(configuration="AC and DC <b>"),
@@ -466,6 +504,61 @@ def suite_gate(work, verbose):
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept SIL without hardware           rc={rc}")
 
+    # A test system and a report hash are optional record fields on both paths.
+    d = copy.deepcopy(ctrf)
+    d["results"]["extra"].update(testSystem={"name": "Conformance tool", "version": "1.2.0"}, reportSha256="ab" * 32)
+    rc_c, cs_c, _ = gate(work, d, P)
+    d = copy.deepcopy(htf)
+    d["metadata"]["testSystem"] = {"name": "Conformance tool", "version": "1.2.0"}
+    d["metadata"]["everest"]["reportSha256"] = "ab" * 32
+    rc_h, cs_h, _ = gate(work, d, P)
+    ok = rc_c == 0 and rc_h == 0
+    report("accept testSystem and reportSha256 (ctrf and openhtf)", ok, f"ctrf rc={rc_c} {cs_c} openhtf rc={rc_h} {cs_h}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} accept testSystem and reportSha256    rc={rc_c},{rc_h}")
+
+    # The section 10 forms are accepted, and the bare tag from before them warns.
+    d = copy.deepcopy(ctrf)
+    d["results"]["tests"][0].update(status="failed", extra={"acceptedDeviation": {
+        "reason": "Kept for deployed EVs", "clause": "V2G3-M06-08", "since": "2026-09-01"}, "failureKey": "deviation"})
+    d["results"]["tests"][1].update(status="other", extra={"inconclusive": {"reason": "Precondition not established"}})
+    d["results"]["summary"].update(passed=sum(t["status"] == "passed" for t in d["results"]["tests"]),
+                                   failed=sum(t["status"] == "failed" for t in d["results"]["tests"]),
+                                   other=sum(t["status"] == "other" for t in d["results"]["tests"]))
+    rc, cs, out = gate(work, d, P)
+    ok = rc == 0 and "deviation-undeclared" not in out
+    report("accept a declared deviation and an inconclusive result", ok, f"rc={rc} codes={cs}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} accept deviation and inconclusive     rc={rc}")
+    d = copy.deepcopy(ctrf)
+    d["results"]["tests"][0].update(status="skipped", tags=["DC", "x-accepted-deviation"])
+    d["results"]["summary"].update(passed=sum(t["status"] == "passed" for t in d["results"]["tests"]),
+                                   failed=sum(t["status"] == "failed" for t in d["results"]["tests"]),
+                                   skipped=sum(t["status"] == "skipped" for t in d["results"]["tests"]))
+    rc, cs, out = gate(work, d, P)
+    ok = rc == 0 and "deviation-undeclared" in out
+    report("accept + warn on a bare x-accepted-deviation tag", ok, f"rc={rc} warned={'deviation-undeclared' in out}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} accept+warn bare deviation tag        rc={rc}")
+
+    # A label lets two runs of one day coexist without racing for the next -N.
+    for name in ("20260901-ocpp201-sil.json", "20260901-ocpp201-sil-2.json"):
+        rc, cs, _ = gate(work, copy.deepcopy(ctrf), f"results/example-integrator/testing/main/{name}")
+        ok = rc == 0
+        report(f"accept a labelled path {name}", ok, f"rc={rc} codes={cs}")
+        if verbose or not ok:
+            print(f"  {'ok  ' if ok else 'FAIL'} accept {name:36} rc={rc}")
+
+    # A conformance test carries its OCPP version and the test specification it comes from.
+    d = copy.deepcopy(ctrf)
+    d["results"]["tests"][0]["tags"] = ["OCPP1.6", "OCPP1.6-TestCases"]
+    d["results"]["tests"][1]["tags"] = ["OCPP2.0.1", "OCPP2.0.1-Part6"]
+    rc, cs, out = gate(work, d, P)
+    ok = rc == 0 and "tag-vocabulary" not in out
+    report("accept OCPP conformance tags without a vocabulary warning", ok, f"rc={rc} codes={cs}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} accept OCPP conformance tags          rc={rc}")
+
     # Every example must be accepted. The path has to match the example's OWN
     # integrator id, or id-mismatch fires - correctly - and the test is measuring
     # the harness rather than the gate.
@@ -557,6 +650,12 @@ def suite_intake(work, verbose):
         ("a genuine submission",
          [{"status": "added", "filename": "results/example-integrator/testing/main/20260910.json"}],
          "submission", ""),
+        ("a labelled submission",
+         [{"status": "added", "filename": "results/example-integrator/testing/main/20260910-ocpp16-sil.json"}],
+         "submission", ""),
+        ("a label the gate would not accept",
+         [{"status": "added", "filename": "results/example-integrator/testing/main/20260910-nightly-1.json"}],
+         "refuse", "bad-path"),
     ]
     for label, files, want_kind, want_reason in cases:
         rc, got, accepted, verdict = kinds(files, want_kind, want_reason)
@@ -1474,6 +1573,31 @@ def suite_build(work, verbose):
     check("only a test with no vocabulary tag is marked untagged", sp.count("<b>untagged</b>") == 1,
           f'{sp.count("<b>untagged</b>")} marker(s)')
 
+    pinned = dict(copy.deepcopy(base), report="https://ci.example/r.pdf", report_sha="ab" * 32,
+                  test_system={"name": "Conformance tool", "version": "1.2.0"})
+    sp = next((v for k, v in bs.build_site([pinned], declared, logs, allow, vocab).items() if k.startswith("setup/")), "")
+    check("a declared report hash is shown as declared, not as verified",
+          "abababababab…</code> declared, not checked here" in sp and "Conformance tool 1.2.0" in sp, sp[sp.find("Evidence"):][:300])
+
+    # A description titles the test where it is listed, escaped, and never replaces its name.
+    title = "Update Charging Station Password <Accepted>"
+    t0 = dict(base["tests"][0], desc=title)
+    older = dict(copy.deepcopy(base), commit=shas[-2], start=1_000, tests=[dict(t0, outcome="passed")])
+    newer = dict(copy.deepcopy(base), commit=shas[-1], start=2_000, tests=[dict(t0, outcome="failed", message="boom")])
+    got = bs.build_site([older, newer], declared, logs, allow, vocab)
+    sp = next((v for k, v in got.items() if k.startswith("setup/")), "")
+    det = got.get(bs.pointer_file("detailed", main), "")
+    want = "Update Charging Station Password &lt;Accepted&gt;"
+    check("a test's description is shown on its setup page and in the regressions panel",
+          f'<code>{bs.esc(t0["name"])}</code> {want}' in sp and want in det[det.find("Open regressions"):],
+          f'setup={want in sp} panel={want in det}')
+
+    logged = dict(copy.deepcopy(base), tests=[dict(base["tests"][0], log="https://ci.example/t1.log?a=1&b=2")])
+    sp = next((v for k, v in bs.build_site([logged], declared, logs, allow, vocab).items() if k.startswith("setup/")), "")
+    check("a test's log link is shown as unverified",
+          '<a href="https://ci.example/t1.log?a=1&amp;b=2">log</a> · linked by the integrator · <span class="muted">unverified link</span>' in sp,
+          sp[sp.find("log</a>") - 80:][:200])
+
     u, d = copy.deepcopy(base), copy.deepcopy(base)
     u["config"], d["config"] = "AC_1", "AC-1"
     pages = [k for k in bs.build_site([u, d], declared, logs, allow, vocab) if k.startswith("setup/")]
@@ -1568,8 +1692,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 71, "intake": 14, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 64, "docs": 10}
+EXPECT = {"gate": 94, "intake": 16, "normalise": 8, "pointers": 17,
+          "archive": 9, "staleness": 6, "build": 67, "docs": 10}
 TOTAL = sum(EXPECT.values())
 
 
