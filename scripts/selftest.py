@@ -1657,6 +1657,28 @@ def suite_build(work, verbose):
 
     base = next((x for x in recs if x["pointer"] == main and x["commit"] in shas), None)
 
+    # A failed build has no modules and no tests: it renders as a failed build
+    # for that move, not as a build-only row and not as a crash.
+    d = json.load(open(os.path.join(work, "examples", "minimal-ctrf.json")))
+    d["results"]["extra"]["build"] = {"status": "failed"}
+    d["results"]["environment"].update(commit=shas[-1], healthy=False)
+    d["results"]["tests"] = []
+    d["results"]["summary"].update(tests=0, passed=0, failed=0, skipped=0, pending=0, other=0)
+    rel = "results/example-unnamed/testing/main/20260901-selftest-failed.json"
+    os.makedirs(os.path.dirname(os.path.join(work, rel)), exist_ok=True)
+    with open(os.path.join(work, rel), "w") as f:
+        json.dump(d, f)
+    try:
+        failed = [x for x in bs.load_records(root) if x["path"].endswith(rel)]
+        files_f = bs.build_site(failed, declared, logs, allow, vocab) if failed else {}
+    finally:
+        os.remove(os.path.join(work, rel))
+    row = (rows_of(files_f.get("index.html", "")) or [""])[0]
+    setup = next((v for k, v in files_f.items() if k.startswith("setup/")), "")
+    check("a failed build with no modules and no tests renders as a failed build",
+          len(failed) == 1 and row.startswith('"build-failed"') and "✕ build failed" in row
+          and "✕ build failed" in setup, row[:160])
+
     # A submitted report link is rendered on the setup page.
     if base is None:
         check("a setup page links the submitted report", False, "no submission on the default pointer")
@@ -2014,7 +2036,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 111, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 67, "docs": 10, "sources": 28}
+          "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 28}
 TOTAL = sum(EXPECT.values())
 
 
