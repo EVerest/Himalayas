@@ -694,6 +694,19 @@ def suite_gate(work, verbose):
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept OCPP conformance tags          rc={rc}")
 
+    # A failed build has no modules to list, on both paths.
+    d = copy.deepcopy(ctrf)
+    d["results"]["extra"]["build"] = {"status": "failed"}
+    _, cs_c, _ = gate(work, d, P)
+    d = copy.deepcopy(htf)
+    d["metadata"]["build"] = {"status": "failed"}
+    _, cs_h, _ = gate(work, d, P)
+    schema = {"extra-contract", "htf-metadata", "ctrf-schema", "htf-profile", "ctrf-profile"}
+    ok = not schema & set(cs_c) and not schema & set(cs_h)
+    report("schema: a failed build needs no modules (ctrf and openhtf)", ok, f"ctrf {cs_c} openhtf {cs_h}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} failed build needs no modules         {cs_c} {cs_h}")
+
     # Every example must be accepted. The path has to match the example's OWN
     # integrator id, or id-mismatch fires - correctly - and the test is measuring
     # the harness rather than the gate.
@@ -1994,7 +2007,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 109, "intake": 16, "normalise": 8, "pointers": 17,
+EXPECT = {"gate": 110, "intake": 16, "normalise": 8, "pointers": 17,
           "archive": 9, "staleness": 6, "build": 67, "docs": 10, "sources": 28}
 TOTAL = sum(EXPECT.values())
 

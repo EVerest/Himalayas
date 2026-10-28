@@ -423,7 +423,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 270 checks, all of which must pass
+python3 scripts/selftest.py        # 271 checks, all of which must pass
 ```
 
 ---
