@@ -2035,7 +2035,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 111, "intake": 16, "normalise": 8, "pointers": 17,
+EXPECT = {"gate": 112, "intake": 16, "normalise": 8, "pointers": 17,
           "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 28}
 TOTAL = sum(EXPECT.values())
 
