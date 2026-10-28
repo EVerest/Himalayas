@@ -106,7 +106,10 @@ def suite_gate(work, verbose):
             appVersion="testing/stable-2026.02"), "pointer-mismatch", P),
         ("build: missing", ctrf, lambda d: d["results"]["extra"].pop("build"),
          ("build-missing", "extra-contract"), P),
-        ("build: failed", ctrf, lambda d: d["results"]["extra"]["build"].update(status="failed"), "build-failed", P),
+        ("healthy: true on a failed build", ctrf, lambda d: d["results"]["extra"]["build"].update(status="failed"),
+         "healthy-mismatch", P),
+        ("healthy: false on a passed build", ctrf, lambda d: d["results"]["environment"].update(healthy=False),
+         "healthy-mismatch", P),
         ("modules: missing (ctrf)", ctrf, lambda d: d["results"]["extra"]["build"].pop("modules"),
          ("extra-contract", "htf-metadata"), P),
         ("modules: empty (ctrf)", ctrf, lambda d: d["results"]["extra"]["build"].update(modules=[]),
@@ -138,7 +141,7 @@ def suite_gate(work, verbose):
         # extra.build.status is not a free string.
         ("extra: build status not in the enum", ctrf,
          lambda d: d["results"]["extra"]["build"].update(status="green"),
-         ("extra-contract", "build-failed"), P),
+         "extra-contract", P),
         # reportUrl is a link a reader follows from the status page: https only,
         # like buildUrl, on both submission paths.
         ("extra: reportUrl not https", ctrf,
@@ -694,18 +697,21 @@ def suite_gate(work, verbose):
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept OCPP conformance tags          rc={rc}")
 
-    # A failed build has no modules to list, on both paths.
+    # A failed build is published, with no modules to list and nothing tested.
     d = copy.deepcopy(ctrf)
     d["results"]["extra"]["build"] = {"status": "failed"}
-    _, cs_c, _ = gate(work, d, P)
+    d["results"]["environment"]["healthy"] = False
+    d["results"]["tests"] = []
+    d["results"]["summary"].update(tests=0, passed=0, failed=0, skipped=0, pending=0, other=0)
+    rc_c, cs_c, out_c = gate(work, d, P)
     d = copy.deepcopy(htf)
     d["metadata"]["build"] = {"status": "failed"}
-    _, cs_h, _ = gate(work, d, P)
-    schema = {"extra-contract", "htf-metadata", "ctrf-schema", "htf-profile", "ctrf-profile"}
-    ok = not schema & set(cs_c) and not schema & set(cs_h)
-    report("schema: a failed build needs no modules (ctrf and openhtf)", ok, f"ctrf {cs_c} openhtf {cs_h}")
+    rc_h, cs_h, out_h = gate(work, d, P)
+    ok = rc_c == 0 and rc_h == 0 and "unknown-module" not in out_c + out_h
+    report("accept a failed build with no modules (ctrf, no tests, and openhtf)", ok,
+           f"ctrf rc={rc_c} {cs_c} openhtf rc={rc_h} {cs_h}")
     if verbose or not ok:
-        print(f"  {'ok  ' if ok else 'FAIL'} failed build needs no modules         {cs_c} {cs_h}")
+        print(f"  {'ok  ' if ok else 'FAIL'} accept a failed build                 rc={rc_c},{rc_h}")
 
     # Every example must be accepted. The path has to match the example's OWN
     # integrator id, or id-mismatch fires - correctly - and the test is measuring
@@ -2007,7 +2013,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 110, "intake": 16, "normalise": 8, "pointers": 17,
+EXPECT = {"gate": 111, "intake": 16, "normalise": 8, "pointers": 17,
           "archive": 9, "staleness": 6, "build": 67, "docs": 10, "sources": 28}
 TOTAL = sum(EXPECT.values())
 
