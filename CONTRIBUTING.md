@@ -232,7 +232,7 @@ optional, but missing it costs you something on the status page or draws a warni
 | `environment.commit` | Required | full 40-character lowercase SHA, present in `pointers.json` for that pointer, and present in `EVerest/EVerest` |
 | `environment.appVersion` | Required | the pointer name: `testing/main`, `testing/stable-2026.02` or `testing/stable-2026.10`. Must match the pointer in the file path |
 | `environment.testEnvironment` | Required | `SIL` or `HIL`, exactly |
-| `extra.build.status` | Required | `passed` or `failed`. A failed build is published, and shows as a failed build for that day |
+| `extra.build.status` | Required | `passed` or `failed`. A failed build is published with `tests: []`, and shows as a failed build for that day |
 | `extra.build.modules` | Required when the build passed | non-empty list of unique PascalCase EVerest module names. A name not in [`schema/everest-modules.txt`](schema/everest-modules.txt) warns |
 | `extra.integrator.id` | Required | equals your `results/<id>/` directory and is in the allowlist |
 | `extra.hardware.board` | Required for HIL | the board model. SIL runs do not need it |
@@ -423,7 +423,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 274 checks, all of which must pass
+python3 scripts/selftest.py        # 276 checks, all of which must pass
 ```
 
 ---
@@ -622,6 +622,7 @@ The gate lists every failed check at once. The codes, roughly in the order peopl
 | `commit-missing` | No commit at all | Set `environment.commit` |
 | `build-missing` | No build reported | Set `extra.build.status` |
 | `healthy-mismatch` | `environment.healthy` disagrees with `extra.build.status` | Set `healthy` to whether the build passed, or leave it out |
+| `failed-build-tests` | The build failed but the record reports tests | Send a failed build with `tests: []` |
 | `hil-needs-board` | A HIL run submitted as CTRF names no board | Set `extra.hardware.board` |
 | `id-missing` / `id-mismatch` | No integrator id, or it differs from the `results/<id>/` directory | Make them equal |
 | `not-allowlisted` | The id is not in `integrators/allowlist.yaml` | Register first ([section 1](#1-register-once)) |

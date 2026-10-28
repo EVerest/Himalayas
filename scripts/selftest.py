@@ -106,8 +106,14 @@ def suite_gate(work, verbose):
             appVersion="testing/stable-2026.02"), "pointer-mismatch", P),
         ("build: missing", ctrf, lambda d: d["results"]["extra"].pop("build"),
          ("build-missing", "extra-contract"), P),
-        ("healthy: true on a failed build", ctrf, lambda d: d["results"]["extra"]["build"].update(status="failed"),
+        ("healthy: true on a failed build", ctrf, lambda d: (d["results"]["extra"]["build"].update(status="failed"),
+                                                              d["results"]["environment"].update(healthy=True)),
          "healthy-mismatch", P),
+        ("build: failed with tests (ctrf)", ctrf, lambda d: (d["results"]["extra"].update(build={"status": "failed"}),
+                                                              d["results"]["environment"].update(healthy=False)),
+         "failed-build-tests", P),
+        ("build: failed with phases (openhtf)", htf, lambda d: d["metadata"].update(build={"status": "failed"}),
+         "failed-build-tests", P),
         ("healthy: false on a passed build", ctrf, lambda d: d["results"]["environment"].update(healthy=False),
          "healthy-mismatch", P),
         ("modules: missing (ctrf)", ctrf, lambda d: d["results"]["extra"]["build"].pop("modules"),
@@ -706,9 +712,10 @@ def suite_gate(work, verbose):
     rc_c, cs_c, out_c = gate(work, d, P)
     d = copy.deepcopy(htf)
     d["metadata"]["build"] = {"status": "failed"}
+    d["phases"] = []
     rc_h, cs_h, out_h = gate(work, d, P)
     ok = rc_c == 0 and rc_h == 0 and "unknown-module" not in out_c + out_h
-    report("accept a failed build with no modules (ctrf, no tests, and openhtf)", ok,
+    report("accept a failed build with no modules and no tests (ctrf and openhtf)", ok,
            f"ctrf rc={rc_c} {cs_c} openhtf rc={rc_h} {cs_h}")
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept a failed build                 rc={rc_c},{rc_h}")
@@ -2035,7 +2042,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 112, "intake": 16, "normalise": 8, "pointers": 17,
+EXPECT = {"gate": 114, "intake": 16, "normalise": 8, "pointers": 17,
           "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 28}
 TOTAL = sum(EXPECT.values())
 
