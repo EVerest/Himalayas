@@ -47,16 +47,27 @@
       }
     },
     "build": {
-      "description": "Build status. Carried here, NOT as a synthetic CTRF test. The intake gate rejects a submission whose build is missing or failed.",
+      "description": "Build status. Carried here, NOT as a synthetic CTRF test. The intake gate rejects a submission whose build is missing.",
       "type": "object",
       "required": [
-        "status",
-        "modules"
+        "status"
       ],
+      "if": {
+        "properties": {
+          "status": {
+            "const": "passed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "modules"
+        ]
+      },
       "additionalProperties": false,
       "properties": {
         "status": {
-          "description": "Overall build outcome. 'failed' submissions are rejected by the intake gate.",
+          "description": "Overall build outcome. A 'failed' build is published as a failed build for that day.",
           "enum": [
             "passed",
             "failed"
@@ -97,7 +108,7 @@
           }
         },
         "modules": {
-          "description": "EVerest modules built. Required: without it a submission cannot say which parts of EVerest it actually exercised, so two passing runs covering different module sets look identical. Checked against schema/everest-modules.txt and warned on if unknown.",
+          "description": "EVerest modules built. Required when the build passed: without it a submission cannot say which parts of EVerest it actually exercised, so two passing runs covering different module sets look identical. Checked against schema/everest-modules.txt and warned on if unknown.",
           "type": "array",
           "items": {
             "description": "EVerest module name, PascalCase, as under modules/**/. Checked against schema/everest-modules.txt and WARNED on if unknown - warn not reject, because the list drifts with EVerest.",

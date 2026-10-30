@@ -106,7 +106,16 @@ def suite_gate(work, verbose):
             appVersion="testing/stable-2026.02"), "pointer-mismatch", P),
         ("build: missing", ctrf, lambda d: d["results"]["extra"].pop("build"),
          ("build-missing", "extra-contract"), P),
-        ("build: failed", ctrf, lambda d: d["results"]["extra"]["build"].update(status="failed"), "build-failed", P),
+        ("healthy: true on a failed build", ctrf, lambda d: (d["results"]["extra"]["build"].update(status="failed"),
+                                                              d["results"]["environment"].update(healthy=True)),
+         "healthy-mismatch", P),
+        ("build: failed with tests (ctrf)", ctrf, lambda d: (d["results"]["extra"].update(build={"status": "failed"}),
+                                                              d["results"]["environment"].update(healthy=False)),
+         "failed-build-tests", P),
+        ("build: failed with phases (openhtf)", htf, lambda d: d["metadata"].update(build={"status": "failed"}),
+         "failed-build-tests", P),
+        ("healthy: false on a passed build", ctrf, lambda d: d["results"]["environment"].update(healthy=False),
+         "healthy-mismatch", P),
         ("modules: missing (ctrf)", ctrf, lambda d: d["results"]["extra"]["build"].pop("modules"),
          ("extra-contract", "htf-metadata"), P),
         ("modules: empty (ctrf)", ctrf, lambda d: d["results"]["extra"]["build"].update(modules=[]),
@@ -138,7 +147,7 @@ def suite_gate(work, verbose):
         # extra.build.status is not a free string.
         ("extra: build status not in the enum", ctrf,
          lambda d: d["results"]["extra"]["build"].update(status="green"),
-         ("extra-contract", "build-failed"), P),
+         "extra-contract", P),
         # reportUrl is a link a reader follows from the status page: https only,
         # like buildUrl, on both submission paths.
         ("extra: reportUrl not https", ctrf,
@@ -693,6 +702,23 @@ def suite_gate(work, verbose):
     report("accept OCPP conformance tags without a vocabulary warning", ok, f"rc={rc} codes={cs}")
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept OCPP conformance tags          rc={rc}")
+
+    # A failed build is published, with no modules to list and nothing tested.
+    d = copy.deepcopy(ctrf)
+    d["results"]["extra"]["build"] = {"status": "failed"}
+    d["results"]["environment"]["healthy"] = False
+    d["results"]["tests"] = []
+    d["results"]["summary"].update(tests=0, passed=0, failed=0, skipped=0, pending=0, other=0)
+    rc_c, cs_c, out_c = gate(work, d, P)
+    d = copy.deepcopy(htf)
+    d["metadata"]["build"] = {"status": "failed"}
+    d["phases"] = []
+    rc_h, cs_h, out_h = gate(work, d, P)
+    ok = rc_c == 0 and rc_h == 0 and "unknown-module" not in out_c + out_h
+    report("accept a failed build with no modules and no tests (ctrf and openhtf)", ok,
+           f"ctrf rc={rc_c} {cs_c} openhtf rc={rc_h} {cs_h}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} accept a failed build                 rc={rc_c},{rc_h}")
 
     # Every example must be accepted. The path has to match the example's OWN
     # integrator id, or id-mismatch fires - correctly - and the test is measuring
@@ -1638,6 +1664,28 @@ def suite_build(work, verbose):
 
     base = next((x for x in recs if x["pointer"] == main and x["commit"] in shas), None)
 
+    # A failed build has no modules and no tests: it renders as a failed build
+    # for that move, not as a build-only row and not as a crash.
+    d = json.load(open(os.path.join(work, "examples", "minimal-ctrf.json")))
+    d["results"]["extra"]["build"] = {"status": "failed"}
+    d["results"]["environment"].update(commit=shas[-1], healthy=False)
+    d["results"]["tests"] = []
+    d["results"]["summary"].update(tests=0, passed=0, failed=0, skipped=0, pending=0, other=0)
+    rel = "results/example-unnamed/testing/main/20260901-selftest-failed.json"
+    os.makedirs(os.path.dirname(os.path.join(work, rel)), exist_ok=True)
+    with open(os.path.join(work, rel), "w") as f:
+        json.dump(d, f)
+    try:
+        failed = [x for x in bs.load_records(root) if x["path"].endswith(rel)]
+        files_f = bs.build_site(failed, declared, logs, allow, vocab) if failed else {}
+    finally:
+        os.remove(os.path.join(work, rel))
+    row = (rows_of(files_f.get("index.html", "")) or [""])[0]
+    setup = next((v for k, v in files_f.items() if k.startswith("setup/")), "")
+    check("a failed build with no modules and no tests renders as a failed build",
+          len(failed) == 1 and row.startswith('"build-failed"') and "✕ build failed" in row
+          and "✕ build failed" in setup, row[:160])
+
     # A submitted report link is rendered on the setup page.
     if base is None:
         check("a setup page links the submitted report", False, "no submission on the default pointer")
@@ -1994,8 +2042,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 109, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 67, "docs": 10, "sources": 28}
+EXPECT = {"gate": 114, "intake": 16, "normalise": 8, "pointers": 17,
+          "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 28}
 TOTAL = sum(EXPECT.values())
 
 

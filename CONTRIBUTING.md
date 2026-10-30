@@ -232,8 +232,8 @@ optional, but missing it costs you something on the status page or draws a warni
 | `environment.commit` | Required | full 40-character lowercase SHA, present in `pointers.json` for that pointer, and present in `EVerest/EVerest` |
 | `environment.appVersion` | Required | the pointer name: `testing/main`, `testing/stable-2026.02` or `testing/stable-2026.10`. Must match the pointer in the file path |
 | `environment.testEnvironment` | Required | `SIL` or `HIL`, exactly |
-| `extra.build.status` | Required | must be `passed`; a failed build is rejected |
-| `extra.build.modules` | Required | non-empty list of unique PascalCase EVerest module names. A name not in [`schema/everest-modules.txt`](schema/everest-modules.txt) warns |
+| `extra.build.status` | Required | `passed` or `failed`. A failed build is published with `tests: []`, and shows as a failed build for that day |
+| `extra.build.modules` | Required when the build passed | non-empty list of unique PascalCase EVerest module names. A name not in [`schema/everest-modules.txt`](schema/everest-modules.txt) warns |
 | `extra.integrator.id` | Required | equals your `results/<id>/` directory and is in the allowlist |
 | `extra.hardware.board` | Required for HIL | the board model. SIL runs do not need it |
 | `tests[].name` | Required | at most 400 characters. Keep it stable across runs ([section 10](#10-reporting-conventions)) |
@@ -252,7 +252,7 @@ optional, but missing it costs you something on the status page or draws a warni
 | `extra.testSystem` | Optional | `{name, version}` of the test system that ran the tests against EVerest, such as a conformance test tool. Shown as the run's provenance |
 | `environment.appName` | Optional | if present, `EVerest` |
 | `environment.osPlatform` | Optional | `linux`, `darwin` or `windows` (lowercase) |
-| `environment.healthy` | Optional | a boolean mirror of the build status, for generic CTRF readers |
+| `environment.healthy` | Optional | a boolean mirror of the build status, for generic CTRF readers. If present it must agree with `extra.build.status` |
 | `extra.build.targets[]` | Optional | `{target, status, toolchain}`: a triple like `aarch64-linux-gnu`, `passed`/`failed`/`skipped`, and `<compiler> <version>` like `gcc 13.2.0`. A target EVerest does not build warns |
 | `extra.integrator.displayName` | Optional | omit to withhold your name |
 | `extra.hardware.bsp`, `chargeController` | Optional | HIL detail |
@@ -423,7 +423,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 270 checks, all of which must pass
+python3 scripts/selftest.py        # 276 checks, all of which must pass
 ```
 
 ---
@@ -620,7 +620,9 @@ The gate lists every failed check at once. The codes, roughly in the order peopl
 | `commit-malformed` | Not a full 40-character lowercase SHA | Use `git rev-parse` output, not a short SHA |
 | `commit-unknown` | The commit is not in `EVerest/EVerest` | Check you fetched from the right repository |
 | `commit-missing` | No commit at all | Set `environment.commit` |
-| `build-missing` / `build-failed` | No build reported, or its status is not `passed` | Only passing builds are accepted |
+| `build-missing` | No build reported | Set `extra.build.status` |
+| `healthy-mismatch` | `environment.healthy` disagrees with `extra.build.status` | Set `healthy` to whether the build passed, or leave it out |
+| `failed-build-tests` | The build failed but the record reports tests | Send a failed build with `tests: []` |
 | `hil-needs-board` | A HIL run submitted as CTRF names no board | Set `extra.hardware.board` |
 | `id-missing` / `id-mismatch` | No integrator id, or it differs from the `results/<id>/` directory | Make them equal |
 | `not-allowlisted` | The id is not in `integrators/allowlist.yaml` | Register first ([section 1](#1-register-once)) |
@@ -657,7 +659,8 @@ does not build), `attachments-large`, `sourcecode` (embedded test source),
 - [ ] `commit` is the full SHA that `git rev-parse` printed for the pointer I tested.
 - [ ] `appVersion` is that pointer name, and matches the path.
 - [ ] `summary.start` and `stop` are real epoch milliseconds, not `0`.
-- [ ] `extra.build.status` is `passed` and `extra.build.modules` lists the modules.
+- [ ] `extra.build.status` is the real build outcome, and a passed build lists its
+      modules in `extra.build.modules`.
 - [ ] A HIL run sets `extra.hardware.board`.
 - [ ] Every test has a power and protocol tag, and private tags start with `x-`.
 - [ ] Skipped tests are `skipped` with a reason in `message`.
