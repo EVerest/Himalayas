@@ -124,7 +124,7 @@ keys, so this is enforced, not advisory.
 
 | Key | Required | Contents |
 |---|:---:|---|
-| `build` | **yes** | `status`: `passed` \| `failed`. **Required `modules[]`**, unique non-empty strings. Optional `targets[]` of `{target, status, toolchain}` |
+| `build` | **yes** | `status`: `passed` \| `failed`. **`modules[]` required when `passed`**, unique non-empty strings. Optional `targets[]` of `{target, status, toolchain}` |
 | `integrator` | **yes** | `id` (**required**, must equal your `results/<id>/` directory). Optional `displayName`: omit to withhold your name |
 | `hardware` | no | `bsp`, `board`, `chargeController`. Only meaningful when `testEnvironment` is `HIL` |
 
@@ -231,6 +231,7 @@ are accepted with a warning.
 | File | Format | What it shows |
 |---|---|---|
 | [`examples/minimal-ctrf.json`](examples/minimal-ctrf.json) | CTRF | The floor: a passing build, one module, an id, `tests: []`. Legal, and renders as *"build only · no tests reported"* |
+| [`examples/minimal-ctrf-failed-build.json`](examples/minimal-ctrf-failed-build.json) | CTRF | A failed build: no modules, `tests: []`, `healthy: false`. Renders as *"build failed"* |
 | [`examples/ctrf-hil-dc.json`](examples/ctrf-hil-dc.json) | CTRF | A three-target build matrix with one failing target, per-test `tags` and `device`, and a closed-source integrator test |
 | [`examples/minimal-openhtf.json`](examples/minimal-openhtf.json) | OpenHTF | The same floor on the OpenHTF path: `phases: []`, and the EVerest fields in `metadata` |
 | [`examples/openhtf-hil-dc.json`](examples/openhtf-hil-dc.json) | OpenHTF | A HIL run with **measurements and their limits**, including one outside its limits. This is the shape CTRF cannot express |

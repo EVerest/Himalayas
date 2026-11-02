@@ -75,12 +75,23 @@
       }
     },
     "build": {
-      "description": "Build status. OpenHTF has no build concept either, so it lives here. The intake gate rejects a submission whose build is missing or failed.",
+      "description": "Build status. OpenHTF has no build concept either, so it lives here. The intake gate rejects a submission whose build is missing.",
       "type": "object",
       "required": [
-        "status",
-        "modules"
+        "status"
       ],
+      "if": {
+        "properties": {
+          "status": {
+            "const": "passed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "modules"
+        ]
+      },
       "additionalProperties": false,
       "properties": {
         "status": {
@@ -128,7 +139,7 @@
             "pattern": "^[A-Z][A-Za-z0-9_]{1,49}$"
           },
           "minItems": 1,
-          "description": "EVerest modules built. Required: without it a submission cannot say which parts of EVerest it actually exercised, so two passing runs covering different module sets look identical. Checked against schema/everest-modules.txt and warned on if unknown."
+          "description": "EVerest modules built. Required when the build passed: without it a submission cannot say which parts of EVerest it actually exercised, so two passing runs covering different module sets look identical. Checked against schema/everest-modules.txt and warned on if unknown."
         }
       }
     },

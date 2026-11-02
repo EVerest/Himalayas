@@ -15,7 +15,8 @@
       e.g. `results/your-id/testing/main/20260909.json` (add a label such as
       `-ocpp201-sil` for a different run the same day, `-2`, `-3`... for a
       re-run; `-1` is not a legal name)
-- [ ] `results.extra.build.status` is `passed`
+- [ ] `results.extra.build.status` is the real build outcome; a failed build is
+      published as one, with `tests: []`
 - [ ] `summary.start` / `summary.stop` are real timestamps, not `0`
 - [ ] Traces are truncated; full detail is reachable via `environment.buildUrl`
 - [ ] I may publish everything in the file, permanently: no credentials, no tokens in

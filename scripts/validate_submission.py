@@ -15,7 +15,8 @@ REJECTS
                       includes the rule that a HIL run must name its board
   extra-contract      results.extra breaks the EVerest extra contract
   build-missing       no metadata.build
-  build-failed        metadata.build.status is not passed
+  healthy-mismatch    results.environment.healthy disagrees with the build status
+  failed-build-tests  a failed build reports tests; nothing was built to test
   id-missing          no metadata.integrator.id at all
   id-mismatch         integrator id does not match the results/<id>/ directory
   pointer-mismatch    the pointer in the path does not match the one in the record
@@ -422,9 +423,17 @@ def main():
         if not build:
             v.err("build-missing", "`metadata.build` is absent. The build is the one mandatory "
                                    "item in a submission.")
-        elif build.get("status") != "passed":
-            v.err("build-failed", f"`metadata.build.status` is `{build.get('status')}`. Only "
-                                  "submissions whose build passed are accepted.")
+        ran = rec.get("phases") if isinstance(rec.get("phases"), list) else []
+        if build.get("status") == "failed" and ran:
+            v.err("failed-build-tests", f"The build failed but the record reports {len(ran)} tests. "
+                                        "A failed build has nothing to test, and tests counted "
+                                        "against it would show as coverage; leave them out.")
+        healthy = (((doc.get("results") or {}).get("environment") or {}).get("healthy")
+                   if fmt == "ctrf" else None)
+        if build and isinstance(healthy, bool) and healthy != (build.get("status") == "passed"):
+            v.err("healthy-mismatch", f"`results.environment.healthy` is `{str(healthy).lower()}` "
+                                      f"but `extra.build.status` is `{build.get('status')}`. "
+                                      "`healthy` mirrors the build status.")
 
         # --- identity ------------------------------------------------------
         claimed = integ.get("id")
