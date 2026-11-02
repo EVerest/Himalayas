@@ -1418,6 +1418,8 @@ def suite_build(work, verbose):
     check("page carries its headline", 'class="brand">Himalayas<' in page
           and "EVerest test results, self-reported" in page)
     check("page carries the self-reported caveat", "self-reported" in page)
+    check("the header says EVerest CI's own results are copied from its workflow runs",
+          "EVerest CI's own results are copied from its workflow runs" in page)
     check("the EVerest logo links to EVerest on GitHub and the name to the overview",
           '<a class="logo" href="https://github.com/EVerest">' in page and '<a class="home" href="index.html">' in page)
     # Links may leave the site; loaded resources may not, so a page view contacts no third party.
@@ -2269,7 +2271,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 119, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 58}
+          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 58}
 TOTAL = sum(EXPECT.values())
 
 
