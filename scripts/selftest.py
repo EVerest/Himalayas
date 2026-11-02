@@ -491,14 +491,17 @@ def suite_gate(work, verbose):
     RP = "results/example-run/testing/main/20260909.json"
     rfix = os.path.join(work, "_runs")
 
-    def upload(doc, branch="main", inner="testing/main/20260909.json"):
+    def upload(doc, branch="main", inner="testing/main/20260909.json", head_sha="1" * 40):
         d = os.path.join(rfix, "4343", "artifacts", f"rec_testing-main_{rsha}")
         shutil.rmtree(rfix, ignore_errors=True)
         os.makedirs(d)
+        os.makedirs(os.path.join(rfix, "4343", "commits"))
+        with open(os.path.join(rfix, "4343", "commits", "main"), "w") as f:
+            f.write("1" * 40 + "\n")
         with open(os.path.join(d, "7.json"), "w") as f:
             json.dump({"id": 7, "path": ".github/workflows/move.yml", "head_branch": branch,
                        "event": "workflow_dispatch", "conclusion": "success",
-                       "repository": {"id": 4343}}, f)
+                       "repository": {"id": 4343}, "head_sha": head_sha}, f)
         with zipfile.ZipFile(os.path.join(d, "7.zip"), "w") as z:
             z.writestr(inner, json.dumps(doc, indent=2))
 
@@ -518,6 +521,9 @@ def suite_gate(work, verbose):
          lambda: gate(work, rd, RP.replace(".json", "-2.json"), extra=rbot), 1, "path-not-move"),
         ("reject a record whose only artifact is from a run on another branch",
          lambda: (upload(rd, branch="feature"), gate(work, rd, RP, extra=rbot))[1],
+         1, "source-mismatch"),
+        ("reject a record from a run whose commit is not on the branch",
+         lambda: (upload(rd, head_sha="f" * 40), gate(work, rd, RP, extra=rbot))[1],
          1, "source-mismatch"),
         ("reject a pull request at a name a workflow-run source owes",
          lambda: gate(work, rd, RP, extra=("--author", "example-run-ci")), 1, "source-label"),
@@ -2067,7 +2073,7 @@ def suite_sources(work, verbose):
 
     good_run = {"id": 1, "path": rs["workflow"], "head_branch": "main",
                 "event": "workflow_dispatch", "conclusion": "success",
-                "repository": {"id": 9}}
+                "repository": {"id": 9}, "head_sha": "1" * 40}
     check("a successful dispatched run of the workflow on the branch is admitted",
           S.run_admits(rs, good_run))
     for label, change in [("another branch", {"head_branch": "feature"}),
@@ -2078,11 +2084,15 @@ def suite_sources(work, verbose):
         check(f"a run is not admitted from {label}", not S.run_admits(rs, dict(good_run, **change)))
 
     # Fixtures stand in for GitHub: <repo_id>/artifacts/<name>/<run id>.json is
-    # the run, and <run id>.zip the artifact it uploaded.
+    # the run, and <run id>.zip the artifact it uploaded; <repo_id>/commits/<branch>
+    # lists the commits on the branch.
     import zipfile
     afix = os.path.join(work, "_artifacts")
     aname = S.artifact_name("himalayas-record", "testing/main", "a" * 40)
     adir = os.path.join(afix, "9", "artifacts", aname)
+    os.makedirs(os.path.join(afix, "9", "commits"))
+    with open(os.path.join(afix, "9", "commits", "main"), "w") as f:
+        f.write("1" * 40 + "\n")
 
     def upload(run_id, files, **run):
         os.makedirs(adir, exist_ok=True)
@@ -2105,6 +2115,21 @@ def suite_sources(work, verbose):
           len(refused) == 2 and all("26" in x or "25" in x for x in refused), str(refused))
     check("no artifact of that name is no file, not an error",
           S.fetch_artifact_file(rs, aname + "x", inner, None, afix) == ([], []))
+    shutil.rmtree(adir)
+    # A tag may share the branch's name, and its run reports that name as
+    # head_branch, with whatever workflow file the tag holds.
+    upload(40, {inner: b"tagged"}, head_sha="f" * 40)
+    upload(41, {inner: b"gone"}, artifact_expired=True)
+    found, refused = S.fetch_artifact_file(rs, aname, inner, None, afix)
+    check("a run whose commit is not on the branch is refused, whatever its head_branch",
+          found == [] and any("40" in x and "not on `main`" in x for x in refused), str(refused))
+    check("an expired artifact is reported, not skipped silently",
+          any("41" in x and "expired" in x for x in refused), str(refused))
+    _, bad = S.entry_sources({"sources": [dict(good), run_src]})
+    check("an unlabeled branch source cannot sit beside a workflow-run source",
+          any("label" in b for b in bad), str(bad))
+    _, bad = S.entry_sources({"sources": [dict(good, label="nightly"), run_src]})
+    check("a labeled branch source may sit beside a workflow-run source", bad == [], str(bad))
 
     # --- plan and apply against canned GitHub responses ---------------------
     big = 2_000_000
@@ -2293,8 +2318,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 121, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 59}
+EXPECT = {"gate": 122, "intake": 16, "normalise": 8, "pointers": 17,
+          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 63}
 TOTAL = sum(EXPECT.values())
 
 

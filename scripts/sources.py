@@ -138,6 +138,12 @@ def entry_sources(entry):
         problems += bad
         if not bad:
             out.append(src)
+    # An unlabeled branch source would admit the names a run source owes, and
+    # the gate takes any source that holds the bytes.
+    if any(s["kind"] == RUN_KIND for s in out):
+        problems += [f"a branch source beside a `{RUN_KIND}` source needs a `label`: "
+                     f"`{s['repo']}` has none" for s in out
+                     if s["kind"] == "branch" and s["label"] is None]
     return out, problems
 
 
@@ -226,7 +232,8 @@ def _one_file(blob, inner):
     except zipfile.BadZipFile:
         return None, "is not a zip"
     if [i.filename for i in files] != [inner]:
-        return None, f"holds {sorted(i.filename for i in files)}, not `{inner}` alone"
+        held = ", ".join(f"`{n.replace('`', '')}`" for n in sorted(i.filename for i in files))
+        return None, f"holds [{held}], not `{inner}` alone"
     if files[0].file_size > MAX_FILE_BYTES:
         return None, f"holds {files[0].file_size:,} bytes, over the {MAX_FILE_BYTES:,}-byte cap"
     return z.read(files[0]), None
@@ -237,12 +244,24 @@ def fetch_artifact_file(src, name, inner, token, fixtures=None):
     source's repository, oldest first, uploaded by a run the source admits and
     holding exactly the file `inner`.
 
+    A run's head_branch is only a ref name, which a tag can share, so its commit
+    must also be on the branch: a commit there ran the branch's workflow file.
+
     `fixtures` stands in for GitHub as in fetch_file, laid out as
-    <repo_id>/artifacts/<name>/<run id>.json (the run) and <run id>.zip.
+    <repo_id>/artifacts/<name>/<run id>.json (the run, `artifact_expired` set if
+    the artifact is), <run id>.zip, and <repo_id>/commits/<branch> listing the
+    branch's commits.
     """
     found, refused = [], []
-    for run, read in _artifact_runs(src, name, token, fixtures):
+    for run, read, expired in _artifact_runs(src, name, token, fixtures):
         if not run_admits(src, run):
+            continue
+        if expired:
+            refused.append(f"`{name}` from run {run['id']} expired")
+            continue
+        if not on_branch(src, run.get("head_sha"), token, fixtures):
+            refused.append(f"`{name}` from run {run['id']} is at `{run.get('head_sha')}`, "
+                           f"not on `{src['branch']}`")
             continue
         try:
             blob = read()
@@ -257,8 +276,27 @@ def fetch_artifact_file(src, name, inner, token, fixtures=None):
     return found, refused
 
 
+def on_branch(src, sha, token, fixtures=None):
+    """Whether the commit is on the source's branch."""
+    if not isinstance(sha, str) or not re.fullmatch(r"[0-9a-f]{40}", sha):
+        return False
+    if fixtures:
+        p = os.path.join(fixtures, str(src["repo_id"]), "commits", src["branch"])
+        if not os.path.isfile(p):
+            return False
+        with open(p) as f:
+            return sha in f.read().split()
+    q = urllib.parse.quote(src["branch"], safe="/")
+    try:
+        cmp = api_json(f"/repositories/{src['repo_id']}/compare/{sha}...{q}", token)
+    except SourceUnreachable as e:
+        raise SourceUnreachable(f"{src['repo']} ({src['repo_id']}): {e}") from e
+    return cmp.get("status") in ("ahead", "identical")
+
+
 def _artifact_runs(src, name, token, fixtures):
-    """(run, read) per artifact, oldest first; read() is its zip, or None if too big."""
+    """(run, read, expired) per artifact, oldest first; read() is its zip, or None
+    if too big."""
     rid, limit = src["repo_id"], 2 * MAX_FILE_BYTES
     if fixtures:
         down = os.path.join(fixtures, str(rid))
@@ -272,18 +310,21 @@ def _artifact_runs(src, name, token, fixtures):
                 run = json.load(f)
             with open(os.path.join(d, f"{i}.zip"), "rb") as f:
                 blob = f.read()
-            yield run, lambda blob=blob: blob if len(blob) <= limit else None
+            yield (run, lambda blob=blob: blob if len(blob) <= limit else None,
+                   run.pop("artifact_expired", False))
         return
     q = urllib.parse.quote(name, safe="")
     try:
         arts = api_list(f"/repositories/{rid}/actions/artifacts?name={q}&per_page=100",
                         token, key="artifacts")
         for a in sorted(arts, key=lambda a: a["id"]):
-            if a.get("expired"):
-                continue
-            run = api_json(f"/repositories/{rid}/actions/runs/{a['workflow_run']['id']}", token)
-            yield run, lambda a=a: None if a.get("size_in_bytes", 0) > limit else download(
-                f"/repositories/{rid}/actions/artifacts/{a['id']}/zip", token, limit)
+            run_id = (a.get("workflow_run") or {}).get("id")
+            if not isinstance(run_id, int):
+                continue                         # no run to admit it
+            run = api_json(f"/repositories/{rid}/actions/runs/{run_id}", token)
+            yield (run, lambda a=a: None if a.get("size_in_bytes", 0) > limit else download(
+                f"/repositories/{rid}/actions/artifacts/{a['id']}/zip", token, limit),
+                   bool(a.get("expired")))
     except SourceUnreachable as e:
         raise SourceUnreachable(f"{src['repo']} ({rid}): {e}") from e
 
@@ -357,6 +398,8 @@ def download(path, token, limit):
         except urllib.error.HTTPError as e:
             if e.code not in (301, 302, 303, 307, 308) or not e.headers.get("Location"):
                 raise ApiError("GET", path, e.code, e.read(500).decode("utf-8", "replace")) from e
+            if urllib.parse.urlsplit(e.headers["Location"]).scheme != "https":
+                raise ApiError("GET", path, e.code, "redirect is not https") from e
             loc = urllib.request.Request(e.headers["Location"],
                                          headers={"User-Agent": "everest-himalayas-intake"})
             with urllib.request.urlopen(loc, timeout=60) as r:

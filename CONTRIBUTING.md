@@ -423,7 +423,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 315 checks, all of which must pass
+python3 scripts/selftest.py        # 320 checks, all of which must pass
 ```
 
 ---
@@ -631,15 +631,18 @@ carry one, so it never takes a name the source owes.
 `<artifact>_<pointer with / as ->_<sha>`, for example
 `himalayas-record_testing-main_<sha>`, and holds that one file at
 `<pointer>/<YYYYMMDD>[-N].json`. Only a successful `workflow_dispatch` run of `workflow`
-on `branch` in that repository counts, so a pull request's run cannot publish. If several
-runs uploaded it, the oldest is taken.
+on `branch` in that repository counts, at a commit on that branch, so neither a pull
+request's run nor a run on a tag of the same name can publish. If several runs uploaded
+it, the oldest is taken. A `workflow-run` source may sit beside a branch source in one
+entry only if the branch source has a `label`.
 
 The intake and the gate both derive the path, so a record under any other date or `-N` is
 refused `path-not-move`. The workflow may wake the intake with a `repository_dispatch` of
 type `everest-ci-record`; otherwise it is found within four hours. An owed record still
 missing a day after its move is listed in one open issue labeled `intake-check`, which
-closes once nothing is missing. GitHub keeps an artifact 90 days, so a move older than that
-is no longer owed.
+closes once nothing is missing. GitHub keeps an artifact 90 days at most, so a move older
+than that is no longer owed; keep the artifact's `retention-days` at a week or more, so the
+intake and the gate can still read it.
 
 ---
 

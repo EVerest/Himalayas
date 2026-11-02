@@ -110,7 +110,7 @@ jobs:
             if (!missing.length) {
               for (const issue of open) {
                 await github.rest.issues.createComment({ ...repo, issue_number: issue.number,
-                  body: `Every owed record has arrived ([run](${run})).` });
+                  body: `Nothing owed is missing ([run](${run})).` });
                 await github.rest.issues.update({ ...repo, issue_number: issue.number,
                   state: 'closed', state_reason: 'completed' });
               }
