@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Copy new records from bound source repositories into pull requests.
 
-    intake_sources.py plan  --out plan.json     # GITHUB_TOKEN, read only
+    intake_sources.py plan  --out plan.json [--missing missing.json]  # GITHUB_TOKEN
     intake_sources.py apply --plan plan.json    # APP_TOKEN, himalayas-accessor
 
 PLAN reads every source bound in integrators/allowlist.yaml by its numeric
@@ -15,6 +15,12 @@ publishing it again under a new name, as results/ is append-only anyway. A
 branch left without a pull request, by a run that died between the two, is
 taken again.
 
+A workflow-run source holds no files to list. The records it owes are derived
+from pointers.json (see sources.expected_records), and each is read from the
+artifact its CI uploaded. One not uploaded yet is not an error; one still
+missing a day after its move is listed in --missing, which the workflow turns
+into an issue.
+
 APPLY opens one pull request per record, from a branch holding exactly that
 file, so one bad record fails alone and its verdict is the comment on its own
 pull request. It writes nothing but intake/ branches and pull requests, and
@@ -24,7 +30,7 @@ standard library, so the job holding the App's token installs nothing.
 
 One source failing does not stop the others; the run fails at the end instead.
 """
-import argparse, base64, json, os, sys, urllib.parse
+import argparse, base64, datetime, json, os, sys, urllib.parse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sources                                                 # noqa: E402
@@ -35,6 +41,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Each record costs four writes, and GitHub's secondary rate limit allows about
 # 80 a minute. A backlog is drained over several runs instead.
 MAX_PER_RUN = 15
+# How long after a move its record may take to appear before it is reported.
+GRACE = datetime.timedelta(hours=24)
+
+
+class Missing(Exception):
+    """An owed record that is not there to copy yet."""
 
 
 def load_allowlist(root):
@@ -43,6 +55,11 @@ def load_allowlist(root):
         data = yaml.safe_load(f) or {}
     return {e["id"]: e for e in (data.get("integrators") or [])
             if isinstance(e, dict) and "id" in e}
+
+
+def load_pointers(root):
+    with open(os.path.join(root, "pointers.json")) as f:
+        return json.load(f)
 
 
 def branch_for(dest):
@@ -69,13 +86,18 @@ def new_records(iid, src, tree_paths, on_main, branches):
             if d not in on_main and branch_for(d) not in branches]
 
 
-def source_tree(src, token):
-    """The commit the branch points at, and the size of every blob in its tree."""
+def check_name(src, token):
     rid = src["repo_id"]
     name = sources.api_json(f"/repositories/{rid}", token).get("full_name", "")
     if name.lower() != src["repo"].lower():
         print(f"::warning::repo_id {rid} is now {name}, not {src['repo']}; "
               "review the binding if it was transferred")
+
+
+def source_tree(src, token):
+    """The commit the branch points at, and the size of every blob in its tree."""
+    rid = src["repo_id"]
+    check_name(src, token)
     q = urllib.parse.quote(src["ref"], safe="/")
     commit = sources.api_json(f"/repositories/{rid}/branches/{q}", token)["commit"]["sha"]
     tree = sources.api_json(f"/repositories/{rid}/git/trees/{commit}?recursive=1", token)
@@ -83,6 +105,46 @@ def source_tree(src, token):
         raise sources.SourceUnreachable(f"{src['repo']}: tree too large to list in one call")
     return commit, {t["path"]: t.get("size", 0)
                     for t in tree.get("tree") or [] if t.get("type") == "blob"}
+
+
+def branch_offers(iid, src, token, now):
+    """(dest, size, read, due) per record file on a branch source. read() is
+    (bytes, origin); due says whether its absence is worth reporting."""
+    commit, sizes = source_tree(src, token)
+    # Read at the listed commit, with the workflow's own token: the App's token
+    # is scoped to this repository.
+    pinned = dict(src, ref=commit)
+
+    def read(p):
+        data = sources.fetch_file(pinned, p, token)
+        if data is None:
+            raise sources.SourceUnreachable(f"{src['repo']}:{p} listed but not readable at {commit}")
+        blob = (f"https://github.com/{src['repo']}/blob/{commit}/{urllib.parse.quote(p)}")
+        return data, f"[`{src['repo']}`]({blob}) at `{commit}`"
+    return [(d, sizes[p], lambda p=p: read(p), False) for p, d in candidates(iid, src, sizes)]
+
+
+def run_offers(iid, src, token, now):
+    """The same for a workflow-run source: every record the pointer log says it
+    owes, each read from the artifact of the oldest run that uploaded it."""
+    check_name(src, token)
+    log = load_pointers(ROOT)
+    declared = set(log.get("pointers") or {})
+
+    def read(r):
+        name = sources.artifact_name(src["artifact"], r["pointer"], r["sha"])
+        found, refused = sources.fetch_artifact_file(src, name, r["path"], token)
+        if not found:
+            raise Missing(refused or [f"no artifact `{name}` yet"])
+        run, data = found[0]
+        return data, (f"run [{run['id']}]({run['html_url']}) of `{src['workflow']}` "
+                      f"in `{src['repo']}`")
+    return [(r["dest"], None, lambda r=r: read(r), now - r["moved_at"] > GRACE)
+            for r in sources.expected_records(iid, log.get("log") or [], src["since"], now)
+            if r["pointer"] in declared]
+
+
+OFFERS = {"branch": branch_offers, sources.RUN_KIND: run_offers}
 
 
 def intake_branches(repo, token):
@@ -110,49 +172,54 @@ def plan(args):
     except sources.SourceUnreachable as e:
         print(f"::error::cannot list intake branches: {e}")
         return 2
-    items, failed, seen, deferred = [], [], set(), 0
+    now = (datetime.datetime.strptime(args.now, "%Y-%m-%dT%H:%M:%SZ")
+           .replace(tzinfo=datetime.timezone.utc) if args.now
+           else datetime.datetime.now(datetime.timezone.utc))
+    items, failed, missing, seen, deferred = [], [], [], set(), 0
     for iid, entry in sorted(allow.items()):
         srcs, _ = sources.entry_sources(entry)
         for src in srcs:
             try:
-                commit, sizes = source_tree(src, token)
-                found = candidates(iid, src, sizes)
-                on_main = {d for _, d in found if os.path.exists(os.path.join(ROOT, d))}
-                stranded = {branch_for(d) for _, d in found
+                offers = OFFERS[src["kind"]](iid, src, token, now)
+                on_main = {d for d, *_ in offers if os.path.exists(os.path.join(ROOT, d))}
+                stranded = {branch_for(d) for d, *_ in offers
                             if d not in on_main and branch_for(d) in branches
                             and not has_pull_request(args.repo, branch_for(d), token)}
             except sources.SourceUnreachable as e:
                 failed.append(str(e))
                 continue
-            pinned = dict(src, ref=commit)
-            for p, d in new_records(iid, src, sizes, on_main, branches - stranded):
-                if d in seen:
-                    continue                    # two sources of one id hold the same file
-                seen.add(d)
-                if sizes[p] > MAX_FILE_BYTES:
-                    failed.append(f"{src['repo']}:{p} is {sizes[p]:,} bytes, over the "
+            for d, size, read, due in offers:
+                if d in on_main or branch_for(d) in branches - stranded or d in seen:
+                    continue
+                seen.add(d)                     # two sources of one id may hold the same file
+                if size is not None and size > MAX_FILE_BYTES:
+                    failed.append(f"{src['repo']}: {d} is {size:,} bytes, over the "
                                   f"{MAX_FILE_BYTES:,}-byte cap; it is not taken")
                     continue
                 if len(items) == MAX_PER_RUN:
                     deferred += 1
                     continue
-                # Read here, at the listed commit, with the workflow's own token:
-                # the App's token is scoped to this repository.
                 try:
-                    data = sources.fetch_file(pinned, p, token)
+                    data, origin = read()
+                except Missing as e:
+                    if due:
+                        missing.append({"id": iid, "repo": src["repo"], "dest": d,
+                                        "why": e.args[0]})
+                    continue
                 except sources.SourceUnreachable as e:
                     failed.append(str(e))
                     continue
-                if data is None:
-                    failed.append(f"{src['repo']}:{p} listed but not readable at {commit}")
-                    continue
-                items.append({"id": iid, "repo": src["repo"], "commit": commit,
-                              "source_path": p, "dest": d, "branch": branch_for(d),
-                              "resume": branch_for(d) in stranded,
+                items.append({"id": iid, "dest": d, "branch": branch_for(d),
+                              "resume": branch_for(d) in stranded, "origin": origin,
                               "content": base64.b64encode(data).decode()})
-                print(f"new   {src['repo']}:{p} -> {d}")
+                print(f"new   {d} from {origin}")
     with open(args.out, "w") as f:
         json.dump(items, f, indent=2)
+    if args.missing:
+        with open(args.missing, "w") as f:
+            json.dump(missing, f, indent=2)
+    for m in missing:
+        print(f"::warning::{m['dest']} is still missing from {m['repo']}: {'; '.join(m['why'])}")
     if deferred:
         print(f"::notice::{deferred} more new record(s) left for the next run")
     for e in failed:
@@ -180,13 +247,11 @@ def open_one(item, repo, base_sha, token):
         call("PUT", f"/repos/{repo}/contents/{urllib.parse.quote(item['dest'])}", token,
              {"message": f"results: {item['id']} {item['dest'].split('/', 2)[2]}",
               "content": item["content"], "branch": branch})
-        blob = (f"https://github.com/{item['repo']}/blob/{item['commit']}/"
-                f"{urllib.parse.quote(item['source_path'])}")
         pr = call("POST", f"/repos/{repo}/pulls", token, {
             "title": f"intake: {item['id']} {item['dest'].split('/', 2)[2]}",
             "head": branch, "base": "main",
-            "body": (f"Copied by the source intake from [`{item['repo']}`]({blob}) at "
-                     f"`{item['commit']}`, for `{item['id']}`.\n\n"
+            "body": (f"Copied by the source intake from {item['origin']}, for "
+                     f"`{item['id']}`.\n\n"
                      "The gate re-reads the source and checks this file is byte-identical "
                      "before accepting it. See CONTRIBUTING.md, Setting up a source "
                      "repository.")})
@@ -226,6 +291,8 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("plan")
     p.add_argument("--out", required=True)
+    p.add_argument("--missing", help="where to list owed records still missing after a day")
+    p.add_argument("--now", help="self-test only: the time, as YYYY-MM-DDTHH:MM:SSZ")
     a = sub.add_parser("apply")
     a.add_argument("--plan", required=True)
     for x in (p, a):

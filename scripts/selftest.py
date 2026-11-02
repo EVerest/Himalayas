@@ -2079,7 +2079,8 @@ def suite_sources(work, verbose):
     buf = io.StringIO()
     try:
         with contextlib.redirect_stdout(buf):
-            rc = I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out))
+            rc = I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out,
+                                           missing=None, now=None))
     finally:
         S.api_json, S.api_list, S.fetch_file, I.load_allowlist, I.MAX_PER_RUN = saved
     with open(out) as f:
@@ -2125,6 +2126,81 @@ def suite_sources(work, verbose):
           rc == 1 and first[-1][0] == "DELETE"
           and not any("20261030" in c[1] for c in calls), str(calls))
 
+    # --- plan for a workflow-run source -----------------------------------
+    rroot = os.path.join(work, "_intake_root")
+    os.makedirs(os.path.join(rroot, "results/everest/testing/main"), exist_ok=True)
+    open(os.path.join(rroot, "results/everest/testing/main/20261030.json"), "w").close()
+    run_of = lambda i: dict(good_run, id=i, html_url=f"https://github.com/run/{i}")  # noqa: E731
+    asked = []
+
+    def fake_artifact(s, name, inner, token, fixtures=None):
+        asked.append((name, inner))
+        sha = name.rsplit("_", 1)[1][0]
+        return {"d": ([(run_of(20), b"rec-d")], []),
+                "e": ([(run_of(20), b"rec-e"), (run_of(30), b"rec-e2")], []),
+                "b": ([], ["`x` from run 5 is not a zip"])}.get(sha, ([], []))
+
+    pr_branch = "intake/everest/testing/main/20261030-2.json"
+    saved = (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+             I.load_pointers, I.ROOT)
+    S.api_json = lambda path, token: (
+        {"full_name": "EVerest/EVerest"} if path == "/repositories/9" else [{"number": 1}])
+    S.api_list = lambda path, token: [{"ref": f"refs/heads/{pr_branch}"}]
+    S.fetch_artifact_file = fake_artifact
+    I.load_allowlist = lambda root: {"everest": {"sources": [run_src]}}
+    I.load_pointers = lambda root: {"pointers": {"testing/main": {},
+                                                 "testing/stable-2026.10": {}}, "log": mlog}
+    I.ROOT = rroot
+    missing_out = os.path.join(work, "_missing.json")
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc = I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out,
+                                           missing=missing_out, now="2026-10-31T14:00:00Z"))
+    finally:
+        (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+         I.load_pointers, I.ROOT) = saved
+    with open(out) as f:
+        items = json.load(f)
+    with open(missing_out) as f:
+        missing = json.load(f)
+    check("plan copies each owed record not on main and with no pull request",
+          [i["dest"] for i in items] == ["results/everest/testing/main/20261031.json",
+                                         "results/everest/testing/main/20261031-2.json"],
+          str([i["dest"] for i in items]))
+    check("plan takes the oldest admitted run and credits it",
+          base64.b64decode(items[1]["content"]) == b"rec-e"
+          and "run [20](https://github.com/run/20)" in items[1]["origin"], str(items[1:]))
+    check("plan asks for the artifact by its derived name and inner path",
+          ("himalayas-record_testing-main_" + "d" * 40, "testing/main/20261031.json") in asked,
+          str(asked))
+    check("an owed record still without an artifact a day after its move is missing",
+          [(m["dest"], m["why"]) for m in missing]
+          == [("results/everest/testing/stable-2026.10/20261030.json",
+               ["`x` from run 5 is not a zip"])], str(missing))
+    check("an owed record under a day old is not missing yet, and missing is no error",
+          rc == 0 and not any("20261031-3" in m["dest"] for m in missing), f"rc={rc} {missing}")
+
+    bodies = []
+
+    def body_call(method, path, token, body=None):
+        if method == "GET":
+            return {"object": {"sha": "b" * 40}}
+        if path.endswith("/pulls"):
+            bodies.append(body["body"])
+            return {"number": 5, "html_url": "u"}
+        return None
+
+    saved, I.call = I.call, body_call
+    os.environ["APP_TOKEN"] = "fake"
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            I.apply(argparse.Namespace(repo="EVerest/Himalayas", plan=out))
+    finally:
+        I.call = saved
+        del os.environ["APP_TOKEN"]
+    check("apply names the run a copied record came from",
+          bodies and bodies[0].startswith("Copied by the source intake from run [20]"), str(bodies))
+
 
 SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normalise,
           "pointers": suite_pointers, "archive": suite_archive,
@@ -2140,7 +2216,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 114, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 52}
+          "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 58}
 TOTAL = sum(EXPECT.values())
 
 
