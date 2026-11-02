@@ -215,7 +215,8 @@ def plan(args):
                 print(f"new   {d} from {origin}")
     with open(args.out, "w") as f:
         json.dump(items, f, indent=2)
-    if args.missing:
+    # Deferred records were not checked, so the list would read them as arrived.
+    if args.missing and not deferred:
         with open(args.missing, "w") as f:
             json.dump(missing, f, indent=2)
     for m in missing:

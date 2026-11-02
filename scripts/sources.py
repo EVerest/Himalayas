@@ -166,9 +166,10 @@ def label_admits(src, label):
 
 def reserved_label(srcs, label):
     """The source that reserves this filename label, if any. A record from any
-    other route may not use it."""
+    other route may not use it. A workflow-run source reserves the names with no
+    label: they are derived, and one taken first would stand in for its record."""
     for s in srcs:
-        if s.get("label") and label_admits(s, label):
+        if (s.get("label") or s.get("kind") == RUN_KIND) and label_admits(s, label):
             return s
     return None
 

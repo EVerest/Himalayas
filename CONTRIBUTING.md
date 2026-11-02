@@ -423,7 +423,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 312 checks, all of which must pass
+python3 scripts/selftest.py        # 315 checks, all of which must pass
 ```
 
 ---
@@ -624,7 +624,8 @@ allowlist entry names the workflow rather than a branch of files:
 **Which records are owed** is read from `pointers.json`, not from the run: one per move of
 a pointer on or after `since`, at `<pointer>/<YYYYMMDD>[-N].json`. The date is the move's
 `moved_at` in UTC, and `N` counts that pointer's moves that UTC day in log order, the first
-having no suffix. A record carries no label.
+having no suffix. A record carries no label, and a pull request under the same id must
+carry one, so it never takes a name the source owes.
 
 **The artifact** for the move of `<pointer>` to `<sha>` is named
 `<artifact>_<pointer with / as ->_<sha>`, for example
@@ -666,7 +667,7 @@ The gate lists every failed check at once. The codes, roughly in the order peopl
 | `not-authorised` | The PR author is not in that entry's `github_users`, or the entry has neither `github_users` nor `sources` | Open the PR from a listed account, or have an owner add the account |
 | `source-mismatch` | An intake pull request whose file is not byte-identical to the same path in a source bound to the id, or lacks the source's `label` | Publish the record in the source first; do not edit it afterwards |
 | `path-not-move` | An intake record from a workflow run is not at the path the pointer log gives its pointer and commit | Name the record by the move's UTC date and `-N`, as in [Records from a workflow run](#records-from-a-workflow-run) |
-| `source-label` | A pull request uses a filename label one of the id's sources reserves | Use a different label for records submitted by pull request |
+| `source-label` | A pull request uses a filename label one of the id's sources reserves, or no label where a workflow-run source owes unlabeled names | Use a different label for records submitted by pull request |
 | `pointer-unknown` | The pointer in the path is not declared in `pointers.json` | Use a declared pointer |
 | `bad-path` | Not `results/<id>/<pointer>/YYYYMMDD[-label][-N].json`, or a `-1` suffix | Rename the file |
 | `too-big` | Over 1 MB, or over 256 KB of inline bulk | Truncate traces, export OpenHTF with `inline_attachments=False` |

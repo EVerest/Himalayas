@@ -483,7 +483,8 @@ def suite_gate(work, verbose):
         f.write("  - id: example-run\n    sources:\n      - kind: workflow-run\n"
                 "        repo: example/ci\n        repo_id: 4343\n"
                 "        workflow: .github/workflows/move.yml\n        branch: main\n"
-                "        artifact: rec\n        since: 2026-09-01\n")
+                "        artifact: rec\n        since: 2026-09-01\n"
+                "    github_users: [example-run-ci]\n")
     rd = copy.deepcopy(ctrf)
     rd["results"]["extra"]["integrator"]["id"] = "example-run"
     rsha = rd["results"]["environment"]["commit"]
@@ -518,6 +519,11 @@ def suite_gate(work, verbose):
         ("reject a record whose only artifact is from a run on another branch",
          lambda: (upload(rd, branch="feature"), gate(work, rd, RP, extra=rbot))[1],
          1, "source-mismatch"),
+        ("reject a pull request at a name a workflow-run source owes",
+         lambda: gate(work, rd, RP, extra=("--author", "example-run-ci")), 1, "source-label"),
+        ("accept a labeled pull request under an id with a workflow-run source",
+         lambda: gate(work, rd, RP.replace(".json", "-manual.json"),
+                      extra=("--author", "example-run-ci")), 0, None),
     ]
     for label, run, want_rc, want in run_cases:
         rc, cs, _ = run()
@@ -2025,9 +2031,9 @@ def suite_sources(work, verbose):
           bad == [] and got[0]["since"] == dt.date(2026, 10, 1)
           and got[0]["workflow"] == run_src["workflow"], f"{got} {bad}")
     rs = got[0]
-    check("a workflow-run source admits only unlabeled names and reserves none",
+    check("a workflow-run source admits and reserves exactly the unlabeled names",
           S.label_admits(rs, None) and not S.label_admits(rs, "nightly")
-          and S.reserved_label([rs], None) is None)
+          and S.reserved_label([rs], None) is rs and S.reserved_label([rs], "manual") is None)
 
     def move(pointer, sha, at):
         return {"pointer": pointer, "sha": sha * 40, "moved_at": at}
@@ -2206,6 +2212,8 @@ def suite_sources(work, verbose):
     I.load_pointers = lambda root: {"pointers": {"testing/main": {},
                                                  "testing/stable-2026.10": {}}, "log": mlog}
     I.ROOT = rroot
+    plan_fakes = (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+                  I.load_pointers, I.ROOT)
     missing_out = os.path.join(work, "_missing.json")
     try:
         with contextlib.redirect_stdout(io.StringIO()):
@@ -2218,6 +2226,21 @@ def suite_sources(work, verbose):
         items = json.load(f)
     with open(missing_out) as f:
         missing = json.load(f)
+    os.remove(missing_out)
+    saved = (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+             I.load_pointers, I.ROOT, I.MAX_PER_RUN)
+    (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+     I.load_pointers, I.ROOT) = plan_fakes
+    I.MAX_PER_RUN = 1
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out + ".1",
+                                      missing=missing_out, now="2026-10-31T14:00:00Z"))
+    finally:
+        (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+         I.load_pointers, I.ROOT, I.MAX_PER_RUN) = saved
+    check("plan lists no missing records when it deferred some unchecked",
+          not os.path.exists(missing_out))
     check("plan copies each owed record not on main and with no pull request",
           [i["dest"] for i in items] == ["results/everest/testing/main/20261031.json",
                                          "results/everest/testing/main/20261031-2.json"],
@@ -2270,8 +2293,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 119, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 58}
+EXPECT = {"gate": 121, "intake": 16, "normalise": 8, "pointers": 17,
+          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 59}
 TOTAL = sum(EXPECT.values())
 
 

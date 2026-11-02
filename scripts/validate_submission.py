@@ -33,8 +33,8 @@ REJECTS
                       byte-identical to the same path in a source bound to the id
   path-not-move       opened by the intake from a workflow run, but the path is
                       not the one the pointer log gives that pointer and commit
-  source-label        the filename label is reserved for records from one of
-                      the id's sources, and this one did not come from it
+  source-label        the filename label, or its absence, is reserved for records
+                      from one of the id's sources, and this one did not come from it
   too-big             the submission, or its inline attachments, exceed the caps
   possible-secret     a string looks like a credential; named by rule and JSON
                       path, never by value
@@ -498,10 +498,12 @@ def main():
             else:
                 owner = sources.reserved_label(srcs, path_label)
                 if owner:
+                    what = (f"The label `{owner['label']}` is" if owner["label"]
+                            else "A name with no label is")
                     v.err("source-label",
-                          f"The label `{owner['label']}` is reserved for records from "
-                          f"`{owner['repo']}`, which the intake copies itself. Use a "
-                          "different label for records submitted by pull request.")
+                          f"{what} reserved for records from `{owner['repo']}`, which the "
+                          "intake copies itself. Use a different label for records "
+                          "submitted by pull request.")
 
         # --- HIL on the CTRF path must name its board -----------------------
         # The schema enforces this too, but a bare "'hardware' is a required property"
