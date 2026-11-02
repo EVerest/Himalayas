@@ -21,12 +21,17 @@ name: Intake from source repositories
 # own that installs nothing from PyPI and runs Python isolated, so no third-party
 # package ever runs next to it.
 #
-# Sources are public and read with GITHUB_TOKEN, by numeric repository id.
+# Sources are public and read with GITHUB_TOKEN, by numeric repository id. A
+# workflow-run source's CI may wake this job with a repository_dispatch once its
+# record is uploaded; the payload is ignored, as everything is read from the
+# source anyway, and the schedule still finds a record whose wake-up was lost.
 
 on:
   schedule:
     - cron: '17 */4 * * *'
   workflow_dispatch: {}
+  repository_dispatch:
+    types: [everest-ci-record]
 
 permissions:
   contents: read
@@ -40,7 +45,8 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      issues: write             # to create the intake:<id> label the first time
+      actions: read             # a workflow-run source's artifacts
+      issues: write             # the intake:<id> label, and the intake-check issue
     outputs:
       count: ${{ steps.plan.outputs.count }}
     steps:
@@ -58,7 +64,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
-          python scripts/intake_sources.py plan --out plan.json
+          python scripts/intake_sources.py plan --out plan.json --missing missing.json
           echo "rc=$?" >> "$GITHUB_OUTPUT"
           echo "count=$(jq length plan.json 2>/dev/null || echo 0)" >> "$GITHUB_OUTPUT"
 
@@ -79,6 +85,43 @@ jobs:
             gh label create "intake:$id" --force --color BAF419 \
               --description "Copied from a source bound to $id"
           done
+
+      # A workflow-run source owes a record per pointer move. One still missing a
+      # day later is kept in one open issue, updated in place rather than
+      # commented on every run, and closed once nothing is missing. Skipped when
+      # a source could not be read, as its records would read as arrived.
+      - name: Raise, update or close the intake-check issue
+        if: steps.plan.outputs.rc == '0'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            // github-script v9 runs the body as ESM: require() is gone.
+            const { readFileSync } = await import('node:fs');
+            const missing = JSON.parse(readFileSync('missing.json', 'utf8'));
+            const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const repo = { owner: context.repo.owner, repo: context.repo.repo };
+            const { data: open } = await github.rest.issues.listForRepo({
+              ...repo, state: 'open', labels: 'intake-check', per_page: 20 });
+            if (!missing.length) {
+              for (const issue of open) {
+                await github.rest.issues.createComment({ ...repo, issue_number: issue.number,
+                  body: `Every owed record has arrived ([run](${run})).` });
+                await github.rest.issues.update({ ...repo, issue_number: issue.number,
+                  state: 'closed', state_reason: 'completed' });
+              }
+              return;
+            }
+            const body = '<!-- intake-check -->\n\n' +
+              'Records a workflow-run source owes are still missing a day after their ' +
+              `pointer moved ([run](${run})). Check the source's run for each move.\n\n` +
+              missing.map(m => `- \`${m.dest}\` from \`${m.repo}\`: ${m.why.join('; ')}`)
+                .join('\n').slice(0, 60000);
+            if (open.length) {
+              await github.rest.issues.update({ ...repo, issue_number: open[0].number, body });
+            } else {
+              await github.rest.issues.create({ ...repo, title: 'Owed records are missing',
+                labels: ['intake-check'], body });
+            }
 
       # A source that could not be read did not stop the others, but it must not
       # pass quietly either. The apply job still opens what was found.

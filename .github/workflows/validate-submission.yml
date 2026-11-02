@@ -65,10 +65,13 @@ on:
 # verdict - arming auto-merge is a write to the repository's contents, and
 # without it the mutation is refused and an accepted submission sits green and
 # unmerged. `pull-requests: write` posts the verdict comment and closes an
-# unprocessable pull request. Nothing else is needed; do not add anything else.
+# unprocessable pull request. `actions: read` lets the gate read the artifact a
+# workflow-run source's run uploaded, to compare an intake record with it.
+# Nothing else is needed; do not add anything else.
 permissions:
   contents: write
   pull-requests: write
+  actions: read
 
 concurrency:
   group: validate-${{ github.event.pull_request.number }}
