@@ -1948,6 +1948,103 @@ def suite_sources(work, verbose):
     check("an unhashable repo_id is reported, not a crash",
           crashed is None and any("repo_id" in p for p in probs), f"{crashed!r} {probs}")
 
+    # --- workflow-run sources: records copied from another repository's CI --
+    run_src = {"kind": "workflow-run", "repo": "EVerest/EVerest", "repo_id": 9,
+               "workflow": ".github/workflows/on_pointer_moved.yaml", "branch": "main",
+               "artifact": "himalayas-record", "since": "2026-10-01"}
+    for label, entry, want in [
+        ("unknown kind", dict(run_src, kind="tag"), "kind"),
+        ("workflow outside .github/workflows", dict(run_src, workflow="ci/x.yaml"), "workflow"),
+        ("workflow that is not YAML", dict(run_src, workflow=".github/workflows/x.sh"), "workflow"),
+        ("branch that is a pull request head", dict(run_src, branch="pull/1/head"), "branch"),
+        ("artifact prefix with a slash", dict(run_src, artifact="a/b"), "artifact"),
+        ("since that is not a date", dict(run_src, since="2026-13-01"), "since"),
+        ("a branch source's key", dict(run_src, ref="main"), "unknown key"),
+        ("a label", dict(run_src, label="ci"), "unknown key"),
+    ]:
+        _, bad = S.entry_sources({"sources": [entry]})
+        check(f"workflow-run source rejected: {label}", any(want in b for b in bad), str(bad))
+    import datetime as dt
+    got, bad = S.entry_sources({"sources": [dict(run_src, since=dt.date(2026, 10, 1))]})
+    check("a workflow-run source round-trips, since parsed as YAML writes it",
+          bad == [] and got[0]["since"] == dt.date(2026, 10, 1)
+          and got[0]["workflow"] == run_src["workflow"], f"{got} {bad}")
+    rs = got[0]
+    check("a workflow-run source admits only unlabeled names and reserves none",
+          S.label_admits(rs, None) and not S.label_admits(rs, "nightly")
+          and S.reserved_label([rs], None) is None)
+
+    def move(pointer, sha, at):
+        return {"pointer": pointer, "sha": sha * 40, "moved_at": at}
+
+    mlog = [move("testing/main", "a", "2026-10-30T08:00:00Z"),
+            move("testing/stable-2026.10", "b", "2026-10-30T09:00:00Z"),
+            move("testing/main", "c", "2026-10-30T23:59:59Z"),
+            move("testing/main", "d", "2026-10-31T00:00:01Z"),
+            move("testing/main", "e", "2026-10-31T12:00:00Z"),
+            move("testing/main", "f", "2026-10-31T13:00:00Z")]
+    paths = [r["path"] for r in S.expected_records("everest", mlog)]
+    check("one move per pointer and UTC day has no suffix, later ones -2, -3",
+          paths == ["testing/main/20261030.json", "testing/stable-2026.10/20261030.json",
+                    "testing/main/20261030-2.json", "testing/main/20261031.json",
+                    "testing/main/20261031-2.json", "testing/main/20261031-3.json"], str(paths))
+    r0 = S.expected_records("everest", mlog)[0]
+    check("an expected record is placed under results/<id>/",
+          r0["dest"] == "results/everest/testing/main/20261030.json"
+          and r0["sha"] == "a" * 40, str(r0))
+    late = S.expected_records("everest", mlog, since=dt.date(2026, 10, 31))
+    check("a move before since owes nothing, and does not renumber the day",
+          [r["path"] for r in late][-1] == "testing/main/20261031-3.json"
+          and len(late) == 3, str(late))
+    now = dt.datetime(2027, 1, 29, tzinfo=dt.timezone.utc)
+    kept = S.expected_records("everest", mlog, now=now)
+    check("a move older than artifact retention owes nothing",
+          [r["sha"][0] for r in kept] == ["d", "e", "f"], str(kept))
+    check("the artifact name puts the pointer's slash as a dash",
+          S.artifact_name("himalayas-record", "testing/stable-2026.10", "b" * 40)
+          == "himalayas-record_testing-stable-2026.10_" + "b" * 40)
+
+    good_run = {"id": 1, "path": rs["workflow"], "head_branch": "main",
+                "event": "workflow_dispatch", "conclusion": "success",
+                "repository": {"id": 9}}
+    check("a successful dispatched run of the workflow on the branch is admitted",
+          S.run_admits(rs, good_run))
+    for label, change in [("another branch", {"head_branch": "feature"}),
+                          ("another workflow", {"path": ".github/workflows/on_pr.yaml"}),
+                          ("a workflow_run event", {"event": "workflow_run"}),
+                          ("a failed run", {"conclusion": "failure"}),
+                          ("another repository", {"repository": {"id": 10}})]:
+        check(f"a run is not admitted from {label}", not S.run_admits(rs, dict(good_run, **change)))
+
+    # Fixtures stand in for GitHub: <repo_id>/artifacts/<name>/<run id>.json is
+    # the run, and <run id>.zip the artifact it uploaded.
+    import zipfile
+    afix = os.path.join(work, "_artifacts")
+    aname = S.artifact_name("himalayas-record", "testing/main", "a" * 40)
+    adir = os.path.join(afix, "9", "artifacts", aname)
+
+    def upload(run_id, files, **run):
+        os.makedirs(adir, exist_ok=True)
+        with open(os.path.join(adir, f"{run_id}.json"), "w") as f:
+            json.dump(dict(good_run, id=run_id, **run), f)
+        with zipfile.ZipFile(os.path.join(adir, f"{run_id}.zip"), "w") as z:
+            for name, data in files.items():
+                z.writestr(name, data)
+
+    inner = "testing/main/20261030.json"
+    upload(30, {inner: b"third"})
+    upload(12, {inner: b"first"}, head_branch="feature")
+    upload(20, {inner: b"second"})
+    upload(25, {inner: b"x", "testing/main/extra.json": b"y"})
+    upload(26, {"testing/main/20261030-2.json": b"x"})
+    found, refused = S.fetch_artifact_file(rs, aname, inner, None, afix)
+    check("artifact runs are read oldest first, and an unadmitted run is skipped",
+          [(r["id"], d) for r, d in found] == [(20, b"second"), (30, b"third")], str(found))
+    check("an artifact holding another file, or another path, is refused",
+          len(refused) == 2 and all("26" in x or "25" in x for x in refused), str(refused))
+    check("no artifact of that name is no file, not an error",
+          S.fetch_artifact_file(rs, aname + "x", inner, None, afix) == ([], []))
+
     # --- plan and apply against canned GitHub responses ---------------------
     big = 2_000_000
     blobs = {"records/testing/main/20261027-nightly.json": 10,
@@ -2043,7 +2140,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 114, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 28}
+          "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 52}
 TOTAL = sum(EXPECT.values())
 
 
