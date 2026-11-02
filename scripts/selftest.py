@@ -476,6 +476,59 @@ def suite_gate(work, verbose):
         f.write(original)
     shutil.rmtree(fix, ignore_errors=True)
 
+    # A workflow-run source: the gate derives the record's path from the pointer
+    # log and reads the record from the artifact an admitted run uploaded.
+    import zipfile
+    with open(al, "a") as f:
+        f.write("  - id: example-run\n    sources:\n      - kind: workflow-run\n"
+                "        repo: example/ci\n        repo_id: 4343\n"
+                "        workflow: .github/workflows/move.yml\n        branch: main\n"
+                "        artifact: rec\n        since: 2026-09-01\n")
+    rd = copy.deepcopy(ctrf)
+    rd["results"]["extra"]["integrator"]["id"] = "example-run"
+    rsha = rd["results"]["environment"]["commit"]
+    RP = "results/example-run/testing/main/20260909.json"
+    rfix = os.path.join(work, "_runs")
+
+    def upload(doc, branch="main", inner="testing/main/20260909.json"):
+        d = os.path.join(rfix, "4343", "artifacts", f"rec_testing-main_{rsha}")
+        shutil.rmtree(rfix, ignore_errors=True)
+        os.makedirs(d)
+        with open(os.path.join(d, "7.json"), "w") as f:
+            json.dump({"id": 7, "path": ".github/workflows/move.yml", "head_branch": branch,
+                       "event": "workflow_dispatch", "conclusion": "success",
+                       "repository": {"id": 4343}}, f)
+        with zipfile.ZipFile(os.path.join(d, "7.zip"), "w") as z:
+            z.writestr(inner, json.dumps(doc, indent=2))
+
+    rbot = ("--author", "himalayas-accessor[bot]", "--author-id", "332461223",
+            "--source-fixtures", rfix)
+    upload(rd)
+    redited = copy.deepcopy(rd)
+    redited["results"]["tests"][0]["name"] += " (edited)"
+    run_cases = [
+        ("accept a record byte-identical to the artifact of an admitted run",
+         lambda: gate(work, rd, RP, extra=rbot), 0, None),
+        ("reject a record that differs from the run's artifact",
+         lambda: gate(work, redited, RP, extra=rbot), 1, "source-mismatch"),
+        ("reject a run's record under a date its move does not give",
+         lambda: gate(work, rd, RP.replace("0909", "0910"), extra=rbot), 1, "path-not-move"),
+        ("reject a run's record under a -N its move does not give",
+         lambda: gate(work, rd, RP.replace(".json", "-2.json"), extra=rbot), 1, "path-not-move"),
+        ("reject a record whose only artifact is from a run on another branch",
+         lambda: (upload(rd, branch="feature"), gate(work, rd, RP, extra=rbot))[1],
+         1, "source-mismatch"),
+    ]
+    for label, run, want_rc, want in run_cases:
+        rc, cs, _ = run()
+        ok = rc == want_rc and (want is None or want in cs)
+        report(label, ok, f"rc={rc} codes={cs}")
+        if verbose or not ok:
+            print(f"  {'ok  ' if ok else 'FAIL'} {label:60} rc={rc} {','.join(cs)}")
+    with open(al, "w") as f:
+        f.write(original)
+    shutil.rmtree(rfix, ignore_errors=True)
+
     # validate-submission.yml closes the bot's rejected pull requests by user id,
     # and leaves its unprocessable ones open, so its literal must be the gate's.
     with open(os.path.join(work, ".github", "workflows", "validate-submission.yml")) as f:
@@ -2215,7 +2268,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 114, "intake": 16, "normalise": 8, "pointers": 17,
+EXPECT = {"gate": 119, "intake": 16, "normalise": 8, "pointers": 17,
           "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 58}
 TOTAL = sum(EXPECT.values())
 
