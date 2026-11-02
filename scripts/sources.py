@@ -140,6 +140,8 @@ def entry_sources(entry):
             out.append(src)
     # An unlabeled branch source would admit the names a run source owes, and
     # the gate takes any source that holds the bytes.
+    if sum(s["kind"] == RUN_KIND for s in out) > 1:
+        problems.append(f"an entry may have one `{RUN_KIND}` source: they would owe the same names")
     if any(s["kind"] == RUN_KIND for s in out):
         problems += [f"a branch source beside a `{RUN_KIND}` source needs a `label`: "
                      f"`{s['repo']}` has none" for s in out
@@ -286,9 +288,12 @@ def on_branch(src, sha, token, fixtures=None):
             return False
         with open(p) as f:
             return sha in f.read().split()
+    # Compare commits, not names: a bare name in compare could resolve to a tag.
     q = urllib.parse.quote(src["branch"], safe="/")
+    rid = src["repo_id"]
     try:
-        cmp = api_json(f"/repositories/{src['repo_id']}/compare/{sha}...{q}", token)
+        tip = api_json(f"/repositories/{rid}/branches/{q}", token)["commit"]["sha"]
+        cmp = api_json(f"/repositories/{rid}/compare/{sha}...{tip}?per_page=1", token)
     except SourceUnreachable as e:
         raise SourceUnreachable(f"{src['repo']} ({src['repo_id']}): {e}") from e
     return cmp.get("status") in ("ahead", "identical")

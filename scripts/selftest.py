@@ -2130,6 +2130,8 @@ def suite_sources(work, verbose):
           any("label" in b for b in bad), str(bad))
     _, bad = S.entry_sources({"sources": [dict(good, label="nightly"), run_src]})
     check("a labeled branch source may sit beside a workflow-run source", bad == [], str(bad))
+    _, bad = S.entry_sources({"sources": [run_src, dict(run_src, repo_id=10)]})
+    check("an entry may have one workflow-run source", any("one" in b for b in bad), str(bad))
 
     # --- plan and apply against canned GitHub responses ---------------------
     big = 2_000_000
@@ -2319,7 +2321,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 122, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 63}
+          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 64}
 TOTAL = sum(EXPECT.values())
 
 
