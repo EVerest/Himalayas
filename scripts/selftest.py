@@ -195,6 +195,21 @@ def suite_gate(work, verbose):
         ("htf: configuration is prose", htf,
          lambda d: d["metadata"]["everest"].update(configuration="AC and DC <b>"),
          "htf-metadata", P),
+        # series names a schedule, so it is a key like configuration.
+        ("extra: series not a string", ctrf,
+         lambda d: d["results"]["extra"].update(series=7), "extra-contract", P),
+        ("extra: series is prose", ctrf,
+         lambda d: d["results"]["extra"].update(series="every night"), "extra-contract", P),
+        ("extra: provenance not an object", ctrf,
+         lambda d: d["results"]["extra"].update(provenance="tool 1.2"), "extra-contract", P),
+        ("extra: testSystem.instance not a string", ctrf,
+         lambda d: d["results"]["extra"].update(testSystem={"name": "Conformance tool", "instance": 3}),
+         ("extra-contract", "htf-metadata"), P),
+        ("extra: testSystem.instance too long", ctrf,
+         lambda d: d["results"]["extra"].update(testSystem={"name": "Conformance tool", "instance": "x" * 101}),
+         ("extra-contract", "htf-metadata"), P),
+        ("htf: testSystem.instance not a string", htf,
+         lambda d: d["metadata"].update(testSystem={"name": "Conformance tool", "instance": 3}), "htf-metadata", P),
         # A document malformed enough to break the reader must still be a
         # REJECTION with a reason, never a crash. These three were exit 1 by
         # AttributeError, which is indistinguishable from a real rejection.
@@ -660,6 +675,21 @@ def suite_gate(work, verbose):
     report("accept testSystem and reportSha256 (ctrf and openhtf)", ok, f"ctrf rc={rc_c} {cs_c} openhtf rc={rc_h} {cs_h}")
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} accept testSystem and reportSha256    rc={rc_c},{rc_h}")
+
+    # A conformance runner's extra, with placeholder values. Each field is also
+    # absent from every example, which the example sweep accepts.
+    d = copy.deepcopy(ctrf)
+    d["results"]["extra"].update(
+        series="ocpp201", testSystem={"name": "Conformance tool", "version": "1.2", "instance": "lab"},
+        provenance={"tool": {"versions": ["1.2"], "instance": "lab"}, "runner": {"git": None}})
+    rc_c, cs_c, _ = gate(work, d, P)
+    d = copy.deepcopy(htf)
+    d["metadata"]["testSystem"] = {"name": "Conformance tool", "version": "1.2", "instance": "lab"}
+    rc_h, cs_h, _ = gate(work, d, P)
+    ok = rc_c == 0 and rc_h == 0
+    report("accept series, provenance and testSystem.instance", ok, f"ctrf rc={rc_c} {cs_c} openhtf rc={rc_h} {cs_h}")
+    if verbose or not ok:
+        print(f"  {'ok  ' if ok else 'FAIL'} accept series, provenance, instance   rc={rc_c},{rc_h}")
 
     # The section 10 forms are accepted, and the bare tag from before them warns.
     d = copy.deepcopy(ctrf)
@@ -2042,7 +2072,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 114, "intake": 16, "normalise": 8, "pointers": 17,
+EXPECT = {"gate": 121, "intake": 16, "normalise": 8, "pointers": 17,
           "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 28}
 TOTAL = sum(EXPECT.values())
 

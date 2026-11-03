@@ -109,7 +109,9 @@ keys, so this is enforced, not advisory.
 | link back to your CI run | `results.environment.buildUrl` | optional, **strongly encouraged** — with traces truncated it is the only route to full detail |
 | link to a human-readable report of the run | `results.extra.reportUrl` | optional; shown on the status page as **report** next to the run log. For a PDF/HTML test report, especially when the CI run itself is not public. OpenHTF: `metadata.everest.reportUrl` |
 | SHA-256 of that report | `results.extra.reportSha256` | optional, only with `reportUrl`; 64 lowercase hex digits. Shown as declared, never checked. OpenHTF: `metadata.everest.reportSha256` |
-| test system that ran the tests, e.g. a conformance test tool | `results.extra.testSystem` | optional; `{name, version}`, shown as the run's provenance. OpenHTF: `metadata.testSystem` |
+| test system that ran the tests, e.g. a conformance test tool | `results.extra.testSystem` | optional; `{name, version, instance}`, shown as the run's provenance. `instance` tells apart deployments of one release and is not shown. OpenHTF: `metadata.testSystem` |
+| recurring run series, e.g. `nightly` | `results.extra.series` | optional; the schedule or campaign, where `configuration` is the SUT setup. CTRF only |
+| what was tested and by what | `results.extra.provenance` | optional; an object with open fields. CTRF only |
 | SUT configuration, when you submit several per pointer | `results.extra.configuration` | optional; e.g. `dc-full-ocpp`. Each configuration gets its own card on the status page &mdash; without it your newest submission hides the others. OpenHTF: `metadata.everest.configuration` |
 | OS / arch | `results.environment.osPlatform`, `osVersion`, `osRelease` | |
 | run start and end | `results.summary.start`, `stop` | **Required by CTRF, and must not be `0`.** Staleness is computed from these |
@@ -175,7 +177,9 @@ It constrains only the fields it names; everything else stays governed by CTRF.
 | `environment.buildUrl` | must start `https://` | |
 | `extra.reportUrl` | must start `https://` | |
 | `extra.reportSha256` | 64 lowercase hex digits, only with `reportUrl` | a hash with nothing to pin is meaningless |
-| `extra.testSystem` | `name` required, `version` optional | |
+| `extra.testSystem` | `name` required, `version` and `instance` optional | |
+| `extra.series` | `[A-Za-z0-9][A-Za-z0-9._-]{0,63}` | a key like `configuration`, not prose |
+| `extra.provenance` | an object | its fields are open |
 | `extra.configuration` | `[A-Za-z0-9][A-Za-z0-9._-]{0,63}` | it is a card title and a summary key, not prose |
 | `summary.start`, `summary.stop` | integer **≥ 1** | `junit-to-ctrf` emits `0`. A result with no timestamp **can never be aged**, so the staleness rule could never govern it. This is why it is an error and not a warning |
 | `test.tags[]` | `PascalCase`, `lowercase`, or `x-`-prefixed | free text here is exactly what breaks per-protocol rollups |

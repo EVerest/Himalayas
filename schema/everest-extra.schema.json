@@ -15,6 +15,15 @@
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
     },
+    "series": {
+      "description": "Name of the recurring run series this run belongs to, such as nightly. Where configuration names the SUT setup, series names the schedule or campaign. Optional.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "provenance": {
+      "description": "What was tested and by what, for reproducibility. Optional. Open, so a test system can add fields without a schema change.",
+      "type": "object"
+    },
     "reportUrl": {
       "description": "Link to a human-readable report of this run (a PDF or HTML test report), shown on the status page next to the run link. Optional. Use it when the run log is not public or not where a reader finds the results: buildUrl stays the link back to the CI run.",
       "type": "string",
@@ -40,6 +49,12 @@
           "maxLength": 100
         },
         "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "instance": {
+          "description": "Opaque identifier of the deployment of this test system that ran the tests, so two runs on the same release but different deployments can be told apart. Optional. Not shown on the status page.",
           "type": "string",
           "minLength": 1,
           "maxLength": 100

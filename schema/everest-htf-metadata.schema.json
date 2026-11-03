@@ -202,6 +202,12 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 100
+        },
+        "instance": {
+          "description": "Opaque identifier of the deployment of this test system that ran the tests, so two runs on the same release but different deployments can be told apart. Optional. Not shown on the status page.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
         }
       }
     },

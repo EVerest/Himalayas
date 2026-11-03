@@ -249,7 +249,9 @@ optional, but missing it costs you something on the status page or draws a warni
 | `extra.configuration` | Encouraged | needed when you submit several setups per pointer. `[A-Za-z0-9][A-Za-z0-9._-]{0,63}`, e.g. `dc-full-ocpp`. Each configuration gets its own card; without it your newest submission hides the others |
 | `environment.branchName` | Optional | `main` or `stable/yyyy.mm` |
 | `extra.reportSha256` | Optional | SHA-256 of the file at `reportUrl`, 64 lowercase hex digits. Only with `reportUrl` |
-| `extra.testSystem` | Optional | `{name, version}` of the test system that ran the tests against EVerest, such as a conformance test tool. Shown as the run's provenance |
+| `extra.testSystem` | Optional | `{name, version, instance}` of the test system that ran the tests against EVerest, such as a conformance test tool. Shown as the run's provenance. `instance` identifies the deployment and is not shown |
+| `extra.series` | Optional | the recurring series the run belongs to, such as `nightly`. Same characters as `configuration` |
+| `extra.provenance` | Optional | what was tested and by what, for reproducibility. An object with open fields |
 | `environment.appName` | Optional | if present, `EVerest` |
 | `environment.osPlatform` | Optional | `linux`, `darwin` or `windows` (lowercase) |
 | `environment.healthy` | Optional | a boolean mirror of the build status, for generic CTRF readers. If present it must agree with `extra.build.status` |
@@ -423,7 +425,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 276 checks, all of which must pass
+python3 scripts/selftest.py        # 283 checks, all of which must pass
 ```
 
 ---
