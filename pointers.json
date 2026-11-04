@@ -292,6 +292,12 @@
       "tracks": "main",
       "sha": "5d830274c0d98c96adfa491f52632de264b18424",
       "moved_at": "2026-11-04T03:17:15Z"
+    },
+    {
+      "pointer": "testing/stable-2026.02",
+      "tracks": "stable/2026.02",
+      "sha": "994cbeb22b814a1fa11bc95aec7990e99d8ae68b",
+      "moved_at": "2026-11-04T03:17:32Z"
     }
   ]
 }
