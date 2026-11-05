@@ -791,7 +791,7 @@ def page(title, active, body, depth=0, pointer_sel="", pointer=DEFAULT_POINTER):
 <script>try{{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script></head><body>
 <header class="top"><div class="in"><div class="lockup"><a class="logo" href="{EVEREST_ORG}"><img src="{up}{LOGO}" alt="LF Energy EVerest on GitHub" width="116" height="34"></a>
 <a class="home" href="{up}index.html"><span class="brand">Himalayas</span>
-<span class="sub">EVerest test results, self-reported by the companies that build on it</span></a></div>
+<span class="sub">EVerest test results, self-reported by the companies that build on it. EVerest CI's own results are copied from its workflow runs.</span></a></div>
 {pointer_sel}<nav aria-label="Views">{nav}</nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>

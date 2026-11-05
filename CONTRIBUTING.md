@@ -423,7 +423,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 276 checks, all of which must pass
+python3 scripts/selftest.py        # 321 checks, all of which must pass
 ```
 
 ---
@@ -603,6 +603,47 @@ same filename. Leave it out if the source is your only route.
 **Evidence links** (`reportUrl`, `logUrl`) may point into the source. Link a commit
 (`/blob/<sha>/...`), not the branch, so the link still shows the same file later.
 
+#### Records from a workflow run
+
+A repository whose CI produces one record per pointer move can upload it as a workflow
+artifact instead of committing it. EVerest's own CI publishes as `everest` this way. The
+allowlist entry names the workflow rather than a branch of files:
+
+```yaml
+  - id: example-org
+    sources:
+      - kind: workflow-run
+        repo: example-org/firmware
+        repo_id: 123456789                       # as in step 2
+        workflow: .github/workflows/himalayas.yml
+        branch: main                              # the branch its runs must be on
+        artifact: himalayas-record                # the artifact name prefix
+        since: 2026-11-01                         # the first day a record is owed
+```
+
+**Which records are owed** is read from `pointers.json`, not from the run: one per move of
+a pointer on or after `since`, at `<pointer>/<YYYYMMDD>[-N].json`. The date is the move's
+`moved_at` in UTC, and `N` counts that pointer's moves that UTC day in log order, the first
+having no suffix. A record carries no label, and a pull request under the same id must
+carry one, so it never takes a name the source owes.
+
+**The artifact** for the move of `<pointer>` to `<sha>` is named
+`<artifact>_<pointer with / as ->_<sha>`, for example
+`himalayas-record_testing-main_<sha>`, and holds that one file at
+`<pointer>/<YYYYMMDD>[-N].json`. Only a successful `workflow_dispatch` run of `workflow`
+on `branch` in that repository counts, at a commit on that branch, so neither a pull
+request's run nor a run on a tag of the same name can publish. If several runs uploaded
+it, the oldest is taken. A `workflow-run` source may sit beside a branch source in one
+entry only if the branch source has a `label`.
+
+The intake and the gate both derive the path, so a record under any other date or `-N` is
+refused `path-not-move`. The workflow may wake the intake with a `repository_dispatch` of
+type `everest-ci-record`; otherwise it is found within four hours. An owed record still
+missing a day after its move is listed in one open issue labeled `intake-check`, which
+closes once nothing is missing. GitHub keeps an artifact 90 days at most, so a move older
+than that is no longer owed; keep the artifact's `retention-days` at a week or more, so the
+intake and the gate can still read it.
+
 ---
 
 ## 8. Common rejections and how to fix them
@@ -628,7 +669,8 @@ The gate lists every failed check at once. The codes, roughly in the order peopl
 | `not-allowlisted` | The id is not in `integrators/allowlist.yaml` | Register first ([section 1](#1-register-once)) |
 | `not-authorised` | The PR author is not in that entry's `github_users`, or the entry has neither `github_users` nor `sources` | Open the PR from a listed account, or have an owner add the account |
 | `source-mismatch` | An intake pull request whose file is not byte-identical to the same path in a source bound to the id, or lacks the source's `label` | Publish the record in the source first; do not edit it afterwards |
-| `source-label` | A pull request uses a filename label one of the id's sources reserves | Use a different label for records submitted by pull request |
+| `path-not-move` | An intake record from a workflow run is not at the path the pointer log gives its pointer and commit | Name the record by the move's UTC date and `-N`, as in [Records from a workflow run](#records-from-a-workflow-run) |
+| `source-label` | A pull request uses a filename label one of the id's sources reserves, or no label where a workflow-run source owes unlabeled names | Use a different label for records submitted by pull request |
 | `pointer-unknown` | The pointer in the path is not declared in `pointers.json` | Use a declared pointer |
 | `bad-path` | Not `results/<id>/<pointer>/YYYYMMDD[-label][-N].json`, or a `-1` suffix | Rename the file |
 | `too-big` | Over 1 MB, or over 256 KB of inline bulk | Truncate traces, export OpenHTF with `inline_attachments=False` |

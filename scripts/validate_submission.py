@@ -31,8 +31,10 @@ REJECTS
                       integrator id in integrators/allowlist.yaml
   source-mismatch     opened by the intake bot, but the file is not
                       byte-identical to the same path in a source bound to the id
-  source-label        the filename label is reserved for records from one of
-                      the id's sources, and this one did not come from it
+  path-not-move       opened by the intake from a workflow run, but the path is
+                      not the one the pointer log gives that pointer and commit
+  source-label        the filename label, or its absence, is reserved for records
+                      from one of the id's sources, and this one did not come from it
   too-big             the submission, or its inline attachments, exceed the caps
   possible-secret     a string looks like a credential; named by rule and JSON
                       path, never by value
@@ -306,6 +308,7 @@ def main():
                          "bot is recognized by id, not login. Reads SUBMISSION_AUTHOR_ID.")
     ap.add_argument("--source-fixtures",
                     help="self-test only: read bound sources from <dir>/<repo_id>/<ref>/ "
+                         "and run artifacts from <dir>/<repo_id>/artifacts/<name>/ "
                          "instead of GitHub")
     ap.add_argument("--max-file-bytes", type=int, default=MAX_FILE_BYTES,
                     help="whole submission cap; this repository keeps files indefinitely")
@@ -480,7 +483,8 @@ def main():
                       "`integrators/allowlist.yaml`, so nothing is authorised to publish "
                       "as it. An owner must add one before submissions are accepted.")
             elif args.author_id == sources.INTAKE_BOT_ID:
-                bind_source(v, claimed, srcs, rel, abspath, path_ptr, path_label, args)
+                bind_source(v, claimed, srcs, rel, abspath, path_ptr, path_label,
+                            ev.get("commit"), args)
             elif args.author is None:
                 # Local runs have no author. Say so rather than passing silently: the
                 # check that binds a submission to an account was not performed.
@@ -494,10 +498,12 @@ def main():
             else:
                 owner = sources.reserved_label(srcs, path_label)
                 if owner:
+                    what = (f"The label `{owner['label']}` is" if owner["label"]
+                            else "A name with no label is")
                     v.err("source-label",
-                          f"The label `{owner['label']}` is reserved for records from "
-                          f"`{owner['repo']}`, which the intake copies itself. Use a "
-                          "different label for records submitted by pull request.")
+                          f"{what} reserved for records from `{owner['repo']}`, which the "
+                          "intake copies itself. Use a different label for records "
+                          "submitted by pull request.")
 
         # --- HIL on the CTRF path must name its board -----------------------
         # The schema enforces this too, but a bare "'hardware' is a required property"
@@ -655,9 +661,11 @@ def main():
     return finish(v, rel, fmt, args)
 
 
-def bind_source(v, claimed, srcs, rel, abspath, pointer, label, args):
+def bind_source(v, claimed, srcs, rel, abspath, pointer, label, sha, args):
     """A pull request from the intake bot publishes as `claimed` only if the file
-    is byte-identical to the same path in one of the id's bound sources.
+    is byte-identical to the same record in one of the id's bound sources: the
+    same path on a branch source, or the artifact of an admitted run of a
+    workflow-run source, at the path the pointer log gives.
 
     The gate re-reads the source itself rather than trusting the intake that
     copied it, so a fault or a compromise there cannot land a record its
@@ -668,26 +676,51 @@ def bind_source(v, claimed, srcs, rel, abspath, pointer, label, args):
     name = os.path.basename(rel)
     with open(abspath, "rb") as f:
         mine = f.read()
-    tried = []
+    token = os.environ.get("GITHUB_TOKEN")
+    tried, misplaced = [], []
     for s in srcs:
         if not sources.label_admits(s, label):
             continue
-        relpath = sources.source_path(s, pointer, name)
-        tried.append(f"`{relpath}` in `{s['repo']}`")
         try:
-            theirs = sources.fetch_file(s, relpath, os.environ.get("GITHUB_TOKEN"),
-                                        args.source_fixtures)
+            if s["kind"] == sources.RUN_KIND:
+                owed = [r for r in sources.expected_records(
+                            claimed, (pointer_log() or {}).get("log") or [], s["since"])
+                        if r["pointer"] == pointer and r["sha"] == sha]
+                here = [r for r in owed if r["dest"] == rel]
+                if not here:
+                    misplaced += [r["dest"] for r in owed]
+                    tried.append(f"no move of `{pointer}` to `{str(sha)[:12]}` on or after "
+                                 f"{s['since']} at this path, per `pointers.json`")
+                    continue
+                art = sources.artifact_name(s["artifact"], pointer, sha)
+                tried.append(f"artifact `{art}` in `{s['repo']}`")
+                found, _ = sources.fetch_artifact_file(s, art, here[0]["path"], token,
+                                                       args.source_fixtures)
+                run = next((run for run, data in found if data == mine), None)
+                if run:
+                    v.note(f"*Copied from {tried[-1]}, run `{run['id']}`, byte for byte.*")
+                    return
+                continue
+            relpath = sources.source_path(s, pointer, name)
+            tried.append(f"`{relpath}` in `{s['repo']}`")
+            theirs = sources.fetch_file(s, relpath, token, args.source_fixtures)
         except sources.SourceUnreachable as e:
             raise ToolError(f"a source bound to `{claimed}` could not be read: {e}")
         if theirs == mine:
             v.note(f"*Copied from {tried[-1]} at `{s['ref']}`, byte for byte.*")
             return
+    if misplaced:
+        v.err("path-not-move",
+              f"This record came from a workflow run, whose records are named by the pointer "
+              f"log: the move of `{pointer}` to `{str(sha)[:12]}` gives "
+              + ", ".join(f"`{d}`" for d in misplaced) + f", not `{rel}`.")
+        return
     why = (f"tried {', '.join(tried)}" if tried
            else "no bound source admits this filename's label" if srcs
            else "it binds no source")
     v.err("source-mismatch",
           f"This pull request was opened by the intake, but the file is not byte-identical "
-          f"to the same path in any source bound to `{claimed}` ({why}). The intake only "
+          f"to the same record in any source bound to `{claimed}` ({why}). The intake only "
           "copies; the record must be published in the source first.")
 
 

@@ -476,6 +476,71 @@ def suite_gate(work, verbose):
         f.write(original)
     shutil.rmtree(fix, ignore_errors=True)
 
+    # A workflow-run source: the gate derives the record's path from the pointer
+    # log and reads the record from the artifact an admitted run uploaded.
+    import zipfile
+    with open(al, "a") as f:
+        f.write("  - id: example-run\n    sources:\n      - kind: workflow-run\n"
+                "        repo: example/ci\n        repo_id: 4343\n"
+                "        workflow: .github/workflows/move.yml\n        branch: main\n"
+                "        artifact: rec\n        since: 2026-09-01\n"
+                "    github_users: [example-run-ci]\n")
+    rd = copy.deepcopy(ctrf)
+    rd["results"]["extra"]["integrator"]["id"] = "example-run"
+    rsha = rd["results"]["environment"]["commit"]
+    RP = "results/example-run/testing/main/20260909.json"
+    rfix = os.path.join(work, "_runs")
+
+    def upload(doc, branch="main", inner="testing/main/20260909.json", head_sha="1" * 40):
+        d = os.path.join(rfix, "4343", "artifacts", f"rec_testing-main_{rsha}")
+        shutil.rmtree(rfix, ignore_errors=True)
+        os.makedirs(d)
+        os.makedirs(os.path.join(rfix, "4343", "commits"))
+        with open(os.path.join(rfix, "4343", "commits", "main"), "w") as f:
+            f.write("1" * 40 + "\n")
+        with open(os.path.join(d, "7.json"), "w") as f:
+            json.dump({"id": 7, "path": ".github/workflows/move.yml", "head_branch": branch,
+                       "event": "workflow_dispatch", "conclusion": "success",
+                       "repository": {"id": 4343}, "head_sha": head_sha}, f)
+        with zipfile.ZipFile(os.path.join(d, "7.zip"), "w") as z:
+            z.writestr(inner, json.dumps(doc, indent=2))
+
+    rbot = ("--author", "himalayas-accessor[bot]", "--author-id", "332461223",
+            "--source-fixtures", rfix)
+    upload(rd)
+    redited = copy.deepcopy(rd)
+    redited["results"]["tests"][0]["name"] += " (edited)"
+    run_cases = [
+        ("accept a record byte-identical to the artifact of an admitted run",
+         lambda: gate(work, rd, RP, extra=rbot), 0, None),
+        ("reject a record that differs from the run's artifact",
+         lambda: gate(work, redited, RP, extra=rbot), 1, "source-mismatch"),
+        ("reject a run's record under a date its move does not give",
+         lambda: gate(work, rd, RP.replace("0909", "0910"), extra=rbot), 1, "path-not-move"),
+        ("reject a run's record under a -N its move does not give",
+         lambda: gate(work, rd, RP.replace(".json", "-2.json"), extra=rbot), 1, "path-not-move"),
+        ("reject a record whose only artifact is from a run on another branch",
+         lambda: (upload(rd, branch="feature"), gate(work, rd, RP, extra=rbot))[1],
+         1, "source-mismatch"),
+        ("reject a record from a run whose commit is not on the branch",
+         lambda: (upload(rd, head_sha="f" * 40), gate(work, rd, RP, extra=rbot))[1],
+         1, "source-mismatch"),
+        ("reject a pull request at a name a workflow-run source owes",
+         lambda: gate(work, rd, RP, extra=("--author", "example-run-ci")), 1, "source-label"),
+        ("accept a labeled pull request under an id with a workflow-run source",
+         lambda: gate(work, rd, RP.replace(".json", "-manual.json"),
+                      extra=("--author", "example-run-ci")), 0, None),
+    ]
+    for label, run, want_rc, want in run_cases:
+        rc, cs, _ = run()
+        ok = rc == want_rc and (want is None or want in cs)
+        report(label, ok, f"rc={rc} codes={cs}")
+        if verbose or not ok:
+            print(f"  {'ok  ' if ok else 'FAIL'} {label:60} rc={rc} {','.join(cs)}")
+    with open(al, "w") as f:
+        f.write(original)
+    shutil.rmtree(rfix, ignore_errors=True)
+
     # validate-submission.yml closes the bot's rejected pull requests by user id,
     # and leaves its unprocessable ones open, so its literal must be the gate's.
     with open(os.path.join(work, ".github", "workflows", "validate-submission.yml")) as f:
@@ -1365,6 +1430,8 @@ def suite_build(work, verbose):
     check("page carries its headline", 'class="brand">Himalayas<' in page
           and "EVerest test results, self-reported" in page)
     check("page carries the self-reported caveat", "self-reported" in page)
+    check("the header says EVerest CI's own results are copied from its workflow runs",
+          "EVerest CI's own results are copied from its workflow runs" in page)
     check("the EVerest logo links to EVerest on GitHub and the name to the overview",
           '<a class="logo" href="https://github.com/EVerest">' in page and '<a class="home" href="index.html">' in page)
     # Links may leave the site; loaded resources may not, so a page view contacts no third party.
@@ -1948,6 +2015,124 @@ def suite_sources(work, verbose):
     check("an unhashable repo_id is reported, not a crash",
           crashed is None and any("repo_id" in p for p in probs), f"{crashed!r} {probs}")
 
+    # --- workflow-run sources: records copied from another repository's CI --
+    run_src = {"kind": "workflow-run", "repo": "EVerest/EVerest", "repo_id": 9,
+               "workflow": ".github/workflows/on_pointer_moved.yaml", "branch": "main",
+               "artifact": "himalayas-record", "since": "2026-10-01"}
+    for label, entry, want in [
+        ("unknown kind", dict(run_src, kind="tag"), "kind"),
+        ("workflow outside .github/workflows", dict(run_src, workflow="ci/x.yaml"), "workflow"),
+        ("workflow that is not YAML", dict(run_src, workflow=".github/workflows/x.sh"), "workflow"),
+        ("branch that is a pull request head", dict(run_src, branch="pull/1/head"), "branch"),
+        ("artifact prefix with a slash", dict(run_src, artifact="a/b"), "artifact"),
+        ("since that is not a date", dict(run_src, since="2026-13-01"), "since"),
+        ("a branch source's key", dict(run_src, ref="main"), "unknown key"),
+        ("a label", dict(run_src, label="ci"), "unknown key"),
+    ]:
+        _, bad = S.entry_sources({"sources": [entry]})
+        check(f"workflow-run source rejected: {label}", any(want in b for b in bad), str(bad))
+    import datetime as dt
+    got, bad = S.entry_sources({"sources": [dict(run_src, since=dt.date(2026, 10, 1))]})
+    check("a workflow-run source round-trips, since parsed as YAML writes it",
+          bad == [] and got[0]["since"] == dt.date(2026, 10, 1)
+          and got[0]["workflow"] == run_src["workflow"], f"{got} {bad}")
+    rs = got[0]
+    check("a workflow-run source admits and reserves exactly the unlabeled names",
+          S.label_admits(rs, None) and not S.label_admits(rs, "nightly")
+          and S.reserved_label([rs], None) is rs and S.reserved_label([rs], "manual") is None)
+
+    def move(pointer, sha, at):
+        return {"pointer": pointer, "sha": sha * 40, "moved_at": at}
+
+    mlog = [move("testing/main", "a", "2026-10-30T08:00:00Z"),
+            move("testing/stable-2026.10", "b", "2026-10-30T09:00:00Z"),
+            move("testing/main", "c", "2026-10-30T23:59:59Z"),
+            move("testing/main", "d", "2026-10-31T00:00:01Z"),
+            move("testing/main", "e", "2026-10-31T12:00:00Z"),
+            move("testing/main", "f", "2026-10-31T13:00:00Z")]
+    paths = [r["path"] for r in S.expected_records("everest", mlog)]
+    check("one move per pointer and UTC day has no suffix, later ones -2, -3",
+          paths == ["testing/main/20261030.json", "testing/stable-2026.10/20261030.json",
+                    "testing/main/20261030-2.json", "testing/main/20261031.json",
+                    "testing/main/20261031-2.json", "testing/main/20261031-3.json"], str(paths))
+    r0 = S.expected_records("everest", mlog)[0]
+    check("an expected record is placed under results/<id>/",
+          r0["dest"] == "results/everest/testing/main/20261030.json"
+          and r0["sha"] == "a" * 40, str(r0))
+    late = S.expected_records("everest", mlog, since=dt.date(2026, 10, 31))
+    check("a move before since owes nothing, and does not renumber the day",
+          [r["path"] for r in late][-1] == "testing/main/20261031-3.json"
+          and len(late) == 3, str(late))
+    now = dt.datetime(2027, 1, 29, tzinfo=dt.timezone.utc)
+    kept = S.expected_records("everest", mlog, now=now)
+    check("a move older than artifact retention owes nothing",
+          [r["sha"][0] for r in kept] == ["d", "e", "f"], str(kept))
+    check("the artifact name puts the pointer's slash as a dash",
+          S.artifact_name("himalayas-record", "testing/stable-2026.10", "b" * 40)
+          == "himalayas-record_testing-stable-2026.10_" + "b" * 40)
+
+    good_run = {"id": 1, "path": rs["workflow"], "head_branch": "main",
+                "event": "workflow_dispatch", "conclusion": "success",
+                "repository": {"id": 9}, "head_sha": "1" * 40}
+    check("a successful dispatched run of the workflow on the branch is admitted",
+          S.run_admits(rs, good_run))
+    for label, change in [("another branch", {"head_branch": "feature"}),
+                          ("another workflow", {"path": ".github/workflows/on_pr.yaml"}),
+                          ("a workflow_run event", {"event": "workflow_run"}),
+                          ("a failed run", {"conclusion": "failure"}),
+                          ("another repository", {"repository": {"id": 10}})]:
+        check(f"a run is not admitted from {label}", not S.run_admits(rs, dict(good_run, **change)))
+
+    # Fixtures stand in for GitHub: <repo_id>/artifacts/<name>/<run id>.json is
+    # the run, and <run id>.zip the artifact it uploaded; <repo_id>/commits/<branch>
+    # lists the commits on the branch.
+    import zipfile
+    afix = os.path.join(work, "_artifacts")
+    aname = S.artifact_name("himalayas-record", "testing/main", "a" * 40)
+    adir = os.path.join(afix, "9", "artifacts", aname)
+    os.makedirs(os.path.join(afix, "9", "commits"))
+    with open(os.path.join(afix, "9", "commits", "main"), "w") as f:
+        f.write("1" * 40 + "\n")
+
+    def upload(run_id, files, **run):
+        os.makedirs(adir, exist_ok=True)
+        with open(os.path.join(adir, f"{run_id}.json"), "w") as f:
+            json.dump(dict(good_run, id=run_id, **run), f)
+        with zipfile.ZipFile(os.path.join(adir, f"{run_id}.zip"), "w") as z:
+            for name, data in files.items():
+                z.writestr(name, data)
+
+    inner = "testing/main/20261030.json"
+    upload(30, {inner: b"third"})
+    upload(12, {inner: b"first"}, head_branch="feature")
+    upload(20, {inner: b"second"})
+    upload(25, {inner: b"x", "testing/main/extra.json": b"y"})
+    upload(26, {"testing/main/20261030-2.json": b"x"})
+    found, refused = S.fetch_artifact_file(rs, aname, inner, None, afix)
+    check("artifact runs are read oldest first, and an unadmitted run is skipped",
+          [(r["id"], d) for r, d in found] == [(20, b"second"), (30, b"third")], str(found))
+    check("an artifact holding another file, or another path, is refused",
+          len(refused) == 2 and all("26" in x or "25" in x for x in refused), str(refused))
+    check("no artifact of that name is no file, not an error",
+          S.fetch_artifact_file(rs, aname + "x", inner, None, afix) == ([], []))
+    shutil.rmtree(adir)
+    # A tag may share the branch's name, and its run reports that name as
+    # head_branch, with whatever workflow file the tag holds.
+    upload(40, {inner: b"tagged"}, head_sha="f" * 40)
+    upload(41, {inner: b"gone"}, artifact_expired=True)
+    found, refused = S.fetch_artifact_file(rs, aname, inner, None, afix)
+    check("a run whose commit is not on the branch is refused, whatever its head_branch",
+          found == [] and any("40" in x and "not on `main`" in x for x in refused), str(refused))
+    check("an expired artifact is reported, not skipped silently",
+          any("41" in x and "expired" in x for x in refused), str(refused))
+    _, bad = S.entry_sources({"sources": [dict(good), run_src]})
+    check("an unlabeled branch source cannot sit beside a workflow-run source",
+          any("label" in b for b in bad), str(bad))
+    _, bad = S.entry_sources({"sources": [dict(good, label="nightly"), run_src]})
+    check("a labeled branch source may sit beside a workflow-run source", bad == [], str(bad))
+    _, bad = S.entry_sources({"sources": [run_src, dict(run_src, repo_id=10)]})
+    check("an entry may have one workflow-run source", any("one" in b for b in bad), str(bad))
+
     # --- plan and apply against canned GitHub responses ---------------------
     big = 2_000_000
     blobs = {"records/testing/main/20261027-nightly.json": 10,
@@ -1982,7 +2167,8 @@ def suite_sources(work, verbose):
     buf = io.StringIO()
     try:
         with contextlib.redirect_stdout(buf):
-            rc = I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out))
+            rc = I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out,
+                                           missing=None, now=None))
     finally:
         S.api_json, S.api_list, S.fetch_file, I.load_allowlist, I.MAX_PER_RUN = saved
     with open(out) as f:
@@ -2028,6 +2214,98 @@ def suite_sources(work, verbose):
           rc == 1 and first[-1][0] == "DELETE"
           and not any("20261030" in c[1] for c in calls), str(calls))
 
+    # --- plan for a workflow-run source -----------------------------------
+    rroot = os.path.join(work, "_intake_root")
+    os.makedirs(os.path.join(rroot, "results/everest/testing/main"), exist_ok=True)
+    open(os.path.join(rroot, "results/everest/testing/main/20261030.json"), "w").close()
+    run_of = lambda i: dict(good_run, id=i, html_url=f"https://github.com/run/{i}")  # noqa: E731
+    asked = []
+
+    def fake_artifact(s, name, inner, token, fixtures=None):
+        asked.append((name, inner))
+        sha = name.rsplit("_", 1)[1][0]
+        return {"d": ([(run_of(20), b"rec-d")], []),
+                "e": ([(run_of(20), b"rec-e"), (run_of(30), b"rec-e2")], []),
+                "b": ([], ["`x` from run 5 is not a zip"])}.get(sha, ([], []))
+
+    pr_branch = "intake/everest/testing/main/20261030-2.json"
+    saved = (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+             I.load_pointers, I.ROOT)
+    S.api_json = lambda path, token: (
+        {"full_name": "EVerest/EVerest"} if path == "/repositories/9" else [{"number": 1}])
+    S.api_list = lambda path, token: [{"ref": f"refs/heads/{pr_branch}"}]
+    S.fetch_artifact_file = fake_artifact
+    I.load_allowlist = lambda root: {"everest": {"sources": [run_src]}}
+    I.load_pointers = lambda root: {"pointers": {"testing/main": {},
+                                                 "testing/stable-2026.10": {}}, "log": mlog}
+    I.ROOT = rroot
+    plan_fakes = (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+                  I.load_pointers, I.ROOT)
+    missing_out = os.path.join(work, "_missing.json")
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc = I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out,
+                                           missing=missing_out, now="2026-10-31T14:00:00Z"))
+    finally:
+        (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+         I.load_pointers, I.ROOT) = saved
+    with open(out) as f:
+        items = json.load(f)
+    with open(missing_out) as f:
+        missing = json.load(f)
+    os.remove(missing_out)
+    saved = (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+             I.load_pointers, I.ROOT, I.MAX_PER_RUN)
+    (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+     I.load_pointers, I.ROOT) = plan_fakes
+    I.MAX_PER_RUN = 1
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            I.plan(argparse.Namespace(repo="EVerest/Himalayas", out=out + ".1",
+                                      missing=missing_out, now="2026-10-31T14:00:00Z"))
+    finally:
+        (S.api_json, S.api_list, S.fetch_artifact_file, I.load_allowlist,
+         I.load_pointers, I.ROOT, I.MAX_PER_RUN) = saved
+    check("plan lists no missing records when it deferred some unchecked",
+          not os.path.exists(missing_out))
+    check("plan copies each owed record not on main and with no pull request",
+          [i["dest"] for i in items] == ["results/everest/testing/main/20261031.json",
+                                         "results/everest/testing/main/20261031-2.json"],
+          str([i["dest"] for i in items]))
+    check("plan takes the oldest admitted run and credits it",
+          base64.b64decode(items[1]["content"]) == b"rec-e"
+          and "run [20](https://github.com/run/20)" in items[1]["origin"], str(items[1:]))
+    check("plan asks for the artifact by its derived name and inner path",
+          ("himalayas-record_testing-main_" + "d" * 40, "testing/main/20261031.json") in asked,
+          str(asked))
+    check("an owed record still without an artifact a day after its move is missing",
+          [(m["dest"], m["why"]) for m in missing]
+          == [("results/everest/testing/stable-2026.10/20261030.json",
+               ["`x` from run 5 is not a zip"])], str(missing))
+    check("an owed record under a day old is not missing yet, and missing is no error",
+          rc == 0 and not any("20261031-3" in m["dest"] for m in missing), f"rc={rc} {missing}")
+
+    bodies = []
+
+    def body_call(method, path, token, body=None):
+        if method == "GET":
+            return {"object": {"sha": "b" * 40}}
+        if path.endswith("/pulls"):
+            bodies.append(body["body"])
+            return {"number": 5, "html_url": "u"}
+        return None
+
+    saved, I.call = I.call, body_call
+    os.environ["APP_TOKEN"] = "fake"
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            I.apply(argparse.Namespace(repo="EVerest/Himalayas", plan=out))
+    finally:
+        I.call = saved
+        del os.environ["APP_TOKEN"]
+    check("apply names the run a copied record came from",
+          bodies and bodies[0].startswith("Copied by the source intake from run [20]"), str(bodies))
+
 
 SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normalise,
           "pointers": suite_pointers, "archive": suite_archive,
@@ -2042,8 +2320,8 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 114, "intake": 16, "normalise": 8, "pointers": 17,
-          "archive": 9, "staleness": 6, "build": 68, "docs": 10, "sources": 28}
+EXPECT = {"gate": 122, "intake": 16, "normalise": 8, "pointers": 17,
+          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 64}
 TOTAL = sum(EXPECT.values())
 
 
