@@ -1867,7 +1867,7 @@ def suite_build(work, verbose):
     vcell = (re.findall(r'<td class="vcol">.*?</td>', tile) or [""])[0]
     tile = tile[tile.find('class="rtile"'):][:600]
     tf = dict(tp, outcome="failed", std="ISO15118-2")
-    shaded = bs.build_site([dict(copy.deepcopy(base), tests=[tf] + [dict(tf, outcome="passed", name=f"p{i}") for i in range(3)])],
+    shaded = bs.build_site([dict(copy.deepcopy(base), commit=shas[-1], tests=[tf] + [dict(tf, outcome="passed", name=f"p{i}") for i in range(3)])],
                            declared, logs, allow, vocab)
     chip = (shaded["index.html"].split('<span class="schip ')[1:] or [""])[0][:120]
     bar = shaded["detailed.html"].split('<span class="s-failing" style="height:')[1:2]
