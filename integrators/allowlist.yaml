@@ -19,6 +19,7 @@ integrators:
     github_users:
       - mlitre
       - pionix-conformance-bot
+      - Pietfried
   - id: kempower
     display_name: Kempower Oyj
     github_users:
