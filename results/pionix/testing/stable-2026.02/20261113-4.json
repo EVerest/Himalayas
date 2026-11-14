@@ -1,0 +1,149 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "Pionix ISO 15118 Conformance Tester"
+    },
+    "summary": {
+      "tests": 5,
+      "passed": 3,
+      "failed": 1,
+      "skipped": 1,
+      "pending": 0,
+      "other": 0,
+      "start": 1794586284852,
+      "stop": 1794586343787
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/stable-2026.02",
+      "commit": "45dba2c049223d05beb7611c75d59f6639c46ee0",
+      "branchName": "stable/2026.02",
+      "testEnvironment": "SIL",
+      "osPlatform": "linux",
+      "healthy": true
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "DummyTokenValidator",
+          "EnergyManager",
+          "EnergyNode",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac",
+          "EvseV2G",
+          "OCPP201",
+          "System"
+        ]
+      },
+      "integrator": {
+        "id": "pionix",
+        "displayName": "Pionix GmbH"
+      },
+      "configuration": "ac-v2g-dc100"
+    },
+    "tests": [
+      {
+        "name": "TC_SECC_AC_VTB_CmSlacParm_003",
+        "status": "skipped",
+        "duration": 19233,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC",
+          "x-accepted-deviation"
+        ],
+        "rawStatus": "FAIL EXPECTED",
+        "message": "ACCEPTED DEVIATION: Operator-accepted deviation from ISO 15118-3 [V2G3-M06-08]: after a positive EIM the dc100 SUT goes from X1 straight to nominal PWM without the E/F step for T_step_EF. Kept on purpose for compatibility with EVs without HLC that follow plain IEC 61851-1 charging and are confused by the extra E/F step.",
+        "filePath": "tests/test_secc_ac_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_009",
+        "status": "passed",
+        "duration": 6298,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC",
+          "x-rig-limitation"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_011",
+        "status": "passed",
+        "duration": 11278,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_009",
+        "status": "failed",
+        "duration": 14463,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_007",
+        "status": "passed",
+        "duration": 7614,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      }
+    ]
+  }
+}

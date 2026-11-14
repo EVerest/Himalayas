@@ -1,0 +1,6225 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "Pionix ISO 15118 Conformance Tester"
+    },
+    "summary": {
+      "tests": 339,
+      "passed": 193,
+      "failed": 145,
+      "skipped": 1,
+      "pending": 0,
+      "other": 0,
+      "start": 1794583919829,
+      "stop": 1794591272826
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/stable-2026.02",
+      "commit": "45dba2c049223d05beb7611c75d59f6639c46ee0",
+      "branchName": "stable/2026.02",
+      "testEnvironment": "SIL",
+      "osPlatform": "linux",
+      "healthy": true
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "DCSupplySimulator",
+          "DummyTokenProviderManual",
+          "EnergyManager",
+          "EnergyNode",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac",
+          "EvseV2G",
+          "IMDSimulator",
+          "OCPP201",
+          "System"
+        ]
+      },
+      "integrator": {
+        "id": "pionix",
+        "displayName": "Pionix GmbH"
+      },
+      "configuration": "dc-v2g-ocpp"
+    },
+    "tests": [
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_001",
+        "status": "passed",
+        "duration": 8497,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_002",
+        "status": "passed",
+        "duration": 7196,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_003",
+        "status": "passed",
+        "duration": 7224,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_004",
+        "status": "passed",
+        "duration": 8570,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_005",
+        "status": "passed",
+        "duration": 8598,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_006",
+        "status": "passed",
+        "duration": 8002,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_007",
+        "status": "passed",
+        "duration": 7991,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_008",
+        "status": "passed",
+        "duration": 8407,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_009",
+        "status": "passed",
+        "duration": 8595,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_010",
+        "status": "passed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_011",
+        "status": "passed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_012",
+        "status": "passed",
+        "duration": 7785,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_013",
+        "status": "passed",
+        "duration": 7595,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_014",
+        "status": "passed",
+        "duration": 8000,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_015",
+        "status": "passed",
+        "duration": 7999,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_016",
+        "status": "passed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_017",
+        "status": "passed",
+        "duration": 8005,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_018",
+        "status": "passed",
+        "duration": 7999,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_019",
+        "status": "passed",
+        "duration": 23010,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_AttenuationCharacterization_020",
+        "status": "passed",
+        "duration": 9319,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "AttenuationCharacterization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_atten_char.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_001",
+        "status": "passed",
+        "duration": 6582,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_002",
+        "status": "passed",
+        "duration": 5998,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_003",
+        "status": "passed",
+        "duration": 6001,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_004",
+        "status": "passed",
+        "duration": 56486,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_005",
+        "status": "passed",
+        "duration": 56889,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_006",
+        "status": "passed",
+        "duration": 57086,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_007",
+        "status": "passed",
+        "duration": 23047,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_008",
+        "status": "passed",
+        "duration": 11339,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacParm_009",
+        "status": "passed",
+        "duration": 11347,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_001",
+        "status": "passed",
+        "duration": 13387,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_003",
+        "status": "failed",
+        "duration": 19012,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_004",
+        "status": "failed",
+        "duration": 18989,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_005",
+        "status": "failed",
+        "duration": 74467,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_006",
+        "status": "failed",
+        "duration": 8917,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED \u2014 got 'OK'",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_007",
+        "status": "passed",
+        "duration": 13004,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_008",
+        "status": "passed",
+        "duration": 12997,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_009",
+        "status": "passed",
+        "duration": 13001,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_010",
+        "status": "passed",
+        "duration": 12996,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_011",
+        "status": "passed",
+        "duration": 13001,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_012",
+        "status": "passed",
+        "duration": 12993,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_013",
+        "status": "passed",
+        "duration": 13002,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_014",
+        "status": "passed",
+        "duration": 12993,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_015",
+        "status": "failed",
+        "duration": 34827,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_016",
+        "status": "passed",
+        "duration": 13172,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_017",
+        "status": "passed",
+        "duration": 13002,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_018",
+        "status": "passed",
+        "duration": 12991,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_019",
+        "status": "passed",
+        "duration": 13001,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_020",
+        "status": "passed",
+        "duration": 12996,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_021",
+        "status": "passed",
+        "duration": 9600,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCableCheck_023",
+        "status": "passed",
+        "duration": 25030,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_001",
+        "status": "passed",
+        "duration": 9362,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_002",
+        "status": "failed",
+        "duration": 18004,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_003",
+        "status": "failed",
+        "duration": 18001,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_004",
+        "status": "failed",
+        "duration": 18001,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_005",
+        "status": "failed",
+        "duration": 18597,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_006",
+        "status": "failed",
+        "duration": 74260,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_007",
+        "status": "failed",
+        "duration": 34952,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "tests/test_secc_din_charge_parameter_discovery.py::test_tc_secc_dc_vtb_din_charge_parameter_discovery_008[dut]",
+        "status": "skipped",
+        "duration": 0,
+        "suite": [
+          "conformance",
+          "conformance"
+        ],
+        "tags": [
+          "compliance",
+          "DC"
+        ],
+        "rawStatus": "NOT RUN",
+        "message": "('tests/test_secc_din_charge_parameter_discovery.py', 321, \"Skipped: NOT APPLICABLE \u2014 deselected by the ATS selection rules (PIXIT_SECC_CMN_ChargeParameterDiscoveryOngoing := unknown).\\n\\nThis TC verifies the SECC-side give-up path of ChargeParameterDiscovery: the SUT repeatedly answers EVSEProcessing 'Ongoing' until its internal V2G_SECC_Ongoing_Timer expires, then terminates the V2G session by closing the TCP connection within par_CMN_TCP_Connection_Termination_Timeout (ISO 15118-4:2018, Table 241 / Table 116 test objective).\\n\\nWhy this TC is not executed against this SUT:\\n1. EVSEProces...",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinChargeParameterDiscovery_009",
+        "status": "passed",
+        "duration": 24097,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinContractAuthentication_001",
+        "status": "passed",
+        "duration": 8868,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinContractAuthentication"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_contract_authentication.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinContractAuthentication_002",
+        "status": "failed",
+        "duration": 17400,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinContractAuthentication"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_contract_authentication.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinContractAuthentication_003",
+        "status": "failed",
+        "duration": 16998,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinContractAuthentication"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_contract_authentication.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinContractAuthentication_004",
+        "status": "failed",
+        "duration": 73065,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinContractAuthentication"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_contract_authentication.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinContractAuthentication_005",
+        "status": "failed",
+        "duration": 33753,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinContractAuthentication"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_contract_authentication.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinContractAuthentication_006",
+        "status": "failed",
+        "duration": 8364,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinContractAuthentication"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: EVSEProcessing = Ongoing on repetition \u2014 got 'Finished'",
+        "filePath": "tests/test_secc_din_contract_authentication.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinContractAuthentication_007",
+        "status": "passed",
+        "duration": 22836,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinContractAuthentication"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_contract_authentication.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCurrentDemand_001",
+        "status": "passed",
+        "duration": 13767,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCurrentDemand_002",
+        "status": "failed",
+        "duration": 23008,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCurrentDemand_003",
+        "status": "failed",
+        "duration": 23000,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCurrentDemand_004",
+        "status": "failed",
+        "duration": 78873,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCurrentDemand_005",
+        "status": "failed",
+        "duration": 39545,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinCurrentDemand_006",
+        "status": "passed",
+        "duration": 28211,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinCurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_001",
+        "status": "passed",
+        "duration": 13948,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_002",
+        "status": "passed",
+        "duration": 15597,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_003",
+        "status": "failed",
+        "duration": 22415,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_004",
+        "status": "failed",
+        "duration": 24600,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_005",
+        "status": "failed",
+        "duration": 22388,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_006",
+        "status": "failed",
+        "duration": 24601,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_007",
+        "status": "failed",
+        "duration": 13385,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_ChargingProfileInvalid \u2014 got 'OK'",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_008",
+        "status": "failed",
+        "duration": 23002,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_009",
+        "status": "failed",
+        "duration": 78875,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_010",
+        "status": "failed",
+        "duration": 79595,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_011",
+        "status": "failed",
+        "duration": 44550,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_012",
+        "status": "failed",
+        "duration": 46798,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_013",
+        "status": "passed",
+        "duration": 28455,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPowerDelivery_014",
+        "status": "passed",
+        "duration": 30705,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPreCharge_001",
+        "status": "passed",
+        "duration": 14194,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPreCharge_002",
+        "status": "failed",
+        "duration": 22605,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPreCharge_003",
+        "status": "failed",
+        "duration": 21997,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPreCharge_004",
+        "status": "failed",
+        "duration": 78068,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPreCharge_005",
+        "status": "failed",
+        "duration": 18924,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after CP State B (par_CMN_TCP_Connection_Termination_Timeout) \u2014 connection stayed open",
+        "filePath": "tests/test_secc_din_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPreCharge_006",
+        "status": "failed",
+        "duration": 17206,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: oscillator-retain teardown incomplete: retained=True, off=False",
+        "filePath": "tests/test_secc_din_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPreCharge_007",
+        "status": "failed",
+        "duration": 39814,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinPreCharge_008",
+        "status": "passed",
+        "duration": 28049,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinPreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSdp_001",
+        "status": "passed",
+        "duration": 7300,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSdp"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_sdp.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSdp_002",
+        "status": "passed",
+        "duration": 8007,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSdp"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_sdp.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServiceDiscovery_001",
+        "status": "passed",
+        "duration": 8194,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServiceDiscovery_002",
+        "status": "failed",
+        "duration": 17010,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServiceDiscovery_003",
+        "status": "failed",
+        "duration": 17002,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServiceDiscovery_004",
+        "status": "failed",
+        "duration": 73060,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServiceDiscovery_005",
+        "status": "failed",
+        "duration": 12524,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: oscillator-retain teardown incomplete: retained=True, off=False",
+        "filePath": "tests/test_secc_din_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServiceDiscovery_006",
+        "status": "failed",
+        "duration": 34220,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServiceDiscovery_008",
+        "status": "passed",
+        "duration": 23194,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServicePaymentSelection_001",
+        "status": "passed",
+        "duration": 8173,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServicePaymentSelection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_service_payment_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServicePaymentSelection_002",
+        "status": "failed",
+        "duration": 17007,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServicePaymentSelection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_service_payment_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServicePaymentSelection_003",
+        "status": "failed",
+        "duration": 16999,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServicePaymentSelection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_service_payment_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServicePaymentSelection_004",
+        "status": "failed",
+        "duration": 16993,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServicePaymentSelection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_service_payment_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServicePaymentSelection_005",
+        "status": "failed",
+        "duration": 72866,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServicePaymentSelection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_service_payment_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServicePaymentSelection_006",
+        "status": "failed",
+        "duration": 33949,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServicePaymentSelection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_service_payment_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServicePaymentSelection_007",
+        "status": "failed",
+        "duration": 17176,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServicePaymentSelection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_service_payment_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinServicePaymentSelection_008",
+        "status": "passed",
+        "duration": 22916,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinServicePaymentSelection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_service_payment_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionSetup_001",
+        "status": "passed",
+        "duration": 7870,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionSetup_002",
+        "status": "failed",
+        "duration": 17006,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionSetup_003",
+        "status": "failed",
+        "duration": 72870,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionSetup_004",
+        "status": "passed",
+        "duration": 23848,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_001",
+        "status": "failed",
+        "duration": 20081,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: oscillator-retain teardown incomplete: retained=True, off=False",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_002",
+        "status": "failed",
+        "duration": 20202,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: oscillator-retain teardown incomplete: retained=True, off=False",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_003",
+        "status": "failed",
+        "duration": 24594,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_004",
+        "status": "failed",
+        "duration": 19033,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=True",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_005",
+        "status": "failed",
+        "duration": 81038,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_006",
+        "status": "failed",
+        "duration": 25922,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_007",
+        "status": "failed",
+        "duration": 19190,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=True",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_008",
+        "status": "failed",
+        "duration": 80876,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_009",
+        "status": "failed",
+        "duration": 15510,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED \u2014 got 'OK'",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_010",
+        "status": "failed",
+        "duration": 41433,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_011",
+        "status": "failed",
+        "duration": 41999,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_012",
+        "status": "passed",
+        "duration": 31069,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSessionStop_013",
+        "status": "passed",
+        "duration": 31099,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSupportedAppProtocol_001",
+        "status": "passed",
+        "duration": 7985,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSupportedAppProtocol_002",
+        "status": "failed",
+        "duration": 10996,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=True",
+        "filePath": "tests/test_secc_din_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSupportedAppProtocol_003",
+        "status": "failed",
+        "duration": 73082,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSupportedAppProtocol_004",
+        "status": "passed",
+        "duration": 7909,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinSupportedAppProtocol_005",
+        "status": "passed",
+        "duration": 8001,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinV2gtpSdp_001",
+        "status": "passed",
+        "duration": 8793,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinV2gtpSdp"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_v2gtp_sdp.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinV2gtpSessionSetup_001",
+        "status": "passed",
+        "duration": 8406,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinV2gtpSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_v2gtp_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinV2gtpSessionSetup_002",
+        "status": "passed",
+        "duration": 9798,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinV2gtpSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_v2gtp_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinV2gtpSessionSetup_003",
+        "status": "passed",
+        "duration": 9997,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinV2gtpSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_v2gtp_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinV2gtpSessionSetup_004",
+        "status": "passed",
+        "duration": 9997,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinV2gtpSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_v2gtp_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinWeldingDetection_001",
+        "status": "passed",
+        "duration": 15607,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinWeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinWeldingDetection_002",
+        "status": "failed",
+        "duration": 24013,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinWeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinWeldingDetection_003",
+        "status": "failed",
+        "duration": 23992,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinWeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: error teardown incomplete: oscillator_off=False, tcp_closed=False",
+        "filePath": "tests/test_secc_din_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinWeldingDetection_004",
+        "status": "failed",
+        "duration": 79873,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinWeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: sequence-timeout teardown incomplete: tcp_closed=True, oscillator_off=False",
+        "filePath": "tests/test_secc_din_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinWeldingDetection_005",
+        "status": "failed",
+        "duration": 15314,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinWeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED \u2014 got 'OK'",
+        "filePath": "tests/test_secc_din_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinWeldingDetection_006",
+        "status": "failed",
+        "duration": 41623,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinWeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: CP State A teardown incomplete: oscillator_off=True, tcp_closed=False",
+        "filePath": "tests/test_secc_din_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_DinWeldingDetection_007",
+        "status": "passed",
+        "duration": 30126,
+        "suite": [
+          "conformance",
+          "DIN70121",
+          "DinWeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "DIN70121",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_din_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_001",
+        "status": "passed",
+        "duration": 8432,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_002",
+        "status": "passed",
+        "duration": 9204,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_003",
+        "status": "passed",
+        "duration": 10191,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_004",
+        "status": "passed",
+        "duration": 8187,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_005",
+        "status": "failed",
+        "duration": 13812,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_006",
+        "status": "failed",
+        "duration": 14195,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_007",
+        "status": "failed",
+        "duration": 14003,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_008",
+        "status": "passed",
+        "duration": 69673,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_009",
+        "status": "passed",
+        "duration": 68188,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_010",
+        "status": "failed",
+        "duration": 14131,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_011",
+        "status": "failed",
+        "duration": 13998,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "TimeoutError: TCP connection stayed open for 6.0s (SECC did not close it)",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_012",
+        "status": "passed",
+        "duration": 8590,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_Authorization_013",
+        "status": "passed",
+        "duration": 8994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_authorization.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CableCheck_001",
+        "status": "passed",
+        "duration": 13406,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CableCheck_003",
+        "status": "passed",
+        "duration": 11191,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CableCheck_004",
+        "status": "failed",
+        "duration": 16005,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection within par_CMN_TCP_Connection_Termination_Timeout \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CableCheck_005",
+        "status": "passed",
+        "duration": 71272,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CableCheck_006",
+        "status": "passed",
+        "duration": 13515,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CableCheck_008",
+        "status": "failed",
+        "duration": 8604,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CableCheck"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode is FAILED (CP not in State C/D) \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_cable_check.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateInstallation_001",
+        "status": "passed",
+        "duration": 8192,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_certificate_installation.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateInstallation_002",
+        "status": "passed",
+        "duration": 7990,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_certificate_installation.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateInstallation_003",
+        "status": "failed",
+        "duration": 8005,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_UnknownSession \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_installation.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateInstallation_004",
+        "status": "passed",
+        "duration": 68072,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_certificate_installation.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateInstallation_005",
+        "status": "failed",
+        "duration": 13925,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_certificate_installation.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateInstallation_006",
+        "status": "failed",
+        "duration": 14002,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_certificate_installation.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateInstallation_007",
+        "status": "failed",
+        "duration": 13997,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_certificate_installation.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateInstallation_008",
+        "status": "failed",
+        "duration": 13993,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_certificate_installation.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_001",
+        "status": "failed",
+        "duration": 7989,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: response signature verifies (four References, SA provisioning leaf) \u2014 response Header carries no Signature",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_002",
+        "status": "passed",
+        "duration": 8005,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_003",
+        "status": "failed",
+        "duration": 7995,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_UnknownSession \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_004",
+        "status": "passed",
+        "duration": 68068,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_005",
+        "status": "failed",
+        "duration": 7927,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_SignatureError \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_006",
+        "status": "failed",
+        "duration": 7991,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_SignatureError \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_007",
+        "status": "failed",
+        "duration": 7999,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_CertChainError \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_008",
+        "status": "failed",
+        "duration": 7992,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_CertChainError \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_009",
+        "status": "failed",
+        "duration": 8000,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_CertChainError \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_010",
+        "status": "failed",
+        "duration": 7991,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_CertChainError \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_011",
+        "status": "failed",
+        "duration": 8001,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_CertChainError \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_012",
+        "status": "failed",
+        "duration": 7994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED or FAILED_ContractCanceled or FAILED_NoCertificateAvailable \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_013",
+        "status": "failed",
+        "duration": 7992,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED or FAILED_ContractCanceled or FAILED_NoCertificateAvailable \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_014",
+        "status": "failed",
+        "duration": 7992,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED or FAILED_ContractCanceled or FAILED_NoCertificateAvailable \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_015",
+        "status": "failed",
+        "duration": 8005,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED or FAILED_ContractCanceled or FAILED_NoCertificateAvailable \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_016",
+        "status": "failed",
+        "duration": 7992,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_CertificateExpired \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CertificateUpdate_017",
+        "status": "failed",
+        "duration": 7993,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CertificateUpdate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED or FAILED_NoCertificateAvailable \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_certificate_update.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_ChargeParameterDiscovery_001",
+        "status": "passed",
+        "duration": 10808,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_ChargeParameterDiscovery_002",
+        "status": "passed",
+        "duration": 70875,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_001",
+        "status": "passed",
+        "duration": 9117,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_002",
+        "status": "failed",
+        "duration": 14995,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_003",
+        "status": "failed",
+        "duration": 8995,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED_WrongEnergyTransferMode \u2014 F-AC-1: SUT rejects with FAILED_WrongChargeParameter instead of FAILED_WrongEnergyTransferMode.",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_004",
+        "status": "failed",
+        "duration": 15002,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_006",
+        "status": "passed",
+        "duration": 8994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_007",
+        "status": "passed",
+        "duration": 23022,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_012",
+        "status": "passed",
+        "duration": 9572,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_016",
+        "status": "passed",
+        "duration": 9397,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_017",
+        "status": "passed",
+        "duration": 23419,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_019",
+        "status": "passed",
+        "duration": 23200,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ChargeParameterDiscovery_022",
+        "status": "passed",
+        "duration": 23792,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_001",
+        "status": "passed",
+        "duration": 13586,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_002",
+        "status": "failed",
+        "duration": 8193,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_003",
+        "status": "passed",
+        "duration": 15805,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_004",
+        "status": "failed",
+        "duration": 20011,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection within par_CMN_TCP_Connection_Termination_Timeout \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_005",
+        "status": "passed",
+        "duration": 75869,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_006",
+        "status": "passed",
+        "duration": 14111,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_007",
+        "status": "failed",
+        "duration": 8189,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_008",
+        "status": "passed",
+        "duration": 13809,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_CurrentDemand_009",
+        "status": "failed",
+        "duration": 8187,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "CurrentDemand"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_current_demand.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_MeteringReceipt_001",
+        "status": "failed",
+        "duration": 8389,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "MeteringReceipt"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_metering_receipt.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_MeteringReceipt_002",
+        "status": "failed",
+        "duration": 8559,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "MeteringReceipt"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_metering_receipt.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_MeteringReceipt_003",
+        "status": "failed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "MeteringReceipt"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_metering_receipt.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_MeteringReceipt_004",
+        "status": "failed",
+        "duration": 8001,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "MeteringReceipt"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_metering_receipt.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_MeteringReceipt_005",
+        "status": "failed",
+        "duration": 7993,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "MeteringReceipt"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_metering_receipt.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_MeteringReceipt_006",
+        "status": "failed",
+        "duration": 8001,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "MeteringReceipt"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_metering_receipt.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_MeteringReceipt_007",
+        "status": "failed",
+        "duration": 7994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "MeteringReceipt"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "harness.v2g.ConnectionClosed: SECC closed the TCP connection during recv",
+        "filePath": "tests/test_secc_iso2_metering_receipt.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_001",
+        "status": "failed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': '3889d1b42a4347fc'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_002",
+        "status": "failed",
+        "duration": 7997,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': '198a6d1e8c045825'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_003",
+        "status": "failed",
+        "duration": 8003,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': '64a2ab13ea1511cf'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_004",
+        "status": "failed",
+        "duration": 7988,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': '58111c8dde460ea5'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_005",
+        "status": "failed",
+        "duration": 7998,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': '3ebfc1a089effaa1'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_006",
+        "status": "failed",
+        "duration": 7990,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': '55f43a907552308a'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_007",
+        "status": "failed",
+        "duration": 7995,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': 'ac769eb774922448'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_008",
+        "status": "failed",
+        "duration": 7994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': 'a05d1f7ffbace24b'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_009",
+        "status": "failed",
+        "duration": 7998,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': 'f99b5ebbbcf63dcb'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentDetails_010",
+        "status": "failed",
+        "duration": 8409,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentDetails"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: PaymentServiceSelection(Contract) not OK: {'Signature_isUsed': False, 'msg': {'ResponseCode': 'FAILED_PaymentSelectionInvalid', 'ResponseCodeValue': 9}, 'name': 'PaymentServiceSelectionRes', 'ok': True, 'proto': 'iso2', 'session_id': '24266660ede01e14'}\nassert 'FAILED_Payme...ectionInvalid' == 'OK'\n  \n  - OK\n  + FAILED_PaymentSelectionInvalid",
+        "filePath": "tests/test_secc_iso2_payment_details.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_001",
+        "status": "passed",
+        "duration": 8588,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_003",
+        "status": "failed",
+        "duration": 7799,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT did not offer Contract over TLS: ['ExternalPayment']\nassert 'Contract' in ['ExternalPayment']\n +  where ['ExternalPayment'] = <harness.v2g.Iso2Session object at 0x74a287d570d0>.payment_options\n +    where <harness.v2g.Iso2Session object at 0x74a287d570d0> = <harness.test_ev.ConformanceTestEv object at 0x74a287fefcd0>.iso2",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_004",
+        "status": "passed",
+        "duration": 10200,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_005",
+        "status": "failed",
+        "duration": 13996,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_006",
+        "status": "failed",
+        "duration": 14009,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_007",
+        "status": "failed",
+        "duration": 13995,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_008",
+        "status": "passed",
+        "duration": 69872,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PaymentServiceSelection_010",
+        "status": "passed",
+        "duration": 8110,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PaymentServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_payment_service_selection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_001",
+        "status": "passed",
+        "duration": 13410,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_002",
+        "status": "passed",
+        "duration": 14993,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_003",
+        "status": "passed",
+        "duration": 16001,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_004",
+        "status": "passed",
+        "duration": 16999,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_005",
+        "status": "failed",
+        "duration": 20008,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_006",
+        "status": "failed",
+        "duration": 20991,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_007",
+        "status": "failed",
+        "duration": 19994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_008",
+        "status": "failed",
+        "duration": 20003,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_009",
+        "status": "passed",
+        "duration": 75868,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_010",
+        "status": "passed",
+        "duration": 76002,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_013",
+        "status": "failed",
+        "duration": 19315,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the FAILED response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_014",
+        "status": "passed",
+        "duration": 15189,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_015",
+        "status": "passed",
+        "duration": 15005,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_016",
+        "status": "passed",
+        "duration": 15000,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_017",
+        "status": "passed",
+        "duration": 14994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_018",
+        "status": "passed",
+        "duration": 14993,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_019",
+        "status": "passed",
+        "duration": 14998,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_020",
+        "status": "passed",
+        "duration": 14999,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PowerDelivery_021",
+        "status": "passed",
+        "duration": 15003,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PreCharge_001",
+        "status": "passed",
+        "duration": 13794,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PreCharge_002",
+        "status": "passed",
+        "duration": 15603,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PreCharge_003",
+        "status": "failed",
+        "duration": 18997,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection within par_CMN_TCP_Connection_Termination_Timeout \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PreCharge_004",
+        "status": "passed",
+        "duration": 75076,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PreCharge"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_pre_charge.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_ServiceDiscovery_001",
+        "status": "passed",
+        "duration": 7511,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_ServiceDiscovery_002",
+        "status": "passed",
+        "duration": 9996,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_ServiceDiscovery_003",
+        "status": "failed",
+        "duration": 14001,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_ServiceDiscovery_004",
+        "status": "passed",
+        "duration": 69880,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_ServiceDiscovery_001",
+        "status": "passed",
+        "duration": 22525,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SessionSetup_001",
+        "status": "passed",
+        "duration": 7586,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SessionSetup_002",
+        "status": "passed",
+        "duration": 9997,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SessionSetup_003",
+        "status": "passed",
+        "duration": 69882,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SessionSetup_004",
+        "status": "failed",
+        "duration": 69992,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection within V2G_SECC_CommunicationSetup_Timeout+termination (26.0s) \u2014 closed after 62.1s; the SUT appears to enforce the 60 s sequence timeout rather than the 20 s comm-setup timeout",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_SessionSetup_001",
+        "status": "passed",
+        "duration": 22134,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_SessionSetup_002",
+        "status": "passed",
+        "duration": 22000,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_SessionSetup_003",
+        "status": "passed",
+        "duration": 21998,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_SessionStop_002",
+        "status": "failed",
+        "duration": 17186,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT terminates the data link within par_TP_match_leave (1.25s) \u2014 left after 2.03s",
+        "filePath": "tests/test_secc_iso2_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_SessionStop_006",
+        "status": "failed",
+        "duration": 14599,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED (no preceding CP State B) \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_SessionStop_007",
+        "status": "passed",
+        "duration": 17398,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_SessionStop_008",
+        "status": "passed",
+        "duration": 16999,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_SessionStop_009",
+        "status": "passed",
+        "duration": 76873,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SupportedAppProtocol_001",
+        "status": "passed",
+        "duration": 7720,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SupportedAppProtocol_002",
+        "status": "passed",
+        "duration": 9995,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SupportedAppProtocol_003",
+        "status": "passed",
+        "duration": 70078,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SupportedAppProtocol_004",
+        "status": "passed",
+        "duration": 7911,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SupportedAppProtocol_005",
+        "status": "failed",
+        "duration": 29026,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT stops waiting after V2G_SECC_CommunicationSetup_Timeout (rejects the late TCP handshake / SupportedAppProtocol) \u2014 SUT accepted a late TCP handshake and answered SupportedAppProtocol after V2G_SECC_CommunicationSetup_Timeout (20 s) elapsed; the -4 ATS expects it to stop waiting. Got: {'msg': {'ResponseCode': 'OK_SuccessfulNegotiation', 'ResponseCodeValue': 0, 'SchemaID': 1}, 'name': 'supportedAppProtocolRes', 'ok': True, 'proto': 'apphand'}",
+        "filePath": "tests/test_secc_iso2_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SupportedAppProtocol_006",
+        "status": "passed",
+        "duration": 7976,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_001",
+        "status": "passed",
+        "duration": 8802,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_002",
+        "status": "passed",
+        "duration": 8195,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_003",
+        "status": "passed",
+        "duration": 7987,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_004",
+        "status": "failed",
+        "duration": 29825,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT stops the SDP server after V2G_SECC_CommunicationSetup_Timeout (no SDP response) \u2014 SUT still answered SDP after V2G_SECC_CommunicationSetup_Timeout (20 s) elapsed with no TCP connection; the -4 ATS expects it to stop the SDP server. (Some SECC stacks keep the SDP multicast server up for the whole module lifetime -- the comm-setup timeout is not enforced at the SDP layer.)",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_005",
+        "status": "failed",
+        "duration": 29205,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT stops the SDP server after V2G_SECC_CommunicationSetup_Timeout (TLS run, no SDP response) \u2014 SUT still answered a TLS SDP request after V2G_SECC_CommunicationSetup_Timeout (20 s) elapsed with no TCP connection; the -4 ATS expects it to stop the SDP server. (Some SECC stacks keep the SDP multicast server up for the whole module lifetime -- the comm-setup timeout is not enforced at the SDP layer.)",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_SDP_006",
+        "status": "failed",
+        "duration": 28995,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT stops the SDP server after V2G_SECC_CommunicationSetup_Timeout (under PnC, no SDP response) \u2014 SUT still answered a TLS SDP request under PnC after V2G_SECC_CommunicationSetup_Timeout (20 s) elapsed; the -4 ATS expects it to stop the SDP server. (Some SECC stacks keep the SDP multicast server up for the whole module lifetime.)",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSessionSetup_001",
+        "status": "passed",
+        "duration": 8779,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSessionSetup_002",
+        "status": "passed",
+        "duration": 10188,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSessionSetup_003",
+        "status": "passed",
+        "duration": 10001,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSessionSetup_004",
+        "status": "passed",
+        "duration": 9999,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSessionSetup_005",
+        "status": "passed",
+        "duration": 9998,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSDP_001",
+        "status": "passed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSDP_002",
+        "status": "passed",
+        "duration": 10008,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSDP_003",
+        "status": "passed",
+        "duration": 10791,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSDP_004",
+        "status": "passed",
+        "duration": 10993,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_V2GTPSDP_005",
+        "status": "passed",
+        "duration": 11001,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_transport.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_WeldingDetection_001",
+        "status": "passed",
+        "duration": 15807,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "WeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_WeldingDetection_002",
+        "status": "passed",
+        "duration": 16996,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "WeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_WeldingDetection_003",
+        "status": "failed",
+        "duration": 21005,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "WeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT closes the TCP connection after the error response \u2014 SUT sent the mandated FAILED_* ResponseCode but kept the TCP connection open past par_CMN_TCP_Connection_Termination_Timeout (5 s); the -4 ATS expects the session to be terminated.",
+        "filePath": "tests/test_secc_iso2_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_WeldingDetection_004",
+        "status": "passed",
+        "duration": 76673,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "WeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_WeldingDetection_005",
+        "status": "failed",
+        "duration": 15113,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "WeldingDetection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: ResponseCode = FAILED (no preceding CP State B) \u2014 got 'OK'",
+        "filePath": "tests/test_secc_iso2_welding_detection.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PionixInterop_010",
+        "status": "passed",
+        "duration": 7385,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixInterop_001",
+        "status": "failed",
+        "duration": 16418,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: Every DC session-setup response time within bounds (min 90 ms / Table 109 max per message) \u2014 violations (SLAC excluded, from supportedAppProtocol): supportedAppProtocolRes (sample 1/1): 0.7 ms -- came too quickly, PIONIX interop minimum is 90 ms",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixInterop_003",
+        "status": "passed",
+        "duration": 72773,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixInterop_004",
+        "status": "passed",
+        "duration": 6625,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixInterop_007",
+        "status": "failed",
+        "duration": 13587,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: Every DIN 70121 session-setup response time within bounds (min 90 ms / DIN timing-table max per message) \u2014 violations (SLAC excluded, from supportedAppProtocol): supportedAppProtocolRes (sample 1/1): 0.7 ms -- came too quickly, PIONIX interop minimum is 90 ms",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixInterop_014",
+        "status": "passed",
+        "duration": 30218,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixInterop_017",
+        "status": "passed",
+        "duration": 44800,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixInterop_019",
+        "status": "passed",
+        "duration": 17934,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixUseCase_001",
+        "status": "passed",
+        "duration": 29653,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixUseCase_003",
+        "status": "failed",
+        "duration": 33190,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: new SLAC matching, link, SDP, TCP and SessionSetup after the BCB-toggle restart \u2014 TimeoutError('TT_matching_repetition (10.25s) expired without a valid CM_SLAC_PARM.CNF')",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixUseCase_009",
+        "status": "failed",
+        "duration": 29597,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: within 10 s: EVSEMaximumPowerLimit <= 75% of P_max = 8.28 kW and the delivered power within 3% of it \u2014 last: P 2.76 kW (U 400.00 V, I 6.90 A), EVSEMaximumPowerLimit 2.76 kW, EVSEMaximumCurrentLimit 6.90 A",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PionixUseCase_010",
+        "status": "failed",
+        "duration": 28796,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: within 10 s: EVSEMaximumPowerLimit <= 75% of P_max = 8.28 kW and the delivered power within 3% of it \u2014 last: P 2.76 kW (U 400.00 V, I 6.90 A), EVSEMaximumPowerLimit 2.76 kW, EVSEMaximumCurrentLimit 6.90 A",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PLCLinkStatus_001",
+        "status": "passed",
+        "duration": 6564,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PLCLinkStatus_002",
+        "status": "passed",
+        "duration": 22120,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PLCLinkStatus_003",
+        "status": "passed",
+        "duration": 7270,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PLCLinkStatus_004",
+        "status": "passed",
+        "duration": 6613,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_PLCLinkStatus_005",
+        "status": "passed",
+        "duration": 12098,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PLCLinkStatus_001",
+        "status": "passed",
+        "duration": 24286,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PLCLinkStatus_003",
+        "status": "passed",
+        "duration": 29363,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PLCLinkStatus_004",
+        "status": "failed",
+        "duration": 20549,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "TimeoutError: no matching CP duty period within 8.0s (periods: [(0.0, 440151.23), (100.0, 440155.238), (5.0, 440156.036)])",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PLCLinkStatus_005",
+        "status": "failed",
+        "duration": 18368,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "FAIL",
+        "message": "AssertionError: SUT has left the current logical network (CM_NW_STATS empty) \u2014 still in network: CmNwStatsCnf(num_stas=1, stations=[00b052000001(tx=10,rx=10)])",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PLCLinkStatus_006",
+        "status": "passed",
+        "duration": 24137,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_DC_VTB_PLCLinkStatus_007",
+        "status": "passed",
+        "duration": 23018,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_001",
+        "status": "passed",
+        "duration": 9033,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_003",
+        "status": "passed",
+        "duration": 7202,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_005",
+        "status": "passed",
+        "duration": 17410,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_007",
+        "status": "passed",
+        "duration": 16994,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_009",
+        "status": "passed",
+        "duration": 16996,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_011",
+        "status": "passed",
+        "duration": 17008,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_013",
+        "status": "passed",
+        "duration": 16992,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_015",
+        "status": "passed",
+        "duration": 17000,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_017",
+        "status": "passed",
+        "duration": 16989,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_019",
+        "status": "passed",
+        "duration": 17000,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_021",
+        "status": "passed",
+        "duration": 16999,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmSlacMatch_023",
+        "status": "passed",
+        "duration": 21807,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacMatch"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_slac_match.py"
+      },
+      {
+        "name": "TC_SECC_CMN_VTB_CmValidate_010",
+        "status": "passed",
+        "duration": 6596,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmValidate"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "DC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_cm_validate.py"
+      }
+    ]
+  }
+}
