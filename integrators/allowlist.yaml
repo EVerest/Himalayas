@@ -20,6 +20,11 @@ integrators:
       - mlitre
       - pionix-conformance-bot
       - Pietfried
+    sources:
+      - repo: PionixPublic/Himalayas
+        repo_id: 1437204999
+        ref: results
+        path: records/
   - id: kempower
     display_name: Kempower Oyj
     github_users:
