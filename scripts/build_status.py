@@ -787,11 +787,14 @@ def page(title, active, body, depth=0, pointer_sel="", pointer=DEFAULT_POINTER):
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title>
+<meta name="description" content="EVerest federated testing: build and test results self-reported by the companies that build on EVerest.">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="EVerest federated testing: build and test results self-reported by the companies that build on EVerest.">
 <style>{font_faces(up)}{CSS}</style>
 <script>try{{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script></head><body>
 <header class="top"><div class="in"><div class="lockup"><a class="logo" href="{EVEREST_ORG}"><img src="{up}{LOGO}" alt="LF Energy EVerest on GitHub" width="116" height="34"></a>
 <a class="home" href="{up}index.html"><span class="brand">Himalayas</span>
-<span class="sub">EVerest test results, self-reported by the companies that build on it. EVerest CI's own results are copied from its workflow runs.</span></a></div>
+<span class="sub">EVerest's federated test results, self-reported by the companies that build on it. EVerest CI's own results are copied from its workflow runs.</span></a></div>
 {pointer_sel}<nav aria-label="Views">{nav}</nav><fieldset class="theme" id="theme"><legend>Color theme</legend><span class="thumb" aria-hidden="true"></span>
 <input type="radio" name="theme" id="th-light" value="light"><label for="th-light">Light</label>
 <input type="radio" name="theme" id="th-dark" value="dark"><label for="th-dark">Dark</label></fieldset></div><div class="bar"></div></header>
