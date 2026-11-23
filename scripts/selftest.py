@@ -1486,15 +1486,6 @@ def suite_build(work, verbose):
           and all(f'href="licenses/{f}"' in lic for f in os.listdir(os.path.join(work, "licenses"))),
           f"unlinked: {unlicensed[:5]}")
 
-    # Regression badges live on the detailed page, one per setup with a confirmed regression.
-    regs = json.load(open(os.path.join(out, "regressions.json"))) if os.path.exists(os.path.join(out, "regressions.json")) else {}
-    hit = {(r["integrator"], r["configuration"]) for r in (regs.get("pointers") or {}).get("testing/main", []) if r["confirmed"]}
-    det = site.get("detailed.html", "")
-    check("regression badges are on the detailed page, not the overview",
-          'class="reg"' not in page and 'data-f="regressed"' not in page and det.count('class="reg"') == len(hit)
-          and f'▲ {len(hit)} setup{"s" * (len(hit) != 1)} with confirmed regressions' in det,
-          f"overview badges {page.count('class=\"reg\"')}, detailed {det.count('class=\"reg\"')}, confirmed setups {len(hit)}")
-
     # Every committed submission has to reach the site. load_records() made to
     # return nothing was green, with every setup replaced by an empty notice.
     files = [os.path.relpath(os.path.join(dp, fn), work).replace(os.sep, "/")
@@ -1867,6 +1858,16 @@ def suite_build(work, verbose):
     check("a test's description is shown on its setup page and in the regressions panel",
           f'<code>{bs.esc(t0["name"])}</code> {want}' in sp and want in det[det.find("Open regressions"):],
           f'setup={want in sp} panel={want in det}')
+
+    # Regression badges live on the detailed page, one per setup with a confirmed regression.
+    # Pinned to a fixture: the committed data may hold no regression at all.
+    again = dict(copy.deepcopy(newer), start=3_000)
+    got = bs.build_site([older, newer, again], declared, logs, allow, vocab)
+    ov, det = got.get(bs.pointer_file("index", main), ""), got.get(bs.pointer_file("detailed", main), "")
+    check("regression badges are on the detailed page, not the overview",
+          'class="reg"' not in ov and 'data-f="regressed"' not in ov and det.count('class="reg"') == 1
+          and "▲ 1 setup with confirmed regressions" in det,
+          f"overview badges {ov.count('class=\"reg\"')}, detailed {det.count('class=\"reg\"')}")
 
     logged = dict(copy.deepcopy(base), tests=[dict(base["tests"][0], log="https://ci.example/t1.log?a=1&b=2")])
     sp = next((v for k, v in bs.build_site([logged], declared, logs, allow, vocab).items() if k.startswith("setup/")), "")
