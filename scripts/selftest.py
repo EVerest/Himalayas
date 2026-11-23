@@ -1067,6 +1067,37 @@ def pending_cases(work, verbose, fresh, moved_at):
         os.remove(fixture)
 
 
+def liveness_cases(work, verbose, moved_at, aged):
+    """An old pointer fails only when its tracked branch has moved on without it."""
+    sha = "0" * 39 + "c"
+    fixture = os.path.join(work, "pointers-liveness.json")
+    with open(fixture, "w") as f:
+        json.dump({"pointers": {"testing/x": {"tracks": "stable/x"}},
+                   "log": [{"pointer": "testing/x", "tracks": "stable/x",
+                            "sha": sha, "moved_at": moved_at}]}, f)
+    gh = FakeGitHub()
+    gh.routes["/repos/EVerest/EVerest/branches/testing%2Fx"] = (200, {"commit": {"sha": sha}})
+    compare = f"/repos/EVerest/EVerest/compare/stable/x...{sha}"
+    cases = [
+        # label, compare status of the tip against its tracked branch, want rc, want in stdout
+        ("fails a pointer that has stopped moving", "behind", 1, "Has the CI job stopped running?"),
+        ("passes an old pointer whose tracked branch has not moved", "identical", 0,
+         "all checks passed"),
+    ]
+    try:
+        for label, status, want_rc, want_says in cases:
+            gh.routes[compare] = (200, {"status": status})
+            r = sh(work, "verify_pointers.py", "--pointers", fixture, "--now", aged, env=gh.env)
+            ok = r.returncode == want_rc and want_says in r.stdout and "Traceback" not in r.stderr
+            report(f"verifier {label}", ok,
+                   f"rc={r.returncode} want {want_rc} {r.stdout[-200:]} {r.stderr[-200:]}")
+            if verbose or not ok:
+                print(f"  {'ok  ' if ok else 'FAIL'} verifier {label:56} rc={r.returncode}")
+    finally:
+        gh.close()
+        os.remove(fixture)
+
+
 def suite_pointers(work, verbose):
     import datetime
     # The clock is injected. Without --now this check compared the committed log
@@ -1078,20 +1109,15 @@ def suite_pointers(work, verbose):
     fresh = (base + datetime.timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
     aged = (base + datetime.timedelta(days=60)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    r = sh(work, "verify_pointers.py", "--offline", "--now", fresh)
+    # Offline knows no tracked tip, so it cannot tell a dead job from a quiet
+    # branch, and an old log must not fail it.
+    r = sh(work, "verify_pointers.py", "--offline", "--now", aged)
     ok = r.returncode == 0
     report("pointer log is internally consistent", ok, r.stdout[-200:])
     if verbose or not ok:
         print(f"  {'ok  ' if ok else 'FAIL'} verify_pointers --offline rc={r.returncode}")
 
-    # And the liveness check has to actually fire. It is the one that surfaces a
-    # dead pointer job in a repository this one does not control.
-    r = sh(work, "verify_pointers.py", "--offline", "--now", aged)
-    ok = r.returncode == 1 and "Has the CI job stopped running?" in r.stdout
-    report("verifier fails a pointer that has stopped moving", ok,
-           f"rc={r.returncode} {r.stdout[-160:]}")
-    if verbose or not ok:
-        print(f"  {'ok  ' if ok else 'FAIL'} verifier fails a stalled pointer rc={r.returncode}")
+    liveness_cases(work, verbose, base.strftime("%Y-%m-%dT%H:%M:%SZ"), aged)
 
     r = sh(work, "verify_pointers.py", "--offline", "--now", "the day before yesterday")
     ok = r.returncode == 2
@@ -1459,15 +1485,6 @@ def suite_build(work, verbose):
           not unlicensed and 'href="licenses/Apache-2.0.txt"' in lic
           and all(f'href="licenses/{f}"' in lic for f in os.listdir(os.path.join(work, "licenses"))),
           f"unlinked: {unlicensed[:5]}")
-
-    # Regression badges live on the detailed page, one per setup with a confirmed regression.
-    regs = json.load(open(os.path.join(out, "regressions.json"))) if os.path.exists(os.path.join(out, "regressions.json")) else {}
-    hit = {(r["integrator"], r["configuration"]) for r in (regs.get("pointers") or {}).get("testing/main", []) if r["confirmed"]}
-    det = site.get("detailed.html", "")
-    check("regression badges are on the detailed page, not the overview",
-          'class="reg"' not in page and 'data-f="regressed"' not in page and det.count('class="reg"') == len(hit)
-          and f'▲ {len(hit)} setup{"s" * (len(hit) != 1)} with confirmed regressions' in det,
-          f"overview badges {page.count('class=\"reg\"')}, detailed {det.count('class=\"reg\"')}, confirmed setups {len(hit)}")
 
     # Every committed submission has to reach the site. load_records() made to
     # return nothing was green, with every setup replaced by an empty notice.
@@ -1841,6 +1858,16 @@ def suite_build(work, verbose):
     check("a test's description is shown on its setup page and in the regressions panel",
           f'<code>{bs.esc(t0["name"])}</code> {want}' in sp and want in det[det.find("Open regressions"):],
           f'setup={want in sp} panel={want in det}')
+
+    # Regression badges live on the detailed page, one per setup with a confirmed regression.
+    # Pinned to a fixture: the committed data may hold no regression at all.
+    again = dict(copy.deepcopy(newer), start=3_000)
+    got = bs.build_site([older, newer, again], declared, logs, allow, vocab)
+    ov, det = got.get(bs.pointer_file("index", main), ""), got.get(bs.pointer_file("detailed", main), "")
+    check("regression badges are on the detailed page, not the overview",
+          'class="reg"' not in ov and 'data-f="regressed"' not in ov and det.count('class="reg"') == 1
+          and "▲ 1 setup with confirmed regressions" in det,
+          f"overview badges {ov.count('class=\"reg\"')}, detailed {det.count('class=\"reg\"')}")
 
     logged = dict(copy.deepcopy(base), tests=[dict(base["tests"][0], log="https://ci.example/t1.log?a=1&b=2")])
     sp = next((v for k, v in bs.build_site([logged], declared, logs, allow, vocab).items() if k.startswith("setup/")), "")
@@ -2320,7 +2347,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 #
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
-EXPECT = {"gate": 122, "intake": 16, "normalise": 8, "pointers": 17,
+EXPECT = {"gate": 122, "intake": 16, "normalise": 8, "pointers": 18,
           "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 64}
 TOTAL = sum(EXPECT.values())
 
