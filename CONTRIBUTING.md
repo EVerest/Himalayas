@@ -1,4 +1,4 @@
-# Submitting test results to Himalayas
+# Submitting federated test results to Himalayas
 
 A submission is one JSON file, [CTRF](https://ctrf.io) or
 [OpenHTF](https://github.com/google/openhtf), added by pull request under

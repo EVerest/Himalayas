@@ -1454,7 +1454,7 @@ def suite_build(work, verbose):
     # that this page is the only home for.
     check("index.html is not empty", len(page) > 4_000, f"{len(page)} bytes")
     check("page carries its headline", 'class="brand">Himalayas<' in page
-          and "EVerest test results, self-reported" in page)
+          and "EVerest's federated test results, self-reported" in page)
     check("page carries the self-reported caveat", "self-reported" in page)
     check("the header says EVerest CI's own results are copied from its workflow runs",
           "EVerest CI's own results are copied from its workflow runs" in page)
