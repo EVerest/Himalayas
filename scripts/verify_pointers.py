@@ -26,8 +26,11 @@ CHECKS
      before it, so the pointer was never rewound. Checked over the last
      --forward-window pairs, not just the newest one: comparing only the
      newest pair meant a single further move hid an earlier rewind forever
-  5. no pointer has gone unmoved for longer than --max-age-days, which is how
-     a silently dead CI job shows up. Reads --now if given.
+  5. no pointer has gone unmoved for longer than --max-age-days while the
+     branch it tracks has moved on, which is how a silently dead CI job shows
+     up. A pointer whose tracked branch has no new commits is current however
+     old its last move, so this needs the live tip and does not run offline.
+     Reads --now if given.
 
 An API error on check 2 or check 4 is a FAILURE, not a note. Both used to
 degrade to a note while the script still printed "all checks passed" and exited
@@ -84,7 +87,8 @@ def main():
     ap.add_argument("--repo", default="EVerest/EVerest")
     ap.add_argument("--pointers", default=os.path.join(ROOT, "pointers.json"))
     ap.add_argument("--max-age-days", type=int, default=10,
-                    help="a pointer unmoved for longer than this is treated as a dead CI job")
+                    help="a pointer unmoved for longer than this while its tracked branch "
+                         "has moved on is treated as a dead CI job")
     ap.add_argument("--forward-window", type=int, default=10, metavar="N",
                     help="how many of the most recent moves per pointer to check for a "
                          "rewind. One API call each, so this is the cost/coverage dial. "
@@ -176,16 +180,12 @@ def main():
                 notes.append(f"{name}: forward-only checked over the last {checked} "
                              f"move(s) of {len(entries) - 1}")
 
-        # --- 5. liveness ---------------------------------------------------
         try:
             moved = datetime.datetime.fromisoformat(
                 newest["moved_at"].replace("Z", "+00:00"))
-            age = (now - moved).days
-            if age > args.max_age_days:
-                fails.append(f"{name}: last moved {age} days ago, limit is "
-                             f"{args.max_age_days}. Has the CI job stopped running?")
         except Exception:                                      # noqa: BLE001
             fails.append(f"{name}: moved_at is not an ISO timestamp: {newest.get('moved_at')!r}")
+            moved = None
 
         if args.offline:
             continue
@@ -225,6 +225,14 @@ def main():
                 fails.append(f"{name}: tip {tip[:12]} is not reachable from '{tracks}' "
                               f"(compare says '{st}'). The pointer is advertising a commit "
                               f"that is not on the branch it claims to track.")
+
+            # --- 5. liveness -----------------------------------------------
+            # Only a tracked branch that has moved on can show a dead job: one
+            # with no new commits leaves its pointer unmoved for any length.
+            elif st == "behind" and moved and (now - moved).days > args.max_age_days:
+                fails.append(f"{name}: last moved {(now - moved).days} days ago and "
+                             f"'{tracks}' has moved on since, limit is "
+                             f"{args.max_age_days}. Has the CI job stopped running?")
 
     print(f"pointers checked: {len(declared)}   log entries: {len(log)}   repo: {args.repo}"
           + ("   [offline]" if args.offline else ""))
