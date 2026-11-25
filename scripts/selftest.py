@@ -1791,6 +1791,20 @@ def suite_build(work, verbose):
           len(rows2) == 2 and any(">ac-basic<" in r for r in rows2)
           and any(">dc-full<" in r for r in rows2), f"{len(rows2)} row(s)")
 
+    # The name comes from the record, then from the allowlist; it is withheld only
+    # when both omit it. A named integrator whose records carried no displayName
+    # was once published as "<id> (name withheld)".
+    def shown(display, name):
+        r_ = dict(copy.deepcopy(base), integ="selftest-id", display=display)
+        al = list(allow) + [{"id": "selftest-id", "name": name}]
+        return bs.build_site([r_], declared, logs, al, vocab)["index.html"]
+    fb, own, anon = shown(None, "Allowlisted Name"), shown("Record Name", "Allowlisted Name"), shown(None, "selftest-id")
+    check("a record without displayName takes the allowlist's display name",
+          "Allowlisted Name" in fb and "selftest-id (name withheld)" not in fb
+          and "Record Name" in own and "Allowlisted Name" not in own
+          and "selftest-id (name withheld)" in anon,
+          f"fallback={'Allowlisted Name' in fb} record={'Record Name' in own} withheld={'selftest-id (name withheld)' in anon}")
+
     # Valid input must never stop the build: one record would take the site down
     # for every integrator.
     def builds(label, rs, then=lambda files: (True, "")):
@@ -2348,7 +2362,7 @@ SUITES = {"gate": suite_gate, "intake": suite_intake, "normalise": suite_normali
 # Raise a number when you add cases. If you are lowering one, say in the commit
 # message which case you removed and why.
 EXPECT = {"gate": 122, "intake": 16, "normalise": 8, "pointers": 18,
-          "archive": 9, "staleness": 6, "build": 69, "docs": 10, "sources": 64}
+          "archive": 9, "staleness": 6, "build": 70, "docs": 10, "sources": 64}
 TOTAL = sum(EXPECT.values())
 
 
