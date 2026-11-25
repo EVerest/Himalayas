@@ -34,3 +34,7 @@ integrators:
     github_users:
       - SirVer
       - dorezyuk
+  - id: zaptec
+    display_name: Zaptec Charger AS
+    github_users:
+      - marthauk
