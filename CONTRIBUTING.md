@@ -63,7 +63,8 @@ The repository is public, so there is no private submission and no per-submissio
 flag. To stay unnamed, register a pseudonymous `id`, omit `display_name` from your
 allowlist entry, and omit `extra.integrator.displayName` from your records. The status page
 takes the name from the record, so a record that carries `displayName` names you whatever
-the allowlist says. Without it the page shows `your-id (name withheld)`.
+the allowlist says, and falls back to the allowlist's `display_name` when the record has
+none. With neither, the page shows `your-id (name withheld)`.
 
 This changes only what the status page displays. Your allowlist entry, including `contact`
 and `github_users`, is public, and so is who opened each pull request. Anything in your
@@ -423,7 +424,7 @@ If you change anything under `scripts/` or `schema/`, also run the gate's own su
 is almost entirely negative cases asserting the specific rejection code:
 
 ```bash
-python3 scripts/selftest.py        # 322 checks, all of which must pass
+python3 scripts/selftest.py        # 323 checks, all of which must pass
 ```
 
 ---

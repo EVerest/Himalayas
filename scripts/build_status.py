@@ -487,6 +487,9 @@ def build_pointer(name, log, recs, allow, grace_days=GRACE_DAYS):
     for r in sorted(mine, key=lambda r: (r["start"], r["path"])):
         setups.setdefault((r["integ"], r["config"]), []).append(r)
 
+    # A record without displayName takes the allowlist's display_name; the name is withheld
+    # only when both omit it (an allowlist entry without one carries its id as the name).
+    public = {a["id"]: a["name"] for a in allow if a["name"] != a["id"]}
     model = []
     for (integ, cfg), runs in setups.items():
         by_move = collections.OrderedDict((i, []) for i in range(len(shas)))
@@ -503,7 +506,7 @@ def build_pointer(name, log, recs, allow, grace_days=GRACE_DAYS):
         h = phase_history(tested, shas, latest)
         oc = collections.Counter(t["outcome"] for t in latest["tests"])
         model.append({
-            "integ": integ, "integ_name": latest["display"] or f"{integ} (name withheld)", "config": cfg,
+            "integ": integ, "integ_name": latest["display"] or public.get(integ) or f"{integ} (name withheld)", "config": cfg,
             "latest": latest, "runs": runs, "by_move": by_move, "first_tested": first_tested,
             "verdict": verdict(latest), "behind": behind,
             "fresh": "unknown" if stale is None else "stale" if stale else "current",
