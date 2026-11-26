@@ -1,0 +1,1770 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "timestamp": "2026-11-25T10:13:42.056Z",
+  "generatedBy": "ReportLab PDF Library",
+  "results": {
+    "tool": {
+      "name": "Trialog EV Combo CS",
+      "version": "3.4.3 - UI v4.0.1"
+    },
+    "summary": {
+      "tests": 77,
+      "passed": 57,
+      "failed": 20,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "start": 1795526614971,
+      "stop": 1795601622056,
+      "duration": 75007085
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/stable-2026.10",
+      "commit": "f45ba0d0827f29d53d516fec98960f2528460802",
+      "branchName": "main",
+      "testEnvironment": "HIL",
+      "osPlatform": "linux",
+      "healthy": true
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "EnergyManager",
+          "EnergyNode",
+          "ErrorHistory",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac",
+          "Evse15118D20",
+          "OCPP",
+          "PersistentStore"
+        ]
+      },
+      "integrator": {
+        "id": "zaptec",
+        "displayName": "Zaptec"
+      },
+      "configuration": "ISO15118-21",
+      "testSystem": {
+        "name": "Trialog Combo CS"
+      },
+      "hardware": {
+        "board": "Zaptec Pro"
+      }
+    },
+    "tests": [
+      {
+        "name": "TC21_SECC_ChargeParameterDiscovery_002",
+        "status": "passed",
+        "duration": 10204,
+        "start": 1795526614971,
+        "stop": 1795526625175,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ChargeParameterDiscovery_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a valid ServiceDiscoveryReq instead of ChargeParameterDiscoveryReq."
+        },
+        "message": "Test success: ServiceDiscoveryRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_SequenceError."
+      },
+      {
+        "name": "TC21_SECC_ChargeParameterDiscovery_003",
+        "status": "passed",
+        "duration": 70937,
+        "start": 1795526660092,
+        "stop": 1795526731029,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ChargeParameterDiscovery_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC waits after ServiceSelectionRes instead of sending ChargeParameterDiscoveryReq."
+        },
+        "message": "Test success: The SUT terminated the TLS connection after V2G_SECC_Sequence_Timeout and within TLS_Connection_Termination_Timeout."
+      },
+      {
+        "name": "TC21_SECC_ChargeParameterDiscovery_004",
+        "status": "passed",
+        "duration": 10069,
+        "start": 1795526936885,
+        "stop": 1795526946954,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ChargeParameterDiscovery_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a SessionStopReq after ServiceSelectionRes for a non-critical EV-initiated shutdown."
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK."
+      },
+      {
+        "name": "TC21_SECC_ChargeParameterDiscovery_001",
+        "status": "passed",
+        "duration": 9815,
+        "start": 1795526980963,
+        "stop": 1795526990778,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ChargeParameterDiscovery_001",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ChargeParameterDiscoveryReq after ServiceSelectionRes."
+        },
+        "message": "Test success: ChargeParameterDiscoveryRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK."
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_001",
+        "status": "passed",
+        "duration": 9164,
+        "start": 1795527173962,
+        "stop": 1795527183126,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ServiceDetail_001",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ServiceDetailReq after ServiceDiscoveryRes."
+        },
+        "message": "Test success: ServiceDetailRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK."
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_002",
+        "status": "passed",
+        "duration": 8242,
+        "start": 1795527237971,
+        "stop": 1795527246213,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ServiceDetail_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an invalid ServiceDetailReq with an unknown SessionID."
+        },
+        "message": "Test success: ServiceDetailRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_UnknownSession."
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_003",
+        "status": "failed",
+        "duration": 8718,
+        "start": 1795527278961,
+        "stop": 1795527287679,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceDetail_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a valid ServiceDiscoveryReq instead of ServiceDetailReq."
+        },
+        "message": "Test failure: Communication error before ServiceDiscoveryReq was sent (error code: Comm Sequence Error)."
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_004",
+        "status": "passed",
+        "duration": 9514,
+        "start": 1795527365962,
+        "stop": 1795527375476,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ServiceDetail_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an invalid ServiceDetailReq with a ServiceID not previously offered."
+        },
+        "message": "Test success: ServiceDetailRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_ServiceIDInvalid."
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_005",
+        "status": "passed",
+        "duration": 70508,
+        "start": 1795527421962,
+        "stop": 1795527492470,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ServiceDetail_005",
+        "labels": {
+          "description": "[ISO-21] The EVCC waits after ServiceDiscoveryRes instead of sending ServiceDetailReq."
+        },
+        "message": "Test success: The SUT terminated the TLS connection after V2G_SECC_Sequence_Timeout and within TLS_Connection_Termination_Timeout."
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_006",
+        "status": "failed",
+        "duration": 9014,
+        "start": 1795527590962,
+        "stop": 1795527599976,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceDetail_006",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a SessionStopReq after ServiceDiscoveryRes for a non-critical EV-initiated shutdown."
+        },
+        "message": "Test failure: Communication error before SessionStopReq was sent (error code: Comm Sequence Error)."
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_002",
+        "status": "passed",
+        "duration": 9354,
+        "start": 1795587124972,
+        "stop": 1795587134326,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ScheduleExchange_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE sends a valid SchedulExchangeRes with EVSEProvcesing set to 'Finished'"
+        },
+        "message": "Test success: The EVSE returned ScheduleExchangeRes with the correct EVSEProcessing set to 'OK'."
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_003",
+        "status": "passed",
+        "duration": 10453,
+        "start": 1795587201964,
+        "stop": 1795587212417,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ScheduleExchange_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE sends a valid SchedulExchangeRes with a ResponseCode set to 'FAILED_UnknownSession'"
+        },
+        "message": "Test success: The EVSE returned ScheduleExchangeRes with the correct ResponseCode set to 'FAILED_UnknownSession'."
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_004",
+        "status": "passed",
+        "duration": 9471,
+        "start": 1795587240071,
+        "stop": 1795587249542,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ScheduleExchange_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ServiceDiscoveryReq instead of ScheduleExchangeReq"
+        },
+        "message": "Test success: The EVSE returned ServiceDiscoveryRes with the correct response code."
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_005",
+        "status": "passed",
+        "duration": 73990,
+        "start": 1795587292236,
+        "stop": 1795587366226,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ScheduleExchange_005",
+        "labels": {
+          "description": "[ISO-21] The EVCC waits for a sequenceTimeout without sending a ScheduleExchangeReq"
+        },
+        "message": "Test success: V2G communication was stopped after timeout."
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_006",
+        "status": "failed",
+        "duration": 60584,
+        "start": 1795587421330,
+        "stop": 1795587481914,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ScheduleExchange_006",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks whether the EVSE sends a ScheduleExchangeRes message with a valid ScheduleTupleID"
+        },
+        "message": "Test failure: timeout."
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_007",
+        "status": "failed",
+        "duration": 179946,
+        "start": 1795587650964,
+        "stop": 1795587830910,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ScheduleExchange_007",
+        "labels": {
+          "description": "[ISO-21] The EVCC never finishes the ScheduleExchange loop"
+        },
+        "message": "Test failure: timeout."
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_008",
+        "status": "passed",
+        "duration": 10352,
+        "start": 1795588538970,
+        "stop": 1795588549322,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ScheduleExchange_008",
+        "labels": {
+          "description": "[ISO-21] The EVCC initiate a non-critical shutdown instead of sending a ScheduleExchangeReq"
+        },
+        "message": "Test success: The EVSE returned SessionStopRes with the correct response code."
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_001",
+        "status": "failed",
+        "duration": 9257,
+        "start": 1795588836962,
+        "stop": 1795588846219,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ScheduleExchange_001",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE sends a valid SchedulExchangeRes with EVSEProvcesing set to 'Ongoing'"
+        },
+        "message": "Test failure: The EVSE sent ScheduleExchangeRes without EVSEprocessing set to 'Ongoing'."
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_001",
+        "status": "passed",
+        "duration": 8075,
+        "start": 1795589345963,
+        "stop": 1795589354038,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPSupportedAppProtocol_001",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a valid SupportedAppProtocolReq"
+        },
+        "message": "Test success: SupportedAppProtocolRes with valid V2GTP header sent by the EVSE."
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_002",
+        "status": "failed",
+        "duration": 8694,
+        "start": 1795589372000,
+        "stop": 1795589380694,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_V2GTPSupportedAppProtocol_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks whether the TCP destination port of SupportedAppProtocolRes is in the dynamic port range."
+        },
+        "message": "Test failure: SupportedAppProtocolRes message received with TCP destination port 36706 outside the dynamic port range 49152-65535."
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_003",
+        "status": "passed",
+        "duration": 24788,
+        "start": 1795589415222,
+        "stop": 1795589440010,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPSupportedAppProtocol_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an invalid header in SupportedAppProtocolReq (ProtocolVersion: 'FF'H)."
+        },
+        "message": "Test success: The EVSE ignored the SupportedAppProtocolReq message and did not terminate the TLS connection within V2G_SECC_CommunicationSetup_Performance_Time."
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_004",
+        "status": "failed",
+        "duration": 59943,
+        "start": 1795589525967,
+        "stop": 1795589585910,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_V2GTPSupportedAppProtocol_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an invalid header in SupportedAppProtocolReq (InvProtocolVersion: 'FF'H)."
+        },
+        "message": "Test failure: timeout."
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_003",
+        "status": "failed",
+        "duration": 9105,
+        "start": 1795589987960,
+        "stop": 1795589997065,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceSelection_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a valid ServiceDiscoveryReq message instead of a ServiceSelectionReq."
+        },
+        "message": "Test failure: Communication stopped before ServiceDiscoveryReq was sent (error code: Comm Sequence Error)."
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_004",
+        "status": "passed",
+        "duration": 8793,
+        "start": 1795590156003,
+        "stop": 1795590164796,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ServiceSelection_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an invalid ServiceId and ParameterSetID in ServiceSelectionReq"
+        },
+        "message": "Test success: ServiceSelectionRes sent with the good response code"
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_002",
+        "status": "failed",
+        "duration": 59949,
+        "start": 1795590395961,
+        "stop": 1795590455910,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceSelection_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an ServiceSelectionReq with an invalid SessionId"
+        },
+        "message": "Test failure: timeout."
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_006",
+        "status": "failed",
+        "duration": 71716,
+        "start": 1795590500961,
+        "stop": 1795590572677,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceSelection_006",
+        "labels": {
+          "description": "[ISO-21] The EVCC waits until V2G_SECC_Sequence_Timeout after ServiceDetailRes instead of sending ServiceSelectionReq."
+        },
+        "message": "Test failure: Communication ended after V2G_SECC_Sequence_Timeout, but TLS termination could not be confirmed from the SUT with error code: Cable unplug during session."
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_001",
+        "status": "failed",
+        "duration": 59956,
+        "start": 1795590678961,
+        "stop": 1795590738917,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "x-accepted-deviation"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceSelection_001",
+        "extra": {
+          "acceptedDeviation": {
+            "reason": "Confirmed by the test-equipment manufacturer that an issue with the tester led to the corresponding Res message not being caught or interpreted correctly, resulting in a false negative.",
+            "clause": "TC21_SECC_ServiceSelection_001"
+          }
+        },
+        "labels": {
+          "description": "[ISO-21] The The EVCC sends a valid ServiceSelectionReq"
+        },
+        "message": "Test failure: timeout."
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_007",
+        "status": "failed",
+        "duration": 9423,
+        "start": 1795591012905,
+        "stop": 1795591022328,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceSelection_007",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a SessionStopReq after ServiceDetailRes for an EV-initiated shutdown for a non-critical reason."
+        },
+        "message": "Test failure: Communication error before SessionStopReq was sent (error code: Comm Sequence Error)."
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_001",
+        "status": "passed",
+        "duration": 8193,
+        "start": 1795591197959,
+        "stop": 1795591206152,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_AuthorizationSetup_001",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a valid AuthorizationSetupReq after SessionSetupRes."
+        },
+        "message": "Test success: AuthorizationSetupRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK."
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_002",
+        "status": "passed",
+        "duration": 8674,
+        "start": 1795591239488,
+        "stop": 1795591248162,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_AuthorizationSetup_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an AuthorizationSetupReq with an unknown SessionID."
+        },
+        "message": "Test success: AuthorizationSetupRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_UnknownSession."
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_003",
+        "status": "passed",
+        "duration": 8666,
+        "start": 1795592746961,
+        "stop": 1795592755627,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_AuthorizationSetup_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ServiceDiscoveryReq instead of an AuthorizationSetupReq."
+        },
+        "message": "Test success: ServiceDiscoveryRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_SequenceError."
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_004",
+        "status": "passed",
+        "duration": 70381,
+        "start": 1795592795960,
+        "stop": 1795592866341,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_AuthorizationSetup_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC withholds AuthorizationSetupReq after SessionSetupRes."
+        },
+        "message": "Test success: The SUT terminated the TLS connection after V2G_SECC_Sequence_Timeout and within TLS_Connection_Termination_Timeout."
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_005",
+        "status": "passed",
+        "duration": 8459,
+        "start": 1795592891961,
+        "stop": 1795592900420,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_AuthorizationSetup_005",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a SessionStopReq after SessionSetupRes for EV-initiated shutdown."
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_001",
+        "status": "passed",
+        "duration": 10212,
+        "start": 1795593091961,
+        "stop": 1795593102173,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_PowerDelivery_001",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE sends a valid PowerDeliveryRes after receiving PowerDeliveryReq 'Start'"
+        },
+        "message": "Test success: The EVSE returned PowerDeliveryRes with the correct response code."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_002",
+        "status": "passed",
+        "duration": 21557,
+        "start": 1795593136961,
+        "stop": 1795593158518,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_PowerDelivery_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE sends a valid PowerDeliveryRes after receiving PowerDeliveryReq 'Stop'"
+        },
+        "message": "Test success: The EVSE returned PowerDeliveryRes with the correct response code."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_003",
+        "status": "passed",
+        "duration": 10209,
+        "start": 1795593178960,
+        "stop": 1795593189169,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_PowerDelivery_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE sends a valid PowerDeliveryRes with ResponseCode set to 'FAILED_UnknownSession' after receiving PowerDeliveryReq 'Start' with an unknown SessionID"
+        },
+        "message": "Test success: The EVSE returned PowerDeliveryRes with the correct response code."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_004",
+        "status": "passed",
+        "duration": 59642,
+        "start": 1795593245759,
+        "stop": 1795593305401,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_PowerDelivery_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE sends a valid PowerDeliveryRes with ResponseCode set to 'FAILED_UnknownSession' after receiving PowerDeliveryReq 'Stop' with an unknown SessionID"
+        },
+        "message": "Test success: The EVSE returned PowerDeliveryRes with the correct response code."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_005",
+        "status": "passed",
+        "duration": 10363,
+        "start": 1795593363961,
+        "stop": 1795593374324,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_PowerDelivery_005",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ServiceDiscoveryReq instead of a PowerDeliveryReq 'Start'"
+        },
+        "message": "Test success: The EVSE returned ServiceDiscoveryRes with the correct response code."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_006",
+        "status": "passed",
+        "duration": 16623,
+        "start": 1795593404961,
+        "stop": 1795593421584,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_PowerDelivery_006",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ServiceDiscoveryReq instead of a PowerDeliveryReq 'Stop'"
+        },
+        "message": "Test success: The EVSE returned ServiceDiscoveryRes with the correct response code."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_009",
+        "status": "failed",
+        "duration": 119802,
+        "start": 1795593542109,
+        "stop": 1795593661911,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_PowerDelivery_009",
+        "labels": {
+          "description": "[ISO-21] The EVCC waits until the 'V2G_Sequence_Timeout' timer has expired without sending PowerDeliveryReq 'Start'"
+        },
+        "message": "Test failure: timeout."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_010",
+        "status": "passed",
+        "duration": 83083,
+        "start": 1795593716953,
+        "stop": 1795593800036,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_PowerDelivery_010",
+        "labels": {
+          "description": "[ISO-21] The EVCC waits until the V2G_Sequence_Timeout timer has expired without sending PowerDeliveryReq Stop."
+        },
+        "message": "Test success: The SUT terminated the TLS connection after V2G_SECC_Sequence_Timeout and within TLS_Connection_Termination_Timeout."
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_013",
+        "status": "passed",
+        "duration": 9770,
+        "start": 1795593939044,
+        "stop": 1795593948814,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_PowerDelivery_013",
+        "labels": {
+          "description": "[ISO-21] The EVCC initiate a non-critical shutdown instead of sending a PowerDeliveryReq 'Start'"
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode 'OK'."
+      },
+      {
+        "name": "TC21_SECC_SessionStop_001",
+        "status": "passed",
+        "duration": 11903,
+        "start": 1795594507960,
+        "stop": 1795594519863,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionStop_001",
+        "labels": {
+          "description": "[ISO-21] The The EVCC sends a valid SessionStopReq"
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK."
+      },
+      {
+        "name": "TC21_SECC_SessionStop_002",
+        "status": "passed",
+        "duration": 11731,
+        "start": 1795594554959,
+        "stop": 1795594566690,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionStop_002",
+        "labels": {
+          "description": "[ISO-21] The The EVCC sends a SessionStopReq with an invalid SessionId"
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_UnknownSession."
+      },
+      {
+        "name": "TC21_SECC_SessionStop_003",
+        "status": "passed",
+        "duration": 12405,
+        "start": 1795594592961,
+        "stop": 1795594605366,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionStop_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ServiceDiscoveryReq instead of a SessionStopReq"
+        },
+        "message": "Test success: ServiceDiscoveryRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_SequenceError."
+      },
+      {
+        "name": "TC21_SECC_SessionStop_004",
+        "status": "passed",
+        "duration": 78008,
+        "start": 1795594685959,
+        "stop": 1795594763967,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionStop_004",
+        "labels": {
+          "description": "[ISO-21] This TC observes whether the EVSE reacts to a V2G_SECC_Sequence Timeout with a stopped V2G communication session."
+        },
+        "message": "Test success: The SUT terminated the TLS connection after V2G_SECC_Sequence_Timeout and within TLS_Connection_Termination_Timeout."
+      },
+      {
+        "name": "TC21_SECC_SessionStop_005",
+        "status": "passed",
+        "duration": 11383,
+        "start": 1795595020078,
+        "stop": 1795595031461,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionStop_005",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks whether the EVSE includes the SessionID value returned by the SECC in a SessionSetupRes message in the header of each following response message"
+        },
+        "message": "Test success: SessionID remained consistent throughout the V2G communication session."
+      },
+      {
+        "name": "TC21_SECC_SessionStop_006",
+        "status": "passed",
+        "duration": 12098,
+        "start": 1795595079839,
+        "stop": 1795595091937,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionStop_006",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE reacts to a service renegotiation when the EVSE does not support it"
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_NoServiceRenegotiationSupported."
+      },
+      {
+        "name": "TC21_SECC_SessionStop_007",
+        "status": "passed",
+        "duration": 12325,
+        "start": 1795595142966,
+        "stop": 1795595155291,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionStop_007",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks wether the EVSE reacts to a pause when the EVSE does not support it"
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_PauseNotAllowed."
+      },
+      {
+        "name": "TC21_SECC_SDP_001",
+        "status": "passed",
+        "duration": 4385,
+        "start": 1795596104961,
+        "stop": 1795596109346,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SDP"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SDP_001",
+        "labels": {
+          "description": "[ISO-21] The SECC shall respond to SDP within SDP_Msg_Timeout."
+        },
+        "message": "Test success: SDP response received within SDP_Msg_Timeout."
+      },
+      {
+        "name": "TC21_SECC_SDP_002",
+        "status": "passed",
+        "duration": 4438,
+        "start": 1795596135356,
+        "stop": 1795596139794,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SDP"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SDP_002",
+        "labels": {
+          "description": "[ISO-21] The SECC sends an SDP response from UDP source port 15118."
+        },
+        "message": "Test success: SDP response received within SDP_Msg_Timeout with UDP source port 15118."
+      },
+      {
+        "name": "TC21_SECC_SDP_003",
+        "status": "passed",
+        "duration": 15997,
+        "start": 1795596265959,
+        "stop": 1795596281956,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SDP"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SDP_003",
+        "labels": {
+          "description": "[ISO-21] The SECC shall send more than one SDP response during repeated SDP requests."
+        },
+        "message": "Test success: More than one SDP response message received on V2G_UDP_SDP_CLIENT port."
+      },
+      {
+        "name": "TC21_SECC_SDP_004",
+        "status": "passed",
+        "duration": 23152,
+        "start": 1795596332962,
+        "stop": 1795596356114,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SDP"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SDP_004",
+        "labels": {
+          "description": "[ISO-21] The SECC shall send more than one SDP response during repeated SDP requests with different client ports."
+        },
+        "message": "Test success: More than one SDP response messages were received on previously used client ports."
+      },
+      {
+        "name": "TC21_SECC_Authorization_001",
+        "status": "passed",
+        "duration": 8547,
+        "start": 1795596624021,
+        "stop": 1795596632568,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_Authorization_001",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a valid AuthorizationReq after AuthorizationSetupRes."
+        },
+        "message": "Test success: AuthorizationRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK and EVSEProcessing Finished."
+      },
+      {
+        "name": "TC21_SECC_Authorization_002",
+        "status": "failed",
+        "duration": 8540,
+        "start": 1795596763079,
+        "stop": 1795596771619,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_Authorization_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a valid AuthorizationReq and expects AuthorizationRes with EVSEProcessing Ongoing."
+        },
+        "message": "Test failure: AuthorizationRes received with EVSEProcessing Finished instead of Ongoing."
+      },
+      {
+        "name": "TC21_SECC_Authorization_019",
+        "status": "passed",
+        "duration": 8776,
+        "start": 1795596960960,
+        "stop": 1795596969736,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_Authorization_019",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an AuthorizationReq with a SelectedAuthorizationService not provided in AuthorizationSetupRes."
+        },
+        "message": "Test success: AuthorizationRes received within V2G_EVCC_Msg_Timeout with ResponseCode WARNING_AuthorizationSelectionInvalid and EVSEProcessing Finished."
+      },
+      {
+        "name": "TC21_SECC_Authorization_020",
+        "status": "passed",
+        "duration": 8404,
+        "start": 1795597128041,
+        "stop": 1795597136445,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_Authorization_020",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends an AuthorizationReq with an unknown SessionID."
+        },
+        "message": "Test success: AuthorizationRes received within V2G_EVCC_Msg_Timeout with ResponseCode FAILED_UnknownSession."
+      },
+      {
+        "name": "TC21_SECC_Authorization_022",
+        "status": "failed",
+        "duration": 9033,
+        "start": 1795597180942,
+        "stop": 1795597189975,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_Authorization_022",
+        "labels": {
+          "description": "[ISO-21] The EVCC keeps the AuthorizationReq-AuthorizationRes Ongoing loop until V2G_SECC_Ongoing_Termination_Timeout."
+        },
+        "message": "Test failure: AuthorizationRes(Finished) received during Ongoing loop."
+      },
+      {
+        "name": "TC21_SECC_Authorization_024",
+        "status": "passed",
+        "duration": 8337,
+        "start": 1795597256915,
+        "stop": 1795597265252,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_Authorization_024",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a SessionStopReq after AuthorizationSetupRes for EV-initiated shutdown."
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK."
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_001",
+        "status": "failed",
+        "duration": 59949,
+        "start": 1795598225961,
+        "stop": 1795598285910,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "x-accepted-deviation"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceDiscovery_001",
+        "extra": {
+          "acceptedDeviation": {
+            "reason": "Confirmed by the test-equipment manufacturer that an issue with the tester led to the corresponding Res message not being caught or interpreted correctly, resulting in a false negative.",
+            "clause": "TC21_SECC_ServiceDiscovery_001"
+          }
+        },
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a valid ServiceDiscoveryReq"
+        },
+        "message": "Test failure: timeout."
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_002",
+        "status": "failed",
+        "duration": 59950,
+        "start": 1795599588960,
+        "stop": 1795599648910,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceDiscovery_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ServiceDiscoveryReq with an invalid SessionID"
+        },
+        "message": "Test failure: timeout."
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_003",
+        "status": "passed",
+        "duration": 7973,
+        "start": 1795599737959,
+        "stop": 1795599745932,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ServiceDiscovery_003",
+        "labels": {
+          "description": "[ISO-21] The The EVCC sends an AuthorizationSetupReq instead of a ServiceDiscoveryReq"
+        },
+        "message": "Test success: The EVSE returned AuthorizationSetupRes with the good response code."
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_004",
+        "status": "failed",
+        "duration": 70827,
+        "start": 1795599771967,
+        "stop": 1795599842794,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_ServiceDiscovery_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC waits until V2G_SECC_Sequence_Timeout after AuthorizationRes Finished instead of sending ServiceDiscoveryReq."
+        },
+        "message": "Test failure: Communication ended after V2G_SECC_Sequence_Timeout, but TLS termination could not be confirmed from the SUT with error code: Cable unplug during session."
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_005",
+        "status": "passed",
+        "duration": 7964,
+        "start": 1795599929961,
+        "stop": 1795599937925,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ServiceDiscovery_005",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a SessionStopReq after AuthorizationRes Finished for an EV-initiated shutdown for a non-critical reason."
+        },
+        "message": "Test success: SessionStopRes received within V2G_EVCC_Msg_Timeout with ResponseCode OK."
+      },
+      {
+        "name": "TC21_SECC_ChargeLoop_002",
+        "status": "passed",
+        "duration": 72712,
+        "start": 1795600378009,
+        "stop": 1795600450721,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "ChargeLoop"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_ChargeLoop_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC withholds ChargeLoopReq after PowerDeliveryRes Start."
+        },
+        "message": "Test success: The SUT terminated the TLS connection after V2G_SECC_Sequence_Timeout and within TLS_Connection_Termination_Timeout."
+      },
+      {
+        "name": "TC21_SECC_SessionSetup_002",
+        "status": "passed",
+        "duration": 8811,
+        "start": 1795600589959,
+        "stop": 1795600598770,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionSetup_002",
+        "labels": {
+          "description": "[ISO-21] The EVCC sends a ServiceDiscoveryReq instead of a SessionSetupReq"
+        },
+        "message": "Test success: The SUT responded with ServiceDiscoveryRes and ResponseCode FAILED_SequenceError."
+      },
+      {
+        "name": "TC21_SECC_SessionSetup_003",
+        "status": "failed",
+        "duration": 31049,
+        "start": 1795600760960,
+        "stop": 1795600792009,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_SessionSetup_003",
+        "labels": {
+          "description": "[ISO-21] The EVCC waits without sending SessionSetupReq and checks TLS termination"
+        },
+        "message": "Test failure: The SUT did not terminate the TLS connection within TLS_Connection_Termination_Timeout after V2G_SECC_CommunicationSetup_Performance_Time."
+      },
+      {
+        "name": "TC21_SECC_SessionSetup_004",
+        "status": "passed",
+        "duration": 8463,
+        "start": 1795600900960,
+        "stop": 1795600909423,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionSetup_004",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks whether SessionSetupRes includes a valid EVSEID"
+        },
+        "message": "Test success: SessionSetupRes received with valid EVSEID 'NOZAPEZPR254400'."
+      },
+      {
+        "name": "TC21_SECC_SessionSetup_005",
+        "status": "passed",
+        "duration": 7754,
+        "start": 1795601058885,
+        "stop": 1795601066639,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_SessionSetup_005",
+        "labels": {
+          "description": "[ISO-21] The EVCC checks whether SessionSetupRes returns OK_NewSessionEstablished with a non-zero SessionID"
+        },
+        "message": "Test success: SessionSetupRes received with ResponseCode OK_NewSessionEstablished and non-zero SessionID."
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_001",
+        "status": "passed",
+        "duration": 7412,
+        "start": 1795601165096,
+        "stop": 1795601172508,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPCommonMessages_001",
+        "labels": {
+          "description": "[ISO-21] The SECC sends a SessionSetupRes message with a valid V2GTP header."
+        },
+        "message": "Test success: SessionSetupRes with valid V2GTP header sent by the SECC within V2G_EVCC_Msg_Timeout."
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_002",
+        "status": "failed",
+        "duration": 8645,
+        "start": 1795601226103,
+        "stop": 1795601234748,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "FAIL",
+        "testId": "TC21_SECC_V2GTPCommonMessages_002",
+        "labels": {
+          "description": "[ISO-21] The SECC sends a SessionSetupRes message whose TCP destination port is in the dynamic port range."
+        },
+        "message": "Test failure: SessionSetupRes message received with TCP destination port 36824 outside the dynamic port range 49152-65535."
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_003",
+        "status": "passed",
+        "duration": 25710,
+        "start": 1795601298356,
+        "stop": 1795601324066,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPCommonMessages_003",
+        "labels": {
+          "description": "[ISO-21] The SECC ignores a SessionSetupReq message with an invalid ProtocolVersion in the V2GTP header."
+        },
+        "message": "Test success: The EVSE ignored the SessionSetupReq message and did not terminate the TLS connection within V2G_SECC_CommunicationSetup_Performance_Time."
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_004",
+        "status": "passed",
+        "duration": 25108,
+        "start": 1795601353960,
+        "stop": 1795601379068,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPCommonMessages_004",
+        "labels": {
+          "description": "[ISO-21] The SECC ignores a SessionSetupReq message with an invalid InvProtocolVersion in the V2GTP header."
+        },
+        "message": "Test success: The EVSE ignored the SessionSetupReq message and did not terminate the TLS connection within V2G_SECC_CommunicationSetup_Performance_Time."
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_005",
+        "status": "passed",
+        "duration": 25331,
+        "start": 1795601412725,
+        "stop": 1795601438056,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPCommonMessages_005",
+        "labels": {
+          "description": "[ISO-21] The SECC ignores a SessionSetupReq message with an invalid PayloadType in the V2GTP header."
+        },
+        "message": "Test success: The EVSE ignored the SessionSetupReq message and did not terminate the TLS connection within V2G_SECC_CommunicationSetup_Performance_Time."
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_006",
+        "status": "passed",
+        "duration": 25106,
+        "start": 1795601457959,
+        "stop": 1795601483065,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPCommonMessages_006",
+        "labels": {
+          "description": "[ISO-21] The SECC ignores a SessionSetupReq message with an invalid PayloadLength in the V2GTP header."
+        },
+        "message": "Test success: The EVSE ignored the SessionSetupReq message and did not terminate the TLS connection within V2G_SECC_CommunicationSetup_Performance_Time."
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_007",
+        "status": "passed",
+        "duration": 25134,
+        "start": 1795601506931,
+        "stop": 1795601532065,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPCommonMessages_007",
+        "labels": {
+          "description": "[ISO-21] The SECC ignores a SessionSetupReq message with a smaller PayloadLength in the V2GTP header."
+        },
+        "message": "Test success: The EVSE ignored the SessionSetupReq message and did not terminate the TLS connection within V2G_SECC_CommunicationSetup_Performance_Time."
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_008",
+        "status": "passed",
+        "duration": 25096,
+        "start": 1795601596960,
+        "stop": 1795601622056,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SECC",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance"
+        ],
+        "rawStatus": "PASS",
+        "testId": "TC21_SECC_V2GTPCommonMessages_008",
+        "labels": {
+          "description": "[ISO-21] The SECC ignores a SessionSetupReq message with a larger PayloadLength in the V2GTP header."
+        },
+        "message": "Test success: The EVSE ignored the SessionSetupReq message and did not terminate the TLS connection within V2G_SECC_CommunicationSetup_Performance_Time."
+      }
+    ]
+  }
+}
