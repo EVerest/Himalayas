@@ -1,0 +1,83 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "jest"
+    },
+    "summary": {
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "start": 1795539250632,
+      "stop": 1795539271098
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/main",
+      "commit": "124db01e1593a390716f9cb74be03dc3266a3cdc",
+      "branchName": "main",
+      "testEnvironment": "SIL",
+      "healthy": true,
+      "osPlatform": "linux"
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "API",
+          "Auth",
+          "DCSupplySimulator",
+          "DummyTokenProvider",
+          "DummyTokenValidator",
+          "EnergyManager",
+          "EnergyNode",
+          "ErrorHistory",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseV2G",
+          "IMDSimulator",
+          "OCPPmulti",
+          "OVMSimulator",
+          "PersistentStore",
+          "SlacSimulator",
+          "System",
+          "YetiSimulator"
+        ]
+      },
+      "integrator": {
+        "id": "kempower"
+      },
+      "configuration": "sil-dc-ocpp201"
+    },
+    "tests": [
+      {
+        "name": "kp.ocpp201.provisioning.get-variable-single-value",
+        "status": "passed",
+        "duration": 6660,
+        "suite": [
+          "OCPP2.0.1",
+          "Provisioning"
+        ],
+        "tags": [
+          "OCPP2.0.1"
+        ]
+      },
+      {
+        "name": "kp.ocpp201.provisioning.set-variable-single-value",
+        "status": "passed",
+        "duration": 6033,
+        "suite": [
+          "OCPP2.0.1",
+          "Provisioning"
+        ],
+        "tags": [
+          "OCPP2.0.1"
+        ]
+      }
+    ]
+  }
+}
