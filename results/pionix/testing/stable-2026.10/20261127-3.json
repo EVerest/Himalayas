@@ -1,0 +1,3541 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "1.0.0",
+  "results": {
+    "tool": {
+      "name": "Pionix ISO 15118 Conformance Tester"
+    },
+    "summary": {
+      "tests": 194,
+      "passed": 194,
+      "failed": 0,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "start": 1795783230246,
+      "stop": 1795787223470
+    },
+    "environment": {
+      "appName": "EVerest",
+      "appVersion": "testing/stable-2026.10",
+      "commit": "74845c578353fbc23a6628dd0e5fef173030238a",
+      "branchName": "stable/2026.10",
+      "testEnvironment": "SIL",
+      "osPlatform": "linux",
+      "healthy": true,
+      "buildUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261127T124330Z/"
+    },
+    "extra": {
+      "build": {
+        "status": "passed",
+        "modules": [
+          "Auth",
+          "DummyTokenProviderManual",
+          "EnergyManager",
+          "EnergyNode",
+          "Evse15118D20",
+          "EvseManager",
+          "EvseSecurity",
+          "EvseSlac",
+          "OCPPmulti",
+          "System"
+        ]
+      },
+      "integrator": {
+        "id": "pionix",
+        "displayName": "Pionix GmbH"
+      },
+      "configuration": "ac-full-ocpp",
+      "reportUrl": "https://pionix-conformance-bot.github.io/Himalayas/reports/20261127T124330Z/ac-full-ocpp/conformance-report.pdf"
+    },
+    "tests": [
+      {
+        "name": "TC_SECC_AC_VTB_CmSlacParm_001",
+        "status": "passed",
+        "duration": 13101,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_CmSlacParm_002",
+        "status": "passed",
+        "duration": 144820,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_CmSlacParm_004",
+        "status": "passed",
+        "duration": 6756,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "CmSlacParm"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_cm_slac_parm.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_002",
+        "status": "passed",
+        "duration": 20190,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_004",
+        "status": "passed",
+        "duration": 29416,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_005",
+        "status": "passed",
+        "duration": 12790,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_006",
+        "status": "passed",
+        "duration": 19679,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_008",
+        "status": "passed",
+        "duration": 13811,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_010",
+        "status": "passed",
+        "duration": 20221,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PLCLinkStatus_012",
+        "status": "passed",
+        "duration": 17997,
+        "suite": [
+          "conformance",
+          "ISO15118-5",
+          "PLCLinkStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-3",
+          "x-iso15118-5",
+          "x-slac",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_ac_plc_link_status.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_001 [AC]",
+        "status": "passed",
+        "duration": 8386,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_003 [AC]",
+        "status": "passed",
+        "duration": 8997,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_004 [AC]",
+        "status": "passed",
+        "duration": 8400,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_005 [AC]",
+        "status": "passed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_006 [AC]",
+        "status": "passed",
+        "duration": 8007,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_007 [AC]",
+        "status": "passed",
+        "duration": 7994,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_008 [AC]",
+        "status": "passed",
+        "duration": 7997,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_009 [AC]",
+        "status": "passed",
+        "duration": 7995,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_010 [AC]",
+        "status": "passed",
+        "duration": 8002,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_011 [AC]",
+        "status": "passed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_012 [AC]",
+        "status": "passed",
+        "duration": 8000,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_013 [AC]",
+        "status": "passed",
+        "duration": 8000,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_014 [AC]",
+        "status": "passed",
+        "duration": 8000,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_015 [AC]",
+        "status": "passed",
+        "duration": 8004,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_016 [AC]",
+        "status": "passed",
+        "duration": 7995,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_017 [AC]",
+        "status": "passed",
+        "duration": 8399,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_018 [AC]",
+        "status": "passed",
+        "duration": 8607,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_021 [AC]",
+        "status": "passed",
+        "duration": 7990,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_023 [AC]",
+        "status": "passed",
+        "duration": 8595,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_Authorization_024 [AC]",
+        "status": "passed",
+        "duration": 8403,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "Authorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_001 [AC]",
+        "status": "passed",
+        "duration": 7994,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization_setup.py"
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_002 [AC]",
+        "status": "passed",
+        "duration": 8003,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization_setup.py"
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_003 [AC]",
+        "status": "passed",
+        "duration": 7995,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization_setup.py"
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_004 [AC]",
+        "status": "passed",
+        "duration": 67904,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization_setup.py"
+      },
+      {
+        "name": "TC21_SECC_AuthorizationSetup_005 [AC]",
+        "status": "passed",
+        "duration": 8098,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "AuthorizationSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_authorization_setup.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_001 [AC]",
+        "status": "passed",
+        "duration": 8610,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_002 [AC]",
+        "status": "passed",
+        "duration": 8987,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_003 [AC]",
+        "status": "passed",
+        "duration": 9008,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_004 [AC]",
+        "status": "passed",
+        "duration": 8992,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_005 [AC]",
+        "status": "passed",
+        "duration": 8999,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_006 [AC]",
+        "status": "passed",
+        "duration": 8404,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_007 [AC]",
+        "status": "passed",
+        "duration": 7992,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_008 [AC]",
+        "status": "passed",
+        "duration": 8000,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_009 [AC]",
+        "status": "passed",
+        "duration": 8004,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_010 [AC]",
+        "status": "passed",
+        "duration": 7998,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_011 [AC]",
+        "status": "passed",
+        "duration": 7998,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_012 [AC]",
+        "status": "passed",
+        "duration": 8397,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_013 [AC]",
+        "status": "passed",
+        "duration": 8595,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_014 [AC]",
+        "status": "passed",
+        "duration": 8002,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_015 [AC]",
+        "status": "passed",
+        "duration": 8403,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_016 [AC]",
+        "status": "passed",
+        "duration": 8595,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_017 [AC]",
+        "status": "passed",
+        "duration": 7996,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_018 [AC]",
+        "status": "passed",
+        "duration": 8001,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_019 [AC]",
+        "status": "passed",
+        "duration": 8003,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_020 [AC]",
+        "status": "passed",
+        "duration": 7995,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallation_021 [AC]",
+        "status": "passed",
+        "duration": 8401,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallation"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallationOrAuthorization_001 [AC]",
+        "status": "passed",
+        "duration": 8598,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallationOrAuthorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation_or_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_CertificateInstallationOrAuthorization_002 [AC]",
+        "status": "passed",
+        "duration": 67891,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "CertificateInstallationOrAuthorization"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_certificate_installation_or_authorization.py"
+      },
+      {
+        "name": "TC21_SECC_ChargeLoop_001 [AC]",
+        "status": "passed",
+        "duration": 9308,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ChargeLoop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_charge_loop.py"
+      },
+      {
+        "name": "TC21_SECC_ChargeLoop_002 [AC]",
+        "status": "passed",
+        "duration": 69095,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ChargeLoop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_charge_loop.py"
+      },
+      {
+        "name": "TC21_SECC_ChargeParameterDiscovery_001 [AC]",
+        "status": "passed",
+        "duration": 8702,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC21_SECC_ChargeParameterDiscovery_002 [AC]",
+        "status": "passed",
+        "duration": 9394,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC21_SECC_ChargeParameterDiscovery_003 [AC]",
+        "status": "passed",
+        "duration": 69498,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC21_SECC_ChargeParameterDiscovery_004 [AC]",
+        "status": "passed",
+        "duration": 9100,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_001 [AC]",
+        "status": "passed",
+        "duration": 9194,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_002 [AC]",
+        "status": "passed",
+        "duration": 9999,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_003 [AC]",
+        "status": "passed",
+        "duration": 8999,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_004 [AC]",
+        "status": "passed",
+        "duration": 10008,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_005 [AC]",
+        "status": "passed",
+        "duration": 8993,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_006 [AC]",
+        "status": "passed",
+        "duration": 9803,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_007 [AC]",
+        "status": "passed",
+        "duration": 9195,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_008 [AC]",
+        "status": "passed",
+        "duration": 8994,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_009 [AC]",
+        "status": "passed",
+        "duration": 68899,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_010 [AC]",
+        "status": "passed",
+        "duration": 69806,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_011 [AC]",
+        "status": "passed",
+        "duration": 9296,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_012 [AC]",
+        "status": "passed",
+        "duration": 8999,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_PowerDelivery_013 [AC]",
+        "status": "passed",
+        "duration": 8995,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_power_delivery.py"
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_002 [AC]",
+        "status": "passed",
+        "duration": 8800,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_schedule_exchange.py"
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_003 [AC]",
+        "status": "passed",
+        "duration": 9002,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_schedule_exchange.py"
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_004 [AC]",
+        "status": "passed",
+        "duration": 8997,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_schedule_exchange.py"
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_005 [AC]",
+        "status": "passed",
+        "duration": 68892,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_schedule_exchange.py"
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_006 [AC]",
+        "status": "passed",
+        "duration": 9102,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_schedule_exchange.py"
+      },
+      {
+        "name": "TC21_SECC_ScheduleExchange_008 [AC]",
+        "status": "passed",
+        "duration": 9005,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ScheduleExchange"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_schedule_exchange.py"
+      },
+      {
+        "name": "TC21_SECC_SDP_001 [AC]",
+        "status": "passed",
+        "duration": 7595,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_SDP_002 [AC]",
+        "status": "passed",
+        "duration": 8798,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_SDP_003 [AC]",
+        "status": "passed",
+        "duration": 20818,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_SDP_004 [AC]",
+        "status": "passed",
+        "duration": 19995,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_001 [AC]",
+        "status": "passed",
+        "duration": 8578,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_002 [AC]",
+        "status": "passed",
+        "duration": 9001,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_003 [AC]",
+        "status": "passed",
+        "duration": 8999,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_004 [AC]",
+        "status": "passed",
+        "duration": 9602,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_005 [AC]",
+        "status": "passed",
+        "duration": 69294,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDetail_006 [AC]",
+        "status": "passed",
+        "duration": 9101,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDetail"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_001 [AC]",
+        "status": "passed",
+        "duration": 8797,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_002 [AC]",
+        "status": "passed",
+        "duration": 8997,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_003 [AC]",
+        "status": "passed",
+        "duration": 8990,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_004 [AC]",
+        "status": "passed",
+        "duration": 68929,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceDiscovery_005 [AC]",
+        "status": "passed",
+        "duration": 9077,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_discovery_detail.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_001 [AC]",
+        "status": "passed",
+        "duration": 9200,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_selection.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_002 [AC]",
+        "status": "passed",
+        "duration": 9649,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_selection.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_003 [AC]",
+        "status": "passed",
+        "duration": 9372,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_selection.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_004 [AC]",
+        "status": "passed",
+        "duration": 8974,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_selection.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_006 [AC]",
+        "status": "passed",
+        "duration": 69764,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_selection.py"
+      },
+      {
+        "name": "TC21_SECC_ServiceSelection_007 [AC]",
+        "status": "passed",
+        "duration": 9232,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "ServiceSelection"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_service_selection.py"
+      },
+      {
+        "name": "TC21_SECC_SessionSetup_002 [AC]",
+        "status": "passed",
+        "duration": 8644,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_setup.py"
+      },
+      {
+        "name": "TC21_SECC_SessionSetup_003 [AC]",
+        "status": "passed",
+        "duration": 26190,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_setup.py"
+      },
+      {
+        "name": "TC21_SECC_SessionSetup_004 [AC]",
+        "status": "passed",
+        "duration": 8167,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_setup.py"
+      },
+      {
+        "name": "TC21_SECC_SessionSetup_005 [AC]",
+        "status": "passed",
+        "duration": 7994,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_setup.py"
+      },
+      {
+        "name": "TC21_SECC_SessionStop_001 [AC]",
+        "status": "passed",
+        "duration": 11606,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_stop.py"
+      },
+      {
+        "name": "TC21_SECC_SessionStop_002 [AC]",
+        "status": "passed",
+        "duration": 11198,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_stop.py"
+      },
+      {
+        "name": "TC21_SECC_SessionStop_003 [AC]",
+        "status": "passed",
+        "duration": 10988,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_stop.py"
+      },
+      {
+        "name": "TC21_SECC_SessionStop_004 [AC]",
+        "status": "passed",
+        "duration": 70705,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_stop.py"
+      },
+      {
+        "name": "TC21_SECC_SessionStop_005 [AC]",
+        "status": "passed",
+        "duration": 10322,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_stop.py"
+      },
+      {
+        "name": "TC21_SECC_SessionStop_006 [AC]",
+        "status": "passed",
+        "duration": 10979,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_stop.py"
+      },
+      {
+        "name": "TC21_SECC_SessionStop_007 [AC]",
+        "status": "passed",
+        "duration": 10993,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_session_stop.py"
+      },
+      {
+        "name": "TC21_SECC_SupportedAppProtocol_001 [AC]",
+        "status": "passed",
+        "duration": 8790,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_SupportedAppProtocol_002 [AC]",
+        "status": "passed",
+        "duration": 8404,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_SupportedAppProtocol_003 [AC]",
+        "status": "passed",
+        "duration": 8009,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_SupportedAppProtocol_004 [AC]",
+        "status": "passed",
+        "duration": 8012,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_001 [AC]",
+        "status": "passed",
+        "duration": 8044,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_common_messages.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_002 [AC]",
+        "status": "passed",
+        "duration": 7959,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_common_messages.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_003 [AC]",
+        "status": "passed",
+        "duration": 24837,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_common_messages.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_004 [AC]",
+        "status": "passed",
+        "duration": 24975,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_common_messages.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_005 [AC]",
+        "status": "passed",
+        "duration": 25003,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_common_messages.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_006 [AC]",
+        "status": "passed",
+        "duration": 24974,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_common_messages.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_007 [AC]",
+        "status": "passed",
+        "duration": 25020,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_common_messages.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPCommonMessages_008 [AC]",
+        "status": "passed",
+        "duration": 25178,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPCommonMessages"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_common_messages.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSDP_001 [AC]",
+        "status": "passed",
+        "duration": 7771,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSDP_002 [AC]",
+        "status": "passed",
+        "duration": 20614,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSDP_003 [AC]",
+        "status": "passed",
+        "duration": 19993,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSDP_004 [AC]",
+        "status": "passed",
+        "duration": 20001,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSDP_005 [AC]",
+        "status": "passed",
+        "duration": 20005,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSDP_006 [AC]",
+        "status": "passed",
+        "duration": 20016,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSDP_007 [AC]",
+        "status": "passed",
+        "duration": 19998,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSDP"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_sdp.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_001 [AC]",
+        "status": "passed",
+        "duration": 7582,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_002 [AC]",
+        "status": "passed",
+        "duration": 7981,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_003 [AC]",
+        "status": "passed",
+        "duration": 24815,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_004 [AC]",
+        "status": "passed",
+        "duration": 25790,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_005 [AC]",
+        "status": "passed",
+        "duration": 25208,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_006 [AC]",
+        "status": "passed",
+        "duration": 24989,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_007 [AC]",
+        "status": "passed",
+        "duration": 25071,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_supported_app_protocol.py"
+      },
+      {
+        "name": "TC21_SECC_V2GTPSupportedAppProtocol_008 [AC]",
+        "status": "passed",
+        "duration": 25283,
+        "suite": [
+          "conformance",
+          "ISO15118-21",
+          "V2GTPSupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-20",
+          "x-iso15118-21",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso20_v2gtp_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_001",
+        "status": "passed",
+        "duration": 8805,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_003",
+        "status": "passed",
+        "duration": 8999,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_004",
+        "status": "passed",
+        "duration": 9598,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_005",
+        "status": "passed",
+        "duration": 9401,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_006",
+        "status": "passed",
+        "duration": 8994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_007",
+        "status": "passed",
+        "duration": 19217,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_012",
+        "status": "passed",
+        "duration": 8780,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_016",
+        "status": "passed",
+        "duration": 9011,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_017",
+        "status": "passed",
+        "duration": 19226,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_019",
+        "status": "passed",
+        "duration": 18980,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargeParameterDiscovery_022",
+        "status": "passed",
+        "duration": 19241,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargeParameterDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_charge_parameter_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_001",
+        "status": "passed",
+        "duration": 9345,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_005",
+        "status": "passed",
+        "duration": 10985,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_006",
+        "status": "passed",
+        "duration": 9402,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_007",
+        "status": "passed",
+        "duration": 10603,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_008",
+        "status": "passed",
+        "duration": 9798,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_009",
+        "status": "passed",
+        "duration": 11202,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_010",
+        "status": "passed",
+        "duration": 9788,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_011",
+        "status": "passed",
+        "duration": 10201,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_012",
+        "status": "passed",
+        "duration": 69163,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_013",
+        "status": "passed",
+        "duration": 70536,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PowerDelivery_014",
+        "status": "passed",
+        "duration": 8684,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "PowerDelivery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_power_delivery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_SessionStop_001",
+        "status": "passed",
+        "duration": 11137,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_SessionStop_002",
+        "status": "passed",
+        "duration": 10873,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_SessionStop_003",
+        "status": "passed",
+        "duration": 10994,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_SessionStop_004",
+        "status": "passed",
+        "duration": 70723,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionStop"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_session_stop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_SupportedAppProtocol_001",
+        "status": "passed",
+        "duration": 8081,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SupportedAppProtocol"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_ac_supported_app_protocol.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargingStatus_001",
+        "status": "passed",
+        "duration": 9787,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargingStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charging_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargingStatus_003",
+        "status": "passed",
+        "duration": 10018,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargingStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charging_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargingStatus_004",
+        "status": "passed",
+        "duration": 9997,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargingStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charging_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargingStatus_005",
+        "status": "passed",
+        "duration": 69904,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargingStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charging_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargingStatus_006",
+        "status": "passed",
+        "duration": 10058,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargingStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charging_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ChargingStatus_008",
+        "status": "passed",
+        "duration": 9995,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ChargingStatus"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_charging_status.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_ServiceDiscovery_001",
+        "status": "passed",
+        "duration": 18618,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "ServiceDiscovery"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_service_discovery.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_SessionSetup_001",
+        "status": "passed",
+        "duration": 17798,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_SessionSetup_002",
+        "status": "passed",
+        "duration": 18003,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_SessionSetup_003",
+        "status": "passed",
+        "duration": 17988,
+        "suite": [
+          "conformance",
+          "ISO15118-4",
+          "SessionSetup"
+        ],
+        "tags": [
+          "compliance",
+          "ISO15118-2",
+          "x-iso15118-4",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_iso2_session_setup.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixInterop_005",
+        "status": "passed",
+        "duration": 9784,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixInterop_006",
+        "status": "passed",
+        "duration": 610197,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixInterop_012",
+        "status": "passed",
+        "duration": 15221,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixInterop_013",
+        "status": "passed",
+        "duration": 15191,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixInterop_015",
+        "status": "passed",
+        "duration": 15392,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixInterop_016",
+        "status": "passed",
+        "duration": 41784,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixInterop_018",
+        "status": "passed",
+        "duration": 14414,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixInterop_020",
+        "status": "passed",
+        "duration": 22011,
+        "suite": [
+          "conformance",
+          "Pionix-interop",
+          "PionixInterop"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-interop",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_interop.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixUseCase_002",
+        "status": "passed",
+        "duration": 21394,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixUseCase_004",
+        "status": "passed",
+        "duration": 22916,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixUseCase_006",
+        "status": "passed",
+        "duration": 19079,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixUseCase_008",
+        "status": "passed",
+        "duration": 21319,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixUseCase_014",
+        "status": "passed",
+        "duration": 24292,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixUseCase_015",
+        "status": "passed",
+        "duration": 22792,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      },
+      {
+        "name": "TC_SECC_AC_VTB_PionixUseCase_016",
+        "status": "passed",
+        "duration": 23030,
+        "suite": [
+          "conformance",
+          "Pionix-usecase",
+          "PionixUseCase"
+        ],
+        "tags": [
+          "compliance",
+          "x-pionix-usecase",
+          "AC"
+        ],
+        "rawStatus": "PASS",
+        "filePath": "tests/test_secc_pionix_usecase.py"
+      }
+    ]
+  }
+}
